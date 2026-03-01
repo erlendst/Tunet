@@ -98,6 +98,7 @@ export function useEditModalProps({
       isEditNordpool,
       isEditGenericType,
       isEditAndroidTV,
+      isEditVacuum,
       isEditCar,
       isEditRoom,
       isEditSpacer,

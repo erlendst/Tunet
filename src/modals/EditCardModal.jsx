@@ -1056,6 +1056,7 @@ export default function EditCardModal({
   isEditRoom,
   isEditAndroidTV,
   isEditFan,
+  isEditVacuum,
   editSettingsKey,
   editSettings,
   isEditWeatherTemp,
@@ -1164,6 +1165,7 @@ export default function EditCardModal({
   const climateOptions = sortByName(byDomain('climate'));
   const calendarOptions = sortByName(byDomain('calendar'));
   const todoOptions = sortByName(byDomain('todo'));
+  const scriptOptions = sortByName(byDomain('script'));
   const mediaPlayerOptions = sortByName(byDomain('media_player'));
 
   const lastUpdatedOptions = sortByName(
@@ -3078,6 +3080,121 @@ export default function EditCardModal({
                   />
                 </button>
               </div>
+            </div>
+          )}
+
+          {isEditVacuum && editSettingsKey && (
+            <div className="space-y-3">
+              <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+                {t('vacuum.roomScripts') || 'Room Scripts'}
+              </label>
+              <p className="ml-1 text-[10px] text-[var(--text-muted)]">
+                {t('vacuum.roomScriptsHint') ||
+                  'Add HA scripts to clean specific rooms. These buttons appear in the vacuum popup.'}
+              </p>
+
+              <div className="space-y-2">
+                {(Array.isArray(editSettings.roomScripts) ? editSettings.roomScripts : []).map(
+                  (entry, index) => (
+                    <div
+                      key={`room-script-${index}`}
+                      className="popup-surface rounded-2xl p-3"
+                      style={{ backgroundColor: 'var(--glass-bg)' }}
+                    >
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="text-[10px] font-bold tracking-widest text-[var(--text-secondary)] uppercase">
+                          {t('vacuum.addRoom') || 'Add room'} #{index + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const current = Array.isArray(editSettings.roomScripts)
+                              ? editSettings.roomScripts
+                              : [];
+                            const next = current.filter((_, i) => i !== index);
+                            saveCardSetting(editSettingsKey, 'roomScripts', next);
+                          }}
+                          className="rounded-lg px-2 py-1 text-[10px] font-bold tracking-widest text-[var(--text-secondary)] uppercase hover:text-[var(--text-primary)]"
+                        >
+                          {t('common.delete') || 'Delete'}
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          value={entry?.label || ''}
+                          onChange={(e) => {
+                            const current = Array.isArray(editSettings.roomScripts)
+                              ? editSettings.roomScripts
+                              : [];
+                            const next = [...current];
+                            next[index] = {
+                              ...next[index],
+                              label: e.target.value,
+                            };
+                            saveCardSetting(editSettingsKey, 'roomScripts', next);
+                          }}
+                          placeholder={t('vacuum.roomLabel') || 'Label (e.g. Kitchen)'}
+                          className="w-full rounded-xl px-3 py-2 text-sm outline-none"
+                          style={{
+                            backgroundColor: 'var(--card-bg)',
+                            color: 'var(--text-primary)',
+                            border: '1px solid var(--glass-border)',
+                          }}
+                        />
+
+                        <select
+                          value={entry?.entityId || ''}
+                          onChange={(e) => {
+                            const current = Array.isArray(editSettings.roomScripts)
+                              ? editSettings.roomScripts
+                              : [];
+                            const next = [...current];
+                            next[index] = {
+                              ...next[index],
+                              entityId: e.target.value,
+                            };
+                            saveCardSetting(editSettingsKey, 'roomScripts', next);
+                          }}
+                          className="w-full rounded-xl px-3 py-2 text-sm outline-none"
+                          style={{
+                            backgroundColor: 'var(--card-bg)',
+                            color: 'var(--text-primary)',
+                            border: '1px solid var(--glass-border)',
+                          }}
+                        >
+                          <option value="">
+                            {t('vacuum.selectScript') || 'Select a script...'}
+                          </option>
+                          {scriptOptions.map((scriptId) => (
+                            <option key={scriptId} value={scriptId}>
+                              {entities[scriptId]?.attributes?.friendly_name || scriptId}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const current = Array.isArray(editSettings.roomScripts)
+                    ? editSettings.roomScripts
+                    : [];
+                  saveCardSetting(editSettingsKey, 'roomScripts', [
+                    ...current,
+                    { label: '', entityId: '' },
+                  ]);
+                }}
+                className="popup-surface popup-surface-hover flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--glass-border)] px-4 py-3 text-xs font-bold tracking-widest text-[var(--text-secondary)] uppercase"
+              >
+                <Plus className="h-4 w-4" />
+                {t('vacuum.addRoom') || 'Add room'}
+              </button>
             </div>
           )}
 
