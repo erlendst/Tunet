@@ -409,7 +409,7 @@ export default function WeatherModal({
             {/* <img src={iconUrl} alt={info.label} className="w-8 h-8 object-contain" /> */}
           </div>
           <div>
-            <h3 className="text-2xl leading-none font-light tracking-tight text-[var(--text-primary)] uppercase italic">
+            <h3 className="theme-text-primary text-2xl leading-none font-light tracking-tight uppercase italic">
               {attrs.friendly_name || translate('weather.name')}
             </h3>
             <div
@@ -432,11 +432,11 @@ export default function WeatherModal({
             <div className="popup-surface rounded-2xl p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[11px] tracking-widest text-[var(--text-secondary)] uppercase">
+                  <p className="theme-text-secondary text-[11px] tracking-widest uppercase">
                     {translate('weather.detail.temperature')}
                   </p>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-4xl font-light text-[var(--text-primary)]">
+                    <span className="theme-text-primary text-4xl font-light">
                       {currentTemp !== null
                         ? formatUnitValue(currentTempDisplay, { fallback: '--' })
                         : '--'}
