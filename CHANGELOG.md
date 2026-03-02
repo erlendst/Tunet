@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Breaking:** Split Media and SONOS into separate page types and separate card types.
 - Added dedicated SONOS page creation flow and SONOS group card creation flow.
 - Updated dashboard routing and card rendering so Media and SONOS are no longer treated as a single combined mode.
+- Added Large Screen Media Modal improvements for a better desktop playback layout.
 - Refined Room Modal visual hierarchy with unified column surfaces, improved media player row styling, and de-boxed Temp Overview rows.
 
 
