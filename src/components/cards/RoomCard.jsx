@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { Home, Thermometer, Lightbulb, Tv, Activity, Bot } from 'lucide-react';
+import { Home, Thermometer, Lightbulb, Tv, Activity, Bot, ArrowUpDown } from 'lucide-react';
 import { useConfig, useHomeAssistantMeta } from '../../contexts';
 import { getIconComponent } from '../../icons';
 import {
@@ -49,6 +49,7 @@ export default function RoomCard({
   const showMediaChip = settings?.showMediaChip !== false;
   const showActiveChip = settings?.showActiveChip !== false;
   const showVacuumChip = settings?.showVacuumChip !== false;
+  const showCoverChip = settings?.showCoverChip !== false;
   const showOccupiedIndicator = settings?.showOccupiedIndicator !== false;
   const showIconWatermark = settings?.showIconWatermark !== false;
   const cardRef = useRef(null);
@@ -104,6 +105,10 @@ export default function RoomCard({
   );
   const vacuumIds = useMemo(
     () => roomEntityIds.filter((id) => id.startsWith('vacuum.')),
+    [roomEntityIds]
+  );
+  const coverIds = useMemo(
+    () => roomEntityIds.filter((id) => id.startsWith('cover.')),
     [roomEntityIds]
   );
 
@@ -240,6 +245,46 @@ export default function RoomCard({
     }
   }, [activeVacuum]);
 
+  const coverState = useMemo(() => {
+    if (!coverIds.length) return null;
+    const covers = coverIds.map((id) => entities[id]).filter(Boolean);
+    const opening = covers.filter((e) => e.state === 'opening');
+    if (opening.length) return { state: 'opening', count: opening.length };
+    const closing = covers.filter((e) => e.state === 'closing');
+    if (closing.length) return { state: 'closing', count: closing.length };
+    const openCovers = covers.filter((e) => e.state === 'open');
+    if (openCovers.length) return { state: 'open', count: openCovers.length };
+    return null;
+  }, [coverIds, entities]);
+
+  const coverStatusLabel = useMemo(() => {
+    if (!coverState) return null;
+    switch (coverState.state) {
+      case 'opening':
+        return t('room.coverStatus.opening') || 'Opening';
+      case 'closing':
+        return t('room.coverStatus.closing') || 'Closing';
+      case 'open':
+        return coverState.count > 1
+          ? `${coverState.count} ${t('room.coverStatus.open') || 'Open'}`
+          : t('room.coverStatus.open') || 'Open';
+      default:
+        return null;
+    }
+  }, [coverState, t]);
+
+  const coverPillToneClass = useMemo(() => {
+    switch (coverState?.state) {
+      case 'opening':
+      case 'closing':
+        return 'bg-sky-500/14 text-sky-300';
+      case 'open':
+        return 'bg-amber-500/14 text-amber-300';
+      default:
+        return 'bg-[var(--glass-bg-hover)] text-[var(--text-secondary)]';
+    }
+  }, [coverState]);
+
   const activeDeviceCount = useMemo(() => {
     const toggleDomains = new Set(['switch', 'fan', 'cover', 'climate', 'media_player']);
     return roomEntityIds.filter((entityId) => {
@@ -261,7 +306,8 @@ export default function RoomCard({
     (showLightChip && showLights && lightsOnCount > 0 ? 1 : 0) +
     (showMediaChip && mediaPlayingCount > 0 ? 1 : 0) +
     (showActiveChip && activeDeviceCount > 0 ? 1 : 0) +
-    (showVacuumChip && Boolean(vacuumStatusLabel) ? 1 : 0);
+    (showVacuumChip && Boolean(vacuumStatusLabel) ? 1 : 0) +
+    (showCoverChip && Boolean(coverStatusLabel) ? 1 : 0);
 
   useEffect(() => {
     setForceCompactPills(false);
@@ -396,6 +442,12 @@ export default function RoomCard({
             <div className={`${chipClass} ${vacuumPillToneClass}`}>
               <Bot className={chipIconClass} />
               <span className={chipTextClass}>{vacuumStatusLabel}</span>
+            </div>
+          )}
+          {showCoverChip && coverStatusLabel && (
+            <div className={`${chipClass} ${coverPillToneClass}`}>
+              <ArrowUpDown className={chipIconClass} />
+              <span className={chipTextClass}>{coverStatusLabel}</span>
             </div>
           )}
         </div>
