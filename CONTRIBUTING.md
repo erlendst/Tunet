@@ -17,7 +17,7 @@ Thank you for your interest in contributing to Tunet!
 - Follow the existing code style.
 - Keep pull requests focused on a single feature or fix.
 - Update documentation if necessary.
-- For translations, add/update keys in `src/i18n/en.json` first, then keep all maintained locale files in sync: `src/i18n/nb.json`, `src/i18n/nn.json`, `src/i18n/sv.json`, and `src/i18n/de.json`.
+- For translations, add/update keys in `src/i18n/en.json` first, then keep all maintained locale files in sync: `src/i18n/de.json`, `src/i18n/nb.json`, `src/i18n/nn.json`, `src/i18n/sv.json`, and `src/i18n/zh.json`.
 - Run `npm run i18n:check` before opening a PR.
 
 ## Releases (short checklist)
@@ -30,6 +30,8 @@ Thank you for your interest in contributing to Tunet!
   - `npm run build`
   - `npm run release:publish`
 - If release check fails, fix sync/changelog mismatches before tagging.
+- Write short, natural changelog bullets for each release; do not use placeholder text like `Release metadata sync.`.
+- Add issue references in release notes when relevant (example: `(#96)`).
 - Update static Settings fallback version in `src/modals/ConfigModal.jsx` (`SETTINGS_STATIC_VERSION`) for each release.
 
 ## Reporting Issues

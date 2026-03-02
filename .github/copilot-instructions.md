@@ -27,7 +27,7 @@ src/
   contexts/               # Global state (ConfigContext, PageContext, HomeAssistantContext)
   hooks/                  # Custom React hooks
   services/               # HA WebSocket client, card actions, OAuth, Nordpool utils
-  i18n/                   # Translation files (en.json, nn.json)
+  i18n/                   # Translation files (en.json, de.json, nb.json, nn.json, sv.json, zh.json)
   layouts/                # Header, StatusBar
   components/
     cards/                # Dashboard card widgets (SensorCard, LightCard, etc.)
@@ -47,7 +47,7 @@ src/
 - **Sizing**: `settings.size` is `'small'|'large'`. Toggle capability checked via `canToggleSize()`.
 - **Hooks**: `useEnergyData(entity, now)` expects a single entity object.
 - **Icons**: selection stored as string names; mapped via `src/icons/iconMap.js`.
-- **i18n**: keys in `src/i18n/{en,nn}.json`. Setup is manual (no i18next).
+- **i18n**: keys in `src/i18n/{en,de,nb,nn,sv,zh}.json`. Setup is manual (no i18next).
 - **Units (Metric/Imperial)**:
   - Never hard-code units in UI logic.
   - Read Home Assistant unit preferences from `useHomeAssistantMeta()` (`haConfig`) and resolve final mode with `getEffectiveUnitMode(unitsMode, haConfig)`.
@@ -67,6 +67,12 @@ src/
 - `npm run dev` (Vite, port 5173)
 - `npm run build` -> `dist/`
 - `docker-compose up`
+
+## Release notes quality
+
+- Keep release notes short and natural.
+- Avoid placeholder text such as `Release metadata sync.`.
+- Mention major shipped features/fixes and add issue references when relevant (for example `(#96)`).
 
 ## Pitfalls to avoid
 

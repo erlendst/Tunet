@@ -37,7 +37,7 @@ A modern React dashboard for Home Assistant with real-time entity control, energ
 - **Drag-and-Drop Grid**: Fully customizable masonry layout.
 - **Settings Lock**: PIN protection prevents accidental edits.
 - **Theming**: Dark/Light modes with high-end glassmorphism and animated backgrounds.
-- **Multi-language**: Native support for English, German, Norwegian (NB/NN), and Swedish.
+- **Multi-language**: Native support for English, German, Norwegian (NB/NN), Swedish, and Simplified Chinese.
 
 ## Quick Start
 
