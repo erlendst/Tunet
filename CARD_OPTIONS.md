@@ -29,6 +29,8 @@ Detailed overview of each card type, where it fits, and what can be configured.
 - Optional icon/value display tuning.
 
 ### Light
+<img width="757" height="238" alt="image" src="https://github.com/user-attachments/assets/1cea9824-5ce9-4998-b250-8ec4621b89a5" />
+<img width="1842" height="687" alt="image" src="https://github.com/user-attachments/assets/d48b8c2c-b92a-4c32-9c9e-ceebe9ad6115" />
 
 - Light entity selection.
 - On-card quick controls (toggle/brightness shortcuts).
