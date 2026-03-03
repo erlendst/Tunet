@@ -13,6 +13,33 @@ const isHeatingState = (entity) => {
   return action === 'heating';
 };
 
+const normalizeFanModeToken = (value) => {
+  if (typeof value !== 'string') return '';
+  return value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+};
+
+const isAutoFanMode = (value) => {
+  const normalized = normalizeFanModeToken(value);
+  return normalized === 'auto' || normalized === 'automatic';
+};
+
+const getFanSpeedLevel = (fanMode, fanModes) => {
+  if (!Array.isArray(fanModes) || fanModes.length === 0) return 0;
+  if (isAutoFanMode(fanMode)) return 0;
+
+  const speedModes = fanModes.filter((mode) => !isAutoFanMode(mode));
+  if (speedModes.length === 0) return 0;
+
+  const target = normalizeFanModeToken(fanMode);
+  if (!target) return 0;
+
+  const matchedIndex = speedModes.findIndex((mode) => normalizeFanModeToken(mode) === target);
+  if (matchedIndex === -1) return 0;
+
+  const scaledLevel = Math.round(((matchedIndex + 1) / speedModes.length) * 5);
+  return Math.max(1, Math.min(5, scaledLevel));
+};
+
 export default function GenericClimateCard({
   cardId,
   entityId,
@@ -52,7 +79,7 @@ export default function GenericClimateCard({
   const fanMode = entity.attributes?.fan_mode ?? 'Auto';
   const fanModes = entity.attributes?.fan_modes || [];
   const showFan = Array.isArray(fanModes) && fanModes.length > 0;
-  const fanSpeedLevel = ['Low', 'LowMid', 'Mid', 'HighMid', 'High'].indexOf(fanMode) + 1;
+  const fanSpeedLevel = getFanSpeedLevel(fanMode, fanModes);
 
   const name = customNames[cardId] || entity.attributes?.friendly_name || entityId;
 
