@@ -24,16 +24,30 @@ export default function AccessibleModalShell({
   const resolvedTitleId = titleId || `modal-title-${fallbackTitleId}`;
   const panelRef = useRef(null);
   const previousActiveRef = useRef(null);
+  const wasOpenRef = useRef(false);
+  const onCloseRef = useRef(onClose);
 
   useEffect(() => {
-    if (!open) return undefined;
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
-    previousActiveRef.current = document.activeElement;
+  useEffect(() => {
+    if (!open) {
+      wasOpenRef.current = false;
+      return undefined;
+    }
+
+    const openedNow = !wasOpenRef.current;
+    wasOpenRef.current = true;
+    if (openedNow) {
+      previousActiveRef.current = document.activeElement;
+    }
+
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const panel = panelRef.current;
-    if (panel) {
+    if (openedNow && panel) {
       const focusables = Array.from(panel.querySelectorAll(FOCUSABLE_SELECTOR));
       const priorityTarget = panel.querySelector(PRIORITY_FOCUS_SELECTOR);
       const nonCloseTarget = focusables.find((el) => !el.classList.contains('modal-close'));
@@ -45,7 +59,7 @@ export default function AccessibleModalShell({
       if (!panelRef.current) return;
       if (event.key === 'Escape') {
         event.preventDefault();
-        onClose?.();
+        onCloseRef.current?.();
         return;
       }
       if (event.key !== 'Tab') return;
@@ -78,7 +92,7 @@ export default function AccessibleModalShell({
       const previous = previousActiveRef.current;
       if (previous instanceof HTMLElement) previous.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 

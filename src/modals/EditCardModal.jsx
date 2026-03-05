@@ -1900,6 +1900,27 @@ export default function EditCardModal({
                     />
                   </button>
                 </div>
+
+                <div className="popup-surface flex items-center justify-between rounded-2xl p-4">
+                  <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+                    {t('person.showZoneBadgeIcon') || 'Show Zone Icon in Badge'}
+                  </span>
+                  <button
+                    onClick={() =>
+                      editSettingsKey &&
+                      saveCardSetting(
+                        editSettingsKey,
+                        'showZoneBadgeIcon',
+                        !(editSettings.showZoneBadgeIcon !== false)
+                      )
+                    }
+                    className={`relative h-6 w-12 rounded-full transition-colors ${editSettings.showZoneBadgeIcon !== false ? 'border border-[var(--glass-border)] bg-[var(--glass-bg-hover)]' : 'bg-[var(--glass-bg-hover)]'}`}
+                  >
+                    <div
+                      className={`absolute top-1 h-4 w-4 rounded-full bg-[var(--text-primary)] transition-all ${editSettings.showZoneBadgeIcon !== false ? 'left-7' : 'left-1'}`}
+                    />
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-3">
