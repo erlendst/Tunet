@@ -272,12 +272,12 @@ const RoomCard = memo(function RoomCard({
   const vacuumPillToneClass = useMemo(() => {
     switch (activeVacuum?.state) {
       case 'cleaning':
-        return 'bg-emerald-500/14 text-emerald-300';
+        return 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]';
       case 'returning':
       case 'returning_home':
         return 'bg-sky-500/14 text-sky-300';
       case 'error':
-        return 'bg-red-500/14 text-red-300';
+        return 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]';
       case 'paused':
       case 'idle':
       case 'stopped':
@@ -310,7 +310,7 @@ const RoomCard = memo(function RoomCard({
       case 'open':
         return 'bg-sky-500/14 text-sky-300';
       case 'opening':
-        return 'bg-emerald-500/14 text-emerald-300';
+        return 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]';
       case 'closing':
         return 'bg-amber-500/14 text-amber-300';
       default:
@@ -438,7 +438,7 @@ const RoomCard = memo(function RoomCard({
 
           <div className="flex flex-col items-end gap-2">
             {showMotion && showOccupiedIndicator && isOccupied && (
-              <div className={`${chipClass} bg-green-500/14 text-green-300`}>
+              <div className={`${chipClass} bg-[var(--status-success-bg)] text-[var(--status-success-fg)]`}>
                 <span className={chipTextClass}>{occupancyPillLabel}</span>
               </div>
             )}

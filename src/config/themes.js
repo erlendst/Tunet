@@ -1,5 +1,35 @@
 import { Moon, Sun, Sparkles } from 'lucide-react';
 
+const STATUS_TOKENS_DARK = {
+  '--status-success-fg': '#4ade80',
+  '--status-success-bg': 'rgba(34, 197, 94, 0.14)',
+  '--status-success-border': 'rgba(34, 197, 94, 0.3)',
+  '--status-warning-fg': '#fbbf24',
+  '--status-warning-bg': 'rgba(245, 158, 11, 0.14)',
+  '--status-warning-border': 'rgba(245, 158, 11, 0.3)',
+  '--status-error-fg': '#f87171',
+  '--status-error-bg': 'rgba(239, 68, 68, 0.14)',
+  '--status-error-border': 'rgba(239, 68, 68, 0.3)',
+  '--status-info-fg': '#60a5fa',
+  '--status-info-bg': 'rgba(59, 130, 246, 0.14)',
+  '--status-info-border': 'rgba(59, 130, 246, 0.3)',
+};
+
+const STATUS_TOKENS_LIGHT = {
+  '--status-success-fg': '#15803d',
+  '--status-success-bg': 'rgba(22, 163, 74, 0.12)',
+  '--status-success-border': 'rgba(22, 163, 74, 0.26)',
+  '--status-warning-fg': '#b45309',
+  '--status-warning-bg': 'rgba(217, 119, 6, 0.12)',
+  '--status-warning-border': 'rgba(217, 119, 6, 0.26)',
+  '--status-error-fg': '#b91c1c',
+  '--status-error-bg': 'rgba(220, 38, 38, 0.12)',
+  '--status-error-border': 'rgba(220, 38, 38, 0.26)',
+  '--status-info-fg': '#1d4ed8',
+  '--status-info-bg': 'rgba(37, 99, 235, 0.12)',
+  '--status-info-border': 'rgba(37, 99, 235, 0.26)',
+};
+
 export const themes = {
   contextual: {
     label: 'Smart',
@@ -12,6 +42,7 @@ export const themes = {
       '--text-primary': '#f8fafc',
       '--text-secondary': '#cbd5e1',
       '--text-muted': 'rgba(203, 213, 225, 0.6)',
+      ...STATUS_TOKENS_DARK,
       '--card-bg': 'rgba(15, 23, 42, 0.25)', // Lighter, more elegant transparency
       '--card-border': 'rgba(255, 255, 255, 0.05)', // Very subtle border definition
       '--glass-bg': 'rgba(255, 255, 255, 0.08)', // Frosted look
@@ -41,6 +72,7 @@ export const themes = {
       '--text-primary': '#ffffff',
       '--text-secondary': '#9ca3af', // gray-400
       '--text-muted': 'rgba(156, 163, 175, 0.6)',
+      ...STATUS_TOKENS_DARK,
       '--card-bg': 'rgba(15, 23, 42, 0.6)',
       '--card-border': 'rgba(255, 255, 255, 0.04)',
       '--glass-bg': 'rgba(255, 255, 255, 0.05)',
@@ -70,6 +102,7 @@ export const themes = {
       '--text-primary': '#020617',
       '--text-secondary': '#475569',
       '--text-muted': '#94a3b8',
+      ...STATUS_TOKENS_LIGHT,
       '--card-bg': '#ffffff',
       '--card-border': '#e2e8f0',
       '--glass-bg': '#f1f5f9',
@@ -98,6 +131,7 @@ export const themes = {
       '--text-primary': '#e4e4e7',
       '--text-secondary': '#a1a1aa',
       '--text-muted': '#52525b',
+      ...STATUS_TOKENS_DARK,
       '--card-bg': '#18181f',
       '--card-border': '#27272a',
       '--glass-bg': 'rgba(24, 24, 31, 0.6)',
@@ -126,6 +160,7 @@ export const themes = {
       '--text-primary': '#f3e8ff', // lilac white
       '--text-secondary': '#d8b4fe', // light purple
       '--text-muted': '#7e6c8f',
+      ...STATUS_TOKENS_DARK,
       '--card-bg': 'rgba(45, 42, 66, 0.6)',
       '--card-border': 'rgba(216, 180, 254, 0.15)',
       '--glass-bg': 'rgba(45, 42, 66, 0.4)',
@@ -154,6 +189,7 @@ export const themes = {
       '--text-primary': '#f3f4f6',
       '--text-secondary': '#9ca3af',
       '--text-muted': 'rgba(156, 163, 175, 0.65)',
+      ...STATUS_TOKENS_DARK,
       '--card-bg': '#0f141b',
       '--card-border': 'transparent',
       '--glass-bg': '#10161e',

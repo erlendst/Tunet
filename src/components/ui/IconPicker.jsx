@@ -143,7 +143,7 @@ export default function IconPicker({ value, onSelect, onClear, t, maxHeightClass
                         onSelect(iconName);
                         setOpen(false);
                       }}
-                      className={`flex items-center justify-center rounded-xl p-3 transition-all ${isSelected ? 'bg-[var(--accent-bg)] text-[var(--accent-color)]' : 'popup-surface popup-surface-hover text-gray-500'}`}
+                      className={`flex items-center justify-center rounded-xl p-3 transition-all ${isSelected ? 'bg-[var(--accent-bg)] text-[var(--accent-color)]' : 'popup-surface popup-surface-hover text-[var(--text-muted)]'}`}
                       title={iconName}
                     >
                       <Icon className="h-5 w-5" />

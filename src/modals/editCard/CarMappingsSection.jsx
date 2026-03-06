@@ -26,7 +26,7 @@ export function SearchableSelect({ label, value, options, onChange, placeholder,
 
   return (
     <div ref={dropdownRef}>
-      <label className="ml-4 text-xs font-bold text-gray-500 uppercase">{label}</label>
+      <label className="ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">{label}</label>
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -254,12 +254,12 @@ export function CarMappingsSection({
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      <div className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+      <div className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
         {t('car.mappingTitle')}: {t('car.mappingHint')}
       </div>
 
       <div className="popup-surface space-y-2 rounded-2xl p-3">
-        <div className="ml-1 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+        <div className="ml-1 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
           {t('car.anchorEntity') || 'Anchor entity'}
         </div>
         <select
@@ -299,7 +299,7 @@ export function CarMappingsSection({
       </button>
 
       {mappedSensors.length === 0 && (
-        <div className="py-8 text-center text-sm text-gray-500">{t('car.noSensorsMapped')}</div>
+        <div className="py-8 text-center text-sm text-[var(--text-muted)]">{t('car.noSensorsMapped')}</div>
       )}
 
       {mappedSensors.length > 0 && (
@@ -314,20 +314,20 @@ export function CarMappingsSection({
               >
                 <div className="mr-4 min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-xs font-bold tracking-wide text-gray-500">
+                    <span className="text-xs font-bold tracking-wide text-[var(--text-muted)]">
                       {st.label}:
                     </span>
                     <span className="truncate text-sm font-medium text-[var(--text-primary)]">
                       {entityName}
                     </span>
                   </div>
-                  <span className="mt-0.5 block truncate font-mono text-[10px] text-gray-500">
+                  <span className="mt-0.5 block truncate font-mono text-[10px] text-[var(--text-muted)]">
                     {entityId}
                   </span>
                 </div>
                 <button
                   onClick={() => handleRemoveSensor(st.key)}
-                  className="flex-shrink-0 rounded-lg bg-red-500/10 p-2 text-red-400 transition-colors"
+                  className="flex-shrink-0 rounded-lg bg-[var(--status-error-bg)] p-2 text-[var(--status-error-fg)] transition-colors"
                   title={t('tooltip.removeCard')}
                 >
                   <X className="h-4 w-4" />
@@ -351,7 +351,7 @@ export function CarMappingsSection({
       {showAddSensor && (
         <div className="popup-surface space-y-4 rounded-xl px-4 py-4 sm:px-5">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            <span className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
               {t('car.addSensor')}
             </span>
             <button
@@ -367,7 +367,7 @@ export function CarMappingsSection({
           </div>
 
           <div>
-            <label className="mb-2 ml-4 block text-xs font-bold text-gray-500 uppercase">
+            <label className="mb-2 ml-4 block text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('car.sensorType') || 'Sensortype'}
             </label>
             <select
@@ -444,7 +444,7 @@ export function CarMappingsSection({
             <button
               onClick={handleAddSensor}
               disabled={!sensorType || !sensorEntity}
-              className="popup-surface popup-surface-hover flex-1 rounded-xl border border-[var(--glass-border)] px-4 py-3 text-xs font-bold tracking-widest text-[var(--text-primary)] uppercase transition-colors disabled:bg-gray-700 disabled:text-gray-500"
+              className="popup-surface popup-surface-hover flex-1 rounded-xl border border-[var(--glass-border)] px-4 py-3 text-xs font-bold tracking-widest text-[var(--text-primary)] uppercase transition-colors disabled:bg-[var(--glass-bg)] disabled:text-[var(--text-muted)]"
             >
               {t('car.add')}
             </button>
@@ -463,7 +463,7 @@ export function CarMappingsSection({
       )}
 
       {availableTypes.length === 0 && !showAddSensor && (
-        <div className="py-4 text-center text-xs text-gray-500">{t('car.allSensorsMapped')}</div>
+        <div className="py-4 text-center text-xs text-[var(--text-muted)]">{t('car.allSensorsMapped')}</div>
       )}
     </div>
   );

@@ -28,6 +28,9 @@ jobs:
       - name: Validate i18n parity
         run: npm run i18n:check
 
+      - name: Lint Theme Colors
+        run: npm run lint:theme-colors
+
       - name: Run tests
         run: npx vitest run
 

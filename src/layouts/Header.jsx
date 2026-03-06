@@ -153,7 +153,7 @@ export default function Header({
       {/* Date row: independent from heading/clock alignment */}
       {headerSettings.showDate && !isMobile && (
         <p
-          className="mt-1 leading-none font-medium tracking-[0.2em] text-gray-500 uppercase opacity-50 md:tracking-[0.6em]"
+          className="mt-1 leading-none font-medium tracking-[0.2em] text-[var(--text-muted)] uppercase opacity-50 md:tracking-[0.6em]"
           style={{
             fontSize: `calc(0.75rem * ${dateScale})`,
             fontFamily: resolvedFontFamily,

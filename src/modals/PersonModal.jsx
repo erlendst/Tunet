@@ -344,7 +344,7 @@ export default function PersonModal({
               <div
                 className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 transition-all duration-500 ${
                   currentState === 'home'
-                    ? 'bg-green-500/10 text-green-400'
+                    ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'
                     : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'
                 }`}
               >
@@ -361,8 +361,8 @@ export default function PersonModal({
                 <div
                   className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 ${
                     phoneBatteryInfo.level < 20
-                      ? 'bg-red-500/10 text-red-400'
-                      : 'bg-[var(--glass-bg)] text-gray-500'
+                      ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'
+                      : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'
                   }`}
                 >
                   <Battery className="h-3 w-3" />
@@ -407,24 +407,28 @@ export default function PersonModal({
             {phoneBatteryInfo && (
               <div className="popup-surface flex flex-col items-center gap-2 rounded-2xl border border-[var(--glass-border)]/50 p-6 transition-all">
                 <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
+                  <span className="text-[10px] font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
                     {phoneBatteryInfo.label}
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span
                     className={`text-5xl font-light italic ${
-                      phoneBatteryInfo.level < 20 ? 'text-red-400' : 'text-[var(--text-primary)]'
+                      phoneBatteryInfo.level < 20
+                        ? 'text-[var(--status-error-fg)]'
+                        : 'text-[var(--text-primary)]'
                     }`}
                   >
                     {Math.round(phoneBatteryInfo.level)}
                   </span>
-                  <span className="text-xl font-medium text-gray-500">%</span>
+                  <span className="text-xl font-medium text-[var(--text-muted)]">%</span>
                 </div>
                 <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-700/30">
                   <div
                     className={`h-full rounded-full ${
-                      phoneBatteryInfo.level < 20 ? 'bg-red-500' : 'bg-green-500'
+                      phoneBatteryInfo.level < 20
+                        ? 'bg-[var(--status-error-fg)]'
+                        : 'bg-[var(--status-success-fg)]'
                     }`}
                     style={{ width: `${Math.min(100, Math.max(0, phoneBatteryInfo.level))}%` }}
                   />
@@ -437,7 +441,7 @@ export default function PersonModal({
               {watchBatteryInfo && (
                 <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4">
                   <div className="mb-1 flex items-center gap-2 opacity-70">
-                    <span className="text-[9px] font-bold tracking-[0.15em] text-gray-400 uppercase">
+                    <span className="text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
                       {watchBatteryInfo.label}
                     </span>
                   </div>
@@ -445,7 +449,7 @@ export default function PersonModal({
                     <span className="text-2xl font-light text-[var(--text-primary)]">
                       {Math.round(watchBatteryInfo.level)}
                     </span>
-                    <span className="text-xs font-bold text-gray-500">%</span>
+                    <span className="text-xs font-bold text-[var(--text-muted)]">%</span>
                   </div>
                 </div>
               )}
@@ -455,7 +459,7 @@ export default function PersonModal({
                   key={sensor.id}
                   className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4 text-center"
                 >
-                  <span className="mb-1 w-full truncate text-[9px] font-bold tracking-[0.15em] text-gray-400 uppercase">
+                  <span className="mb-1 w-full truncate text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
                     {sensor.label}
                   </span>
                   <span className="text-xl font-light text-[var(--text-primary)]">

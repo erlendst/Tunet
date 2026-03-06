@@ -20,7 +20,7 @@ class TodoErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-full flex-col rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 text-red-400">
+        <div className="flex h-full flex-col rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 text-[var(--status-error-fg)]">
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5" />
             <span className="text-sm font-semibold">Todo error</span>
@@ -188,7 +188,7 @@ const TodoCard = memo(function TodoCard({
               {t('todo.selectList') || 'Select Todo List'}
             </p>
           ) : error ? (
-            <p className="truncate text-xs text-red-400" title={error}>
+            <p className="truncate text-xs text-[var(--status-error-fg)]" title={error}>
               Error: {error}
             </p>
           ) : loading && items.length === 0 ? (
@@ -229,7 +229,7 @@ const TodoCard = memo(function TodoCard({
       {/* Header */}
       <div className="group z-10 flex items-center justify-between p-5 pb-2">
         <div className="flex items-center gap-3">
-          <div className="rounded-xl bg-emerald-500/10 p-2 text-emerald-400 transition-transform duration-300 group-hover:scale-110">
+          <div className="rounded-xl bg-[var(--status-success-bg)] p-2 text-[var(--status-success-fg)] transition-transform duration-300 group-hover:scale-110">
             <IconComp className="h-5 w-5" />
           </div>
           <h3 className="text-lg font-medium tracking-tight text-[var(--text-primary)]">
@@ -238,7 +238,7 @@ const TodoCard = memo(function TodoCard({
         </div>
         {totalCount > 0 ? (
           <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-widest text-[var(--text-secondary)] uppercase">
-            <span className="text-emerald-400">{completedCount}</span>
+            <span className="text-[var(--status-success-fg)]">{completedCount}</span>
             <span>/</span>
             <span>{totalCount}</span>
           </div>
@@ -252,7 +252,7 @@ const TodoCard = memo(function TodoCard({
         <div className="px-5 pb-2">
           <div className="h-1 overflow-hidden rounded-full bg-[var(--glass-bg)]">
             <div
-              className="h-full rounded-full bg-emerald-400/60 transition-all duration-500"
+              className="h-full rounded-full bg-[var(--status-success-fg)]/60 transition-all duration-500"
               style={{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }}
             />
           </div>
@@ -269,20 +269,20 @@ const TodoCard = memo(function TodoCard({
             </p>
           </div>
         ) : error ? (
-          <div className="flex h-full flex-col items-center justify-center text-red-400">
+          <div className="flex h-full flex-col items-center justify-center text-[var(--status-error-fg)]">
             <AlertCircle className="mb-2 h-8 w-8" />
             <p className="px-4 text-center text-xs font-bold tracking-widest uppercase">{error}</p>
           </div>
         ) : loading && items.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-[var(--text-secondary)]">
-            <div className="mb-2 h-6 w-6 animate-spin rounded-full border-b-2 border-emerald-500" />
+            <div className="mb-2 h-6 w-6 animate-spin rounded-full border-b-2 border-[var(--status-success-fg)]" />
             <p className="text-xs font-bold tracking-widest uppercase">
               {t('common.loading') || 'Loading...'}
             </p>
           </div>
         ) : pendingItems.length === 0 && completedItems.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-[var(--text-secondary)] opacity-60">
-            <CheckCircle2 className="mb-2 h-8 w-8 text-emerald-400" />
+            <CheckCircle2 className="mb-2 h-8 w-8 text-[var(--status-success-fg)]" />
             <p className="text-xs font-bold tracking-widest uppercase">
               {t('todo.empty') || 'No items'}
             </p>
@@ -298,7 +298,7 @@ const TodoCard = memo(function TodoCard({
               >
                 <div className="mt-0.5">
                   <Circle
-                    className={`h-4 w-4 text-[var(--text-secondary)] opacity-40 transition-colors group-hover:text-emerald-400 group-hover:opacity-100 ${loading ? 'opacity-20' : ''}`}
+                    className={`h-4 w-4 text-[var(--text-secondary)] opacity-40 transition-colors group-hover:text-[var(--status-success-fg)] group-hover:opacity-100 ${loading ? 'opacity-20' : ''}`}
                   />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -313,7 +313,7 @@ const TodoCard = memo(function TodoCard({
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, item)}
-                  className="-m-1 mt-0.5 flex-shrink-0 p-1 text-transparent transition-colors group-hover:text-red-400/60 hover:!text-red-400"
+                  className="-m-1 mt-0.5 flex-shrink-0 p-1 text-transparent transition-colors group-hover:text-[var(--status-error-fg)]/60 hover:!text-[var(--status-error-fg)]"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -324,7 +324,7 @@ const TodoCard = memo(function TodoCard({
             {completedItems.length > 0 && (
               <div className="pt-2 opacity-50">
                 <div className="pt-2 pb-1">
-                  <p className="px-3 text-[10px] font-bold tracking-widest text-emerald-400/60 uppercase">
+                  <p className="px-3 text-[10px] font-bold tracking-widest text-[var(--status-success-fg)]/60 uppercase">
                     {t('todo.completed') || 'Completed'} ({completedCount})
                   </p>
                 </div>
@@ -334,7 +334,7 @@ const TodoCard = memo(function TodoCard({
                     className="group flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2 transition-colors"
                     onClick={(e) => handleToggle(e, item)}
                   >
-                    <div className="mt-0.5 flex-shrink-0 text-emerald-400">
+                    <div className="mt-0.5 flex-shrink-0 text-[var(--status-success-fg)]">
                       <CheckCircle2 className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -344,7 +344,7 @@ const TodoCard = memo(function TodoCard({
                     </div>
                     <button
                       onClick={(e) => handleDelete(e, item)}
-                      className="-m-1 mt-0.5 flex-shrink-0 p-1 text-transparent transition-colors group-hover:text-red-400/60 hover:!text-red-400"
+                      className="-m-1 mt-0.5 flex-shrink-0 p-1 text-transparent transition-colors group-hover:text-[var(--status-error-fg)]/60 hover:!text-[var(--status-error-fg)]"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
@@ -368,10 +368,10 @@ const TodoCard = memo(function TodoCard({
             className="w-full rounded-xl border border-transparent bg-[var(--glass-bg)] px-3 py-2 pl-9 text-sm text-[var(--text-primary)] transition-all outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--glass-border)]"
             onClick={(e) => e.stopPropagation()}
           />
-          <Plus className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-emerald-400" />
+          <Plus className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)] transition-colors group-focus-within:text-[var(--status-success-fg)]" />
           {adding && (
             <div className="absolute top-1/2 right-3 -translate-y-1/2">
-              <div className="h-3 w-3 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent"></div>
+              <div className="h-3 w-3 animate-spin rounded-full border-2 border-[var(--status-success-fg)] border-t-transparent"></div>
             </div>
           )}
         </div>

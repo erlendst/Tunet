@@ -231,7 +231,7 @@ export default function ConfigModal({
 
   const renderAuthMethodToggle = (showRecommended = false) => (
     <div className="space-y-2">
-      <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+      <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
         {t('system.authMethod')}
       </label>
       <div className="flex gap-2">
@@ -246,7 +246,7 @@ export default function ConfigModal({
           <LogIn className="h-3.5 w-3.5" />
           OAuth2
           {showRecommended && (
-            <span className="absolute -top-2 -right-1 rounded-full bg-green-500 px-1.5 py-0.5 text-[8px] font-bold tracking-wider text-white uppercase shadow-sm">
+            <span className="absolute -top-2 -right-1 rounded-full bg-[var(--status-success-bg)] px-1.5 py-0.5 text-[8px] font-bold tracking-wider text-[var(--status-success-fg)] uppercase shadow-sm">
               {t('onboarding.recommended')}
             </span>
           )}
@@ -281,14 +281,14 @@ export default function ConfigModal({
     } else if (oauthActive) {
       oauthContent = (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3 text-green-400">
+          <div className="flex items-center gap-2 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] px-4 py-3 text-[var(--status-success-fg)]">
             <Check className="h-4 w-4" />
             <span className="text-sm font-bold">{t('system.oauth.authenticated')}</span>
           </div>
           <button
             type="button"
             onClick={handleOAuthLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 py-2.5 text-sm font-bold tracking-widest text-red-400 uppercase transition-all hover:bg-red-500/20"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--status-error-border)] bg-[var(--status-error-bg)] py-2.5 text-sm font-bold tracking-widest text-[var(--status-error-fg)] uppercase transition-all hover:opacity-90"
           >
             <LogOut className="h-4 w-4" />
             {t('system.oauth.logoutButton')}
@@ -316,7 +316,7 @@ export default function ConfigModal({
           <p className="ml-1 text-xs text-[var(--text-muted)]">{t('system.oauth.urlRequired')}</p>
         )}
         {connectionTestResult && !connectionTestResult.success && isOAuth && (
-          <div className="animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/20 p-3 text-red-400">
+          <div className="animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 rounded-xl border border-[var(--status-error-border)] bg-[var(--status-error-bg)] p-3 text-[var(--status-error-fg)]">
             <X className="h-4 w-4 flex-shrink-0" />
             <span className="text-sm font-bold">{connectionTestResult.message}</span>
           </div>
@@ -342,7 +342,7 @@ export default function ConfigModal({
         <div className="flex items-center gap-3 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3">
           <UserCircle2 className="h-5 w-5 text-[var(--accent-color)]" />
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-gray-500 uppercase">
+            <span className="text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('system.loggedInAs')}
             </span>
             <span className="text-sm font-bold text-[var(--text-primary)]">{haUser.name}</span>
@@ -362,11 +362,11 @@ export default function ConfigModal({
 
       {/* URL — always shown */}
       <div className="space-y-3">
-        <label className="ml-1 flex items-center gap-2 text-xs font-bold text-gray-500 uppercase">
+        <label className="ml-1 flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] uppercase">
           <Wifi className="h-4 w-4" />
           {t('system.haUrlPrimary')}
           {connected && activeUrl === config.url && (
-            <span className="rounded bg-green-500/10 px-2 py-0.5 text-[10px] tracking-widest text-green-400">
+            <span className="rounded bg-[var(--status-success-bg)] px-2 py-0.5 text-[10px] tracking-widest text-[var(--status-success-fg)]">
               {t('system.connected')}
             </span>
           )}
@@ -382,7 +382,7 @@ export default function ConfigModal({
           <div className="pointer-events-none absolute inset-0 rounded-xl bg-[var(--accent-bg)] opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         {config.url?.endsWith('/') && (
-          <div className="flex items-center gap-2 rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-3 py-2 text-xs font-bold text-yellow-400">
+          <div className="flex items-center gap-2 rounded-lg border border-[var(--status-warning-border)] bg-[var(--status-warning-bg)] px-3 py-2 text-xs font-bold text-[var(--status-warning-fg)]">
             <AlertCircle className="h-3 w-3" />
             {t('onboarding.urlTrailingSlash')}
           </div>
@@ -396,11 +396,11 @@ export default function ConfigModal({
       {!isOAuth && (
         <>
           <div className="space-y-3">
-            <label className="ml-1 flex items-center gap-2 text-xs font-bold text-gray-500 uppercase">
+            <label className="ml-1 flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] uppercase">
               <Server className="h-4 w-4" />
               {t('system.haUrlFallback')}
               {connected && activeUrl === config.fallbackUrl && (
-                <span className="rounded bg-green-500/10 px-2 py-0.5 text-[10px] tracking-widest text-green-400">
+                <span className="rounded bg-[var(--status-success-bg)] px-2 py-0.5 text-[10px] tracking-widest text-[var(--status-success-fg)]">
                   {t('system.connected')}
                 </span>
               )}
@@ -416,7 +416,7 @@ export default function ConfigModal({
               <div className="pointer-events-none absolute inset-0 rounded-xl bg-[var(--accent-bg)] opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
             {config.fallbackUrl?.endsWith('/') && (
-              <div className="flex items-center gap-2 rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-3 py-2 text-xs font-bold text-yellow-400">
+              <div className="flex items-center gap-2 rounded-lg border border-[var(--status-warning-border)] bg-[var(--status-warning-bg)] px-3 py-2 text-xs font-bold text-[var(--status-warning-fg)]">
                 <AlertCircle className="h-3 w-3" />
                 {t('onboarding.urlTrailingSlash')}
               </div>
@@ -424,7 +424,7 @@ export default function ConfigModal({
           </div>
 
           <div className="space-y-3">
-            <label className="ml-1 flex items-center gap-2 text-xs font-bold text-gray-500 uppercase">
+            <label className="ml-1 flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] uppercase">
               <Lock className="h-4 w-4" />
               {t('system.token')}
             </label>
@@ -511,9 +511,9 @@ export default function ConfigModal({
         setProfileDeviceLabel('');
       } catch {}
     };
-    let syncStatusTone = 'text-emerald-300';
+    let syncStatusTone = 'text-[var(--status-success-fg)]';
     if (autoSync.status === 'error') {
-      syncStatusTone = 'text-red-400';
+      syncStatusTone = 'text-[var(--status-error-fg)]';
     } else if (autoSync.status === 'syncing') {
       syncStatusTone = 'text-amber-300';
     }
@@ -566,7 +566,7 @@ export default function ConfigModal({
             </button>
           </div>
 
-          {profileError && <p className="text-xs font-bold text-red-400">{profileError}</p>}
+          {profileError && <p className="text-xs font-bold text-[var(--status-error-fg)]">{profileError}</p>}
 
           {loadSummary && <p className="text-xs font-bold text-amber-300">{loadSummary}</p>}
 
@@ -647,7 +647,7 @@ export default function ConfigModal({
                       <div className="flex flex-shrink-0 gap-2">
                         <button
                           onClick={() => loadProfile(profile)}
-                          className="rounded-lg bg-green-500 px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-green-600"
+                          className="rounded-lg border border-[var(--status-success-border)] bg-[var(--status-success-bg)] px-3 py-1.5 text-xs font-bold text-[var(--status-success-fg)] transition-all hover:opacity-90"
                         >
                           {t('profiles.load')}
                         </button>
@@ -666,7 +666,7 @@ export default function ConfigModal({
                             if (globalThis.confirm(t('profiles.confirmDelete')))
                               removeProfile(profile.id);
                           }}
-                          className="rounded-lg p-1.5 text-[var(--text-secondary)] transition-all hover:bg-red-500/10 hover:text-red-400"
+                          className="rounded-lg p-1.5 text-[var(--text-secondary)] transition-all hover:bg-[var(--status-error-bg)] hover:text-[var(--status-error-fg)]"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -719,7 +719,7 @@ export default function ConfigModal({
       <div className="animate-in fade-in slide-in-from-right-4 space-y-8 duration-300">
         {haUser && backendAvailable && autoSync && (
           <div className="space-y-3">
-            <h3 className="ml-1 text-xs font-bold tracking-wider text-gray-500 uppercase">
+            <h3 className="ml-1 text-xs font-bold tracking-wider text-[var(--text-muted)] uppercase">
               {t('profiles.autoSyncSection')}
             </h3>
             <div className="popup-surface space-y-4 p-4">
@@ -782,7 +782,7 @@ export default function ConfigModal({
                   </div>
 
                   {autoSync.error && (
-                    <p className="text-xs font-bold text-red-400">{autoSync.error}</p>
+                    <p className="text-xs font-bold text-[var(--status-error-fg)]">{autoSync.error}</p>
                   )}
 
                   <div className="flex flex-wrap gap-2">
@@ -854,7 +854,7 @@ export default function ConfigModal({
                       <p className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                         {t('profiles.autoSyncKnownDevices')}
                       </p>
-                      <div className="custom-scrollbar max-h-36 space-y-1.5 overflow-y-auto pr-1">
+                      <div className="space-y-1.5 pr-1">
                         {visibleKnownDevices.map((entry) => {
                           const isCurrentDevice = entry.device_id === autoSync.deviceId;
                           const isSelected = selectedTargets.includes(entry.device_id);
@@ -938,7 +938,7 @@ export default function ConfigModal({
                                         prev.filter((id) => id !== entry.device_id)
                                       );
                                     }}
-                                    className="rounded p-1 text-[var(--text-muted)] transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50"
+                                    className="rounded p-1 text-[var(--text-muted)] transition-colors hover:bg-[var(--status-error-bg)] hover:text-[var(--status-error-fg)] disabled:opacity-50"
                                     title={t('profiles.autoSyncRemoveDevice')}
                                   >
                                     <Trash2 className="h-3.5 w-3.5" />
@@ -970,16 +970,16 @@ export default function ConfigModal({
 
         {/* Backend status warning */}
         {!backendAvailable && (
-          <div className="flex items-start gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4">
-            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
-            <p className="text-sm text-yellow-300">{t('profiles.backendUnavailable')}</p>
+          <div className="flex items-start gap-3 rounded-xl border border-[var(--status-warning-border)] bg-[var(--status-warning-bg)] p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--status-warning-fg)]" />
+            <p className="text-sm text-[var(--status-warning-fg)]">{t('profiles.backendUnavailable')}</p>
           </div>
         )}
 
         {/* Profiles Section (requires HA user) */}
         <div className="space-y-3">
           <div className="ml-1 flex items-center justify-between gap-2">
-            <h3 className="text-xs font-bold tracking-wider text-gray-500 uppercase">
+            <h3 className="text-xs font-bold tracking-wider text-[var(--text-muted)] uppercase">
               {t('profiles.sectionProfiles')}
             </h3>
             {haUser && backendAvailable && (
@@ -1013,7 +1013,7 @@ export default function ConfigModal({
 
         {/* Start blank */}
         <div className="space-y-3 border-t border-[var(--glass-border)] pt-4">
-          <h3 className="ml-1 text-xs font-bold tracking-wider text-gray-500 uppercase">
+          <h3 className="ml-1 text-xs font-bold tracking-wider text-[var(--text-muted)] uppercase">
             {t('profiles.sectionReset')}
           </h3>
           <div className="popup-surface p-4">
@@ -1021,7 +1021,7 @@ export default function ConfigModal({
               onClick={() => {
                 if (globalThis.confirm(t('profiles.confirmBlank'))) startBlank();
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] py-2.5 text-sm font-bold text-[var(--text-secondary)] transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] py-2.5 text-sm font-bold text-[var(--text-secondary)] transition-all hover:border-[var(--status-error-border)] hover:bg-[var(--status-error-bg)] hover:text-[var(--status-error-fg)]"
             >
               <Trash2 className="h-4 w-4" />
               {t('profiles.startBlank')}
@@ -1084,7 +1084,7 @@ export default function ConfigModal({
         {/* Background */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="ml-1 text-xs font-bold tracking-widest text-gray-500 uppercase">
+            <p className="ml-1 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
               {t('settings.background')}
             </p>
             <button
@@ -1339,7 +1339,7 @@ export default function ConfigModal({
       <div className="animate-in fade-in slide-in-from-right-4 space-y-1 font-sans duration-300">
         {/* Header row: title + live preview */}
         <div className="flex items-center justify-between px-1 pb-3">
-          <p className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+          <p className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
             {t('settings.layout')}
           </p>
           <button
@@ -1644,7 +1644,7 @@ export default function ConfigModal({
       return (
         <div className="animate-in fade-in slide-in-from-right-4 space-y-8 font-sans duration-300">
           <div className="rounded-2xl bg-[var(--glass-bg)] p-8 text-center">
-            <Check className="mx-auto mb-4 h-12 w-12 text-green-400" />
+            <Check className="mx-auto mb-4 h-12 w-12 text-[var(--status-success-fg)]" />
             <h3 className="mb-2 text-xl font-bold text-[var(--text-primary)]">
               {t('updates.none')}
             </h3>
@@ -1708,11 +1708,11 @@ export default function ConfigModal({
                         <ArrowRight className="h-3 w-3 text-[var(--text-muted)] opacity-30" />
                       )}
                       {latestVersion && (
-                        <div className="flex items-center gap-1.5 text-green-400">
+                        <div className="flex items-center gap-1.5 text-[var(--status-success-fg)]">
                           <span className="text-[10px] font-bold tracking-wider uppercase opacity-50">
                             {t('updates.to')}
                           </span>
-                          <span className="rounded border border-green-500/20 bg-green-500/10 px-1.5 py-0.5 font-mono text-[10px] font-bold">
+                          <span className="rounded border border-[var(--status-success-border)] bg-[var(--status-success-bg)] px-1.5 py-0.5 font-mono text-[10px] font-bold">
                             {latestVersion}
                           </span>
                         </div>
@@ -1847,7 +1847,7 @@ export default function ConfigModal({
           background: rgba(255, 255, 255, 0.2);
         }
       `}</style>
-      <div>
+      <div className="flex h-full min-h-0 flex-col">
         <h2 id={resolvedTitleId} className="sr-only">
           {isOnboardingActive ? t('onboarding.title') : t('system.title')}
         </h2>
@@ -1869,7 +1869,7 @@ export default function ConfigModal({
                 return (
                   <div
                     key={step.key}
-                    className={`flex flex-1 cursor-default items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold tracking-wide uppercase transition-all md:flex-none ${isActive ? 'bg-[var(--accent-color)] text-white shadow-lg ' : ''} ${isDone ? 'bg-green-500/10 text-green-400' : ''} ${!isActive && !isDone ? 'text-[var(--text-secondary)] opacity-50' : ''}`}
+                    className={`flex flex-1 cursor-default items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold tracking-wide uppercase transition-all md:flex-none ${isActive ? 'bg-[var(--accent-color)] text-white shadow-lg ' : ''} ${isDone ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : ''} ${!isActive && !isDone ? 'text-[var(--text-secondary)] opacity-50' : ''}`}
                   >
                     {isDone ? <Check className="h-4 w-4" /> : <StepIcon className="h-4 w-4" />}
                     <span className="hidden md:inline">{step.label}</span>
@@ -1907,12 +1907,12 @@ export default function ConfigModal({
                       {/* URL — hidden in Ingress (auto-detected), shown otherwise */}
                       {!config.isIngress && (
                         <div className="space-y-1.5">
-                          <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+                          <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
                             {t('system.haUrlPrimary')}
                           </label>
                           <input
                             type="text"
-                            className={`w-full rounded-xl border-2 bg-[var(--glass-bg)] px-3 py-2 text-sm text-[var(--text-primary)] transition-all outline-none placeholder:text-[var(--text-muted)] ${onboardingUrlError ? 'border-red-500/50' : 'border-[var(--glass-border)] focus:border-[var(--accent-color)]'}`}
+                            className={`w-full rounded-xl border-2 bg-[var(--glass-bg)] px-3 py-2 text-sm text-[var(--text-primary)] transition-all outline-none placeholder:text-[var(--text-muted)] ${onboardingUrlError ? 'border-[var(--status-error-border)]' : 'border-[var(--glass-border)] focus:border-[var(--accent-color)]'}`}
                             value={config.url}
                             onChange={(e) => {
                               setConfig({ ...config, url: e.target.value.trim() });
@@ -1922,7 +1922,7 @@ export default function ConfigModal({
                             placeholder={t('onboarding.haUrlPlaceholder')}
                           />
                           {onboardingUrlError && (
-                            <p className="ml-1 text-xs font-bold text-red-400">
+                            <p className="ml-1 text-xs font-bold text-[var(--status-error-fg)]">
                               {onboardingUrlError}
                             </p>
                           )}
@@ -1938,11 +1938,11 @@ export default function ConfigModal({
                       {!isOAuth && (
                         <>
                           <div className="space-y-1.5">
-                            <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+                            <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
                               {t('system.token')}
                             </label>
                             <textarea
-                              className={`h-24 w-full rounded-xl border-2 bg-[var(--glass-bg)] px-3 py-2 font-mono text-xs leading-tight text-[var(--text-primary)] transition-all outline-none placeholder:text-[var(--text-muted)] ${onboardingTokenError ? 'border-red-500/50' : 'border-[var(--glass-border)] focus:border-[var(--accent-color)]'}`}
+                              className={`h-24 w-full rounded-xl border-2 bg-[var(--glass-bg)] px-3 py-2 font-mono text-xs leading-tight text-[var(--text-primary)] transition-all outline-none placeholder:text-[var(--text-muted)] ${onboardingTokenError ? 'border-[var(--status-error-border)]' : 'border-[var(--glass-border)] focus:border-[var(--accent-color)]'}`}
                               value={config.token}
                               onChange={(e) => {
                                 setConfig({ ...config, token: e.target.value.trim() });
@@ -1952,7 +1952,7 @@ export default function ConfigModal({
                               placeholder={t('onboarding.tokenPlaceholder')}
                             />
                             {onboardingTokenError && (
-                              <p className="ml-1 text-xs font-bold text-red-400">
+                              <p className="ml-1 text-xs font-bold text-[var(--status-error-fg)]">
                                 {onboardingTokenError}
                               </p>
                             )}
@@ -1960,7 +1960,7 @@ export default function ConfigModal({
 
                           {!config.isIngress && (
                             <div className="space-y-1.5">
-                              <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+                              <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
                                 {t('system.haUrlFallback')}
                               </label>
                               <input
@@ -2006,7 +2006,7 @@ export default function ConfigModal({
 
                         {connectionTestResult && (
                           <div
-                            className={`animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 rounded-xl p-3 ${connectionTestResult.success ? 'border border-green-500/30 bg-green-500/20 text-green-400' : 'border border-red-500/30 bg-red-500/20 text-red-400'}`}
+                            className={`animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 rounded-xl p-3 ${connectionTestResult.success ? 'border border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'border border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'}`}
                           >
                             {connectionTestResult.success ? (
                               <Check className="h-4 w-4" />
@@ -2026,7 +2026,7 @@ export default function ConfigModal({
                 {onboardingStep === 1 && (
                   <div className="animate-in fade-in slide-in-from-right-4 space-y-6 duration-300">
                     <div className="space-y-4">
-                      <p className="ml-1 text-xs font-bold text-gray-500 uppercase">
+                      <p className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
                         {t('settings.language')}
                       </p>
                       <ModernDropdown
@@ -2047,7 +2047,7 @@ export default function ConfigModal({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="ml-1 flex justify-between text-xs font-bold text-gray-500 uppercase">
+                      <label className="ml-1 flex justify-between text-xs font-bold text-[var(--text-muted)] uppercase">
                         {t('settings.inactivity')}
                         <span className="text-[var(--text-primary)]">
                           {inactivityTimeout === 0 ? t('common.off') : `${inactivityTimeout}s`}
@@ -2075,7 +2075,7 @@ export default function ConfigModal({
 
                 {onboardingStep === 2 && (
                   <div className="animate-in fade-in zoom-in flex h-full flex-col items-center justify-center space-y-6 p-4 text-center duration-500">
-                    <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-green-500 text-white shadow-xl shadow-green-500/30">
+                    <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-full border border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)] shadow-xl">
                       <Check className="h-12 w-12" />
                     </div>
                     <h4 className="text-3xl font-bold text-[var(--text-primary)]">
@@ -2114,7 +2114,7 @@ export default function ConfigModal({
                 ) : (
                   <button
                     onClick={onFinishOnboarding}
-                    className="flex-1 rounded-xl bg-green-500 py-3 font-bold tracking-widest text-white uppercase shadow-lg shadow-green-500/20 transition-all hover:bg-green-600"
+                    className="flex-1 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] py-3 font-bold tracking-widest text-[var(--status-success-fg)] uppercase shadow-lg transition-all hover:opacity-90"
                   >
                     {t('onboarding.finish')}
                   </button>
@@ -2157,7 +2157,7 @@ export default function ConfigModal({
                 <div className="mt-auto hidden flex-col gap-2 border-t border-[var(--glass-border)] pt-4 md:flex">
                   <button
                     onClick={onClose}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 py-3 text-sm font-bold tracking-widest text-white uppercase shadow-lg shadow-green-500/20 transition-all hover:bg-green-600"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] py-3 text-sm font-bold tracking-widest text-[var(--status-success-fg)] uppercase shadow-lg transition-all hover:opacity-90"
                   >
                     <Check className="h-4 w-4" />
                     {t('system.save')}
@@ -2193,7 +2193,8 @@ export default function ConfigModal({
               </div>
 
               <div
-                className={`custom-scrollbar flex-1 overflow-y-auto ${isLayoutPreview ? 'p-5 md:p-6' : 'p-5 md:p-8'}`}
+                className={`custom-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain ${isLayoutPreview ? 'p-5 md:p-6' : 'p-5 md:p-8'}`}
+                style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
               >
                 {/* Desktop Header */}
                 {!isLayoutPreview && (
@@ -2220,7 +2221,7 @@ export default function ConfigModal({
                 <div className="border-t border-[var(--glass-border)] p-3 md:hidden">
                   <button
                     onClick={onClose}
-                    className="w-full rounded-xl bg-green-500 py-2.5 text-sm font-bold tracking-widest text-white uppercase shadow-lg shadow-green-500/20 transition-all hover:bg-green-600"
+                    className="w-full rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] py-2.5 text-sm font-bold tracking-widest text-[var(--status-success-fg)] uppercase shadow-lg transition-all hover:opacity-90"
                   >
                     {t('system.save')}
                   </button>
@@ -2373,3 +2374,4 @@ ConfigModal.propTypes = {
   onFinishOnboarding: PropTypes.func,
   profiles: profilesShape,
 };
+

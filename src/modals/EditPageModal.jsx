@@ -54,7 +54,7 @@ const EditPageModal = ({
 
         <div className="space-y-5">
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+            <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('form.name')}
             </label>
             <input
@@ -70,7 +70,7 @@ const EditPageModal = ({
           </div>
 
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+            <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('form.chooseIcon')}
             </label>
             <IconPicker
@@ -87,7 +87,7 @@ const EditPageModal = ({
           </div>
 
           <div className="popup-surface flex items-center justify-between rounded-2xl px-4 py-3">
-            <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            <span className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
               {t('form.hidePage')}
             </span>
             <button
@@ -104,7 +104,7 @@ const EditPageModal = ({
 
           {isSinglePage && (
             <div className="popup-surface flex items-center justify-between rounded-2xl px-4 py-3">
-              <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+              <span className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
                 {t('form.hideSinglePagePill')}
               </span>
               <button
@@ -125,10 +125,12 @@ const EditPageModal = ({
           )}
 
           <div className="space-y-2">
-            <label className="ml-1 text-xs font-bold text-gray-500 uppercase">
+            <label className="ml-1 text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('form.gridColumnsPage')}
             </label>
-            <p className="-mt-1 ml-1 text-[10px] text-gray-500">{t('form.gridColumnsPageHint')}</p>
+            <p className="-mt-1 ml-1 text-[10px] text-[var(--text-muted)]">
+              {t('form.gridColumnsPageHint')}
+            </p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((cols) => {
                 const pageGridColumns = pageSettings[editingPage]?.gridColumns;
@@ -167,7 +169,7 @@ const EditPageModal = ({
           {editingPage !== 'home' && (
             <button
               onClick={() => onDelete(editingPage)}
-              className="w-full rounded-2xl bg-red-500/10 py-2.5 font-bold tracking-widest text-red-400 uppercase transition-colors hover:bg-red-500/15"
+              className="w-full rounded-2xl border border-[var(--status-error-border)] bg-[var(--status-error-bg)] py-2.5 font-bold tracking-widest text-[var(--status-error-fg)] uppercase transition-colors hover:opacity-90"
             >
               {t('form.deletePage')}
             </button>

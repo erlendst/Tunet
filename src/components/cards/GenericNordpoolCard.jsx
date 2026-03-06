@@ -88,18 +88,22 @@ const GenericNordpoolCard = memo(function GenericNordpoolCard({
 
   // Determine price level
   let levelText = translate('power.level.normal');
+  let levelTone = 'normal';
   let levelColor = 'text-[var(--accent-color)]';
 
   if (!Number.isNaN(currentPrice) && priceStats.avg > 0) {
     if (currentPrice >= priceStats.avg * 1.4) {
       levelText = translate('power.level.veryHigh');
-      levelColor = 'text-red-400';
+      levelTone = 'high';
+      levelColor = 'text-[var(--status-error-fg)]';
     } else if (currentPrice >= priceStats.avg * 1.15) {
       levelText = translate('power.level.high');
+      levelTone = 'warn';
       levelColor = 'text-orange-400';
     } else if (currentPrice <= priceStats.avg * 0.9) {
       levelText = translate('power.level.low');
-      levelColor = 'text-green-400';
+      levelTone = 'low';
+      levelColor = 'text-[var(--status-success-fg)]';
     }
   }
 
@@ -107,12 +111,16 @@ const GenericNordpoolCard = memo(function GenericNordpoolCard({
   const priceDisplay = currentPrice > 0 ? currentPrice.toFixed(decimals) : '0';
 
   if (settings.size === 'small') {
-    let indicatorClass = 'bg-[var(--accent-color)] ring-[var(--accent-color)] ';
-    if (levelColor.includes('red')) indicatorClass = 'bg-red-400 ring-red-400/30 shadow-red-500/40';
-    else if (levelColor.includes('orange'))
+    let indicatorClass = 'bg-[var(--accent-color)] ring-[var(--accent-color)]';
+    if (levelTone === 'high') {
+      indicatorClass =
+        'bg-[var(--status-error-fg)] ring-[var(--status-error-fg)]/30 shadow-[0_0_0_0.375rem_var(--status-error-bg)]';
+    } else if (levelTone === 'warn') {
       indicatorClass = 'bg-orange-400 ring-orange-400/30 shadow-orange-500/40';
-    else if (levelColor.includes('green'))
-      indicatorClass = 'bg-green-400 ring-green-400/30 shadow-green-500/40';
+    } else if (levelTone === 'low') {
+      indicatorClass =
+        'bg-[var(--status-success-fg)] ring-[var(--status-success-fg)]/30 shadow-[0_0_0_0.375rem_var(--status-success-bg)]';
+    }
 
     return (
       <div

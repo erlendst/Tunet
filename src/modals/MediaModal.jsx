@@ -1168,11 +1168,11 @@ export default function MediaModal({
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
                   {isChannel ? (
-                    <Tv className="h-14 w-14 text-gray-700 md:h-20 md:w-20" />
+                    <Tv className="h-14 w-14 text-[var(--text-muted)] md:h-20 md:w-20" />
                   ) : isSonos ? (
-                    <Speaker className="h-14 w-14 text-gray-700 md:h-20 md:w-20" />
+                    <Speaker className="h-14 w-14 text-[var(--text-muted)] md:h-20 md:w-20" />
                   ) : (
-                    <Music className="h-14 w-14 text-gray-700 md:h-20 md:w-20" />
+                    <Music className="h-14 w-14 text-[var(--text-muted)] md:h-20 md:w-20" />
                   )}
                 </div>
               )}
@@ -1186,14 +1186,14 @@ export default function MediaModal({
                 <h2 className="mb-1 line-clamp-2 text-lg leading-tight font-bold text-white md:mb-2 md:text-3xl">
                   {mpTitle || t('common.unknown')}
                 </h2>
-                <p className="line-clamp-1 text-sm font-medium text-gray-300 md:text-xl">
+                <p className="line-clamp-1 text-sm font-medium text-white/80 md:text-xl">
                   {mpSeries}
                 </p>
               </div>
             </div>
 
             <div className={`flex flex-col gap-2 flex-shrink-0 ${showPlayersSidebar ? 'mt-2 space-y-2' : 'mt-4 space-y-4 md:mt-0 md:flex-1'}`}>
-              <div className="flex flex-shrink-0 items-center justify-between px-1 text-xs font-bold tracking-widest text-gray-500">
+              <div className="flex flex-shrink-0 items-center justify-between px-1 text-xs font-bold tracking-widest text-[var(--text-muted)]">
                 <span>{formatDuration(effectivePosition)}</span>
                 <span>{formatDuration(duration)}</span>
               </div>
@@ -1287,7 +1287,7 @@ export default function MediaModal({
                         onClick={() =>
                           callService('media_player', powerAction, { entity_id: mpId })
                         }
-                        className={`rounded-full p-[clamp(0.25rem,1vw,0.5rem)] transition-colors ${isPowerOffAction ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'}`}
+                        className={`rounded-full p-[clamp(0.25rem,1vw,0.5rem)] transition-colors ${isPowerOffAction ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)] hover:opacity-90' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
                         title={isPowerOffAction ? t('status.off') : t('status.on')}
                       >
                         <Power className="h-[clamp(0.9rem,2vw,1rem)] w-[clamp(0.9rem,2vw,1rem)]" />
@@ -1391,7 +1391,7 @@ export default function MediaModal({
                         onClick={() =>
                           callService('media_player', powerAction, { entity_id: mpId })
                         }
-                        className={`rounded-full p-[clamp(0.45rem,1.4vw,1rem)] transition-colors active:scale-95 ${isPowerOffAction ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'}`}
+                        className={`rounded-full p-[clamp(0.45rem,1.4vw,1rem)] transition-colors active:scale-95 ${isPowerOffAction ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)] hover:opacity-90' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
                         title={isPowerOffAction ? t('status.off') : t('status.on')}
                       >
                         <Power className="h-[clamp(1.25rem,3vw,2rem)] w-[clamp(1.25rem,3vw,2rem)]" />
@@ -1470,7 +1470,7 @@ export default function MediaModal({
                   </>
                 ) : (
                   <div className="flex h-full w-full items-center justify-center bg-gray-900">
-                    <Music className="h-32 w-32 text-gray-700" />
+                    <Music className="h-32 w-32 text-[var(--text-muted)]" />
                   </div>
                 )}
               </div>
@@ -1557,7 +1557,7 @@ export default function MediaModal({
                             shuffle: !shuffle,
                           })
                         }
-                        className={`text-white/60 hover:text-white transition-colors ${shuffle ? 'text-green-400' : ''}`}
+                        className={`text-white/60 hover:text-white transition-colors ${shuffle ? 'text-[var(--status-success-fg)]' : ''}`}
                       >
                         <Shuffle size={20} />
                       </button>
@@ -1602,7 +1602,7 @@ export default function MediaModal({
                             repeat: nextMode,
                           });
                         }}
-                        className={`text-white/60 hover:text-white transition-colors ${repeat !== 'off' ? 'text-green-400' : ''}`}
+                        className={`text-white/60 hover:text-white transition-colors ${repeat !== 'off' ? 'text-[var(--status-success-fg)]' : ''}`}
                       >
                        {repeat === 'one' ? <Repeat1 size={20} /> : <Repeat size={20} />}
                     </button>
@@ -1621,7 +1621,7 @@ export default function MediaModal({
           <div className="relative min-h-0 w-full overflow-hidden border-t border-[var(--glass-border)] transition-all duration-300 ease-out md:w-80 md:border-t-0 md:border-l lg:w-[22rem]">
             <div className="custom-scrollbar absolute inset-0 flex min-h-0 flex-col gap-6 overflow-y-auto pt-4 pl-0 md:pt-10 md:pl-8 lg:pt-16 lg:pl-12">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold tracking-[0.2em] text-gray-500 uppercase">
+            <h3 className="text-sm font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
               {isSonos || isAllSonos
                 ? t('media.group.sonosPlayers')
                 : t('media.group.selectedPlayers')}
@@ -1655,7 +1655,7 @@ export default function MediaModal({
           </div>
           <div className="flex flex-col gap-4">
             {listPlayers.length === 0 && (
-              <p className="text-sm text-gray-600 italic">{t('media.noPlayersFound')}</p>
+              <p className="text-sm text-[var(--text-muted)] italic">{t('media.noPlayersFound')}</p>
             )}
             {listPlayers.map((p, idx) => {
               const isSelected = p.entity_id === mpId;
@@ -1698,9 +1698,9 @@ export default function MediaModal({
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
                           {isSonosUiEntity(p) ? (
-                            <Speaker className="h-5 w-5 text-gray-600" />
+                            <Speaker className="h-5 w-5 text-[var(--text-muted)]" />
                           ) : (
-                            <Music className="h-5 w-5 text-gray-600" />
+                            <Music className="h-5 w-5 text-[var(--text-muted)]" />
                           )}
                         </div>
                       )}
@@ -1711,10 +1711,10 @@ export default function MediaModal({
                       >
                         {applyPlayerNameDisplayFilter(p.attributes?.friendly_name || p.entity_id)}
                       </p>
-                      <p className="mt-0.5 truncate text-xs font-semibold text-gray-500 md:text-sm">
+                      <p className="mt-0.5 truncate text-xs font-semibold text-[var(--text-muted)] md:text-sm">
                         {pTitle}
                       </p>
-                      {pUser && <p className="truncate text-[10px] text-gray-500">{pUser}</p>}
+                      {pUser && <p className="truncate text-[10px] text-[var(--text-muted)]">{pUser}</p>}
                     </div>
                   </button>
                   {p.state === 'playing' && (
@@ -1754,7 +1754,7 @@ export default function MediaModal({
                           });
                         }
                       }}
-                      className={`rounded-full p-2.5 transition-all ${isMember ? 'border border-[var(--accent-color)] bg-[var(--accent-bg)] text-[var(--accent-color)] shadow-lg ' : 'bg-[var(--glass-bg)] text-gray-500 hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
+                      className={`rounded-full p-2.5 transition-all ${isMember ? 'border border-[var(--accent-color)] bg-[var(--accent-bg)] text-[var(--accent-color)] shadow-lg ' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
                       title={isMember ? t('tooltip.removeFromGroup') : t('tooltip.addToGroup')}
                     >
                       {isMember ? <Link className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -1777,7 +1777,7 @@ export default function MediaModal({
               <button
                 type="button"
                 onClick={() => setShowAddSonosPicker((prev) => !prev)}
-                className="text-[10px] font-bold tracking-widest text-emerald-400 uppercase transition-colors hover:text-emerald-300"
+                className="text-[10px] font-bold tracking-widest text-[var(--status-success-fg)] uppercase transition-colors hover:opacity-80"
               >
                 + {t('media.addSonosPlayer')}
               </button>
@@ -1997,3 +1997,4 @@ export default function MediaModal({
     </AccessibleModalShell>
   );
 }
+

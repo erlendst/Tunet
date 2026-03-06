@@ -574,7 +574,7 @@ export default function VacuumModal({
                   style={{ backgroundColor: 'var(--glass-bg)' }}
                 >
                   <Battery
-                    className={`h-6 w-6 ${battery != null && battery < 20 ? 'text-red-400' : 'text-green-400'}`}
+                    className={`h-6 w-6 ${battery != null && battery < 20 ? 'text-[var(--status-error-fg)]' : 'text-[var(--status-success-fg)]'}`}
                   />
                   <span className="text-xl font-light">
                     {battery != null ? `${Math.round(battery)}%` : '--'}

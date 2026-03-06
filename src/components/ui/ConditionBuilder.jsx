@@ -283,7 +283,7 @@ export default function ConditionBuilder({
                 'No entity'}
             </span>
           </div>
-          <div className="flex-shrink-0 rounded-full bg-[var(--glass-bg)] p-1 text-gray-500 transition-colors group-hover:bg-green-500/20 group-hover:text-green-400">
+          <div className="flex-shrink-0 rounded-full bg-[var(--glass-bg)] p-1 text-[var(--text-muted)] transition-colors group-hover:bg-[var(--status-success-bg)] group-hover:text-[var(--status-success-fg)]">
             {pickerOpen ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
           </div>
         </button>
@@ -318,13 +318,13 @@ export default function ConditionBuilder({
                         {getFriendlyEntityName(id, entities)}
                       </span>
                       <span
-                        className={`truncate text-[10px] font-medium ${isSelected ? 'text-[var(--accent-color)]' : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                        className={`truncate text-[10px] font-medium ${isSelected ? 'text-[var(--accent-color)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                       >
                         {id}
                       </span>
                     </div>
                     <div
-                      className={`flex-shrink-0 rounded-full p-1 transition-colors ${isSelected ? 'bg-[var(--accent-color)] text-white' : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-green-500/20 group-hover:text-green-400'}`}
+                      className={`flex-shrink-0 rounded-full p-1 transition-colors ${isSelected ? 'bg-[var(--accent-color)] text-white' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--status-success-bg)] group-hover:text-[var(--status-success-fg)]'}`}
                     >
                       {isSelected ? (
                         <Check className="h-3.5 w-3.5" />
@@ -620,7 +620,7 @@ export default function ConditionBuilder({
               </div>
             )}
             <p
-              className={`mt-1.5 text-xs font-bold ${isVisibleNow ? 'text-emerald-400' : 'text-amber-400'}`}
+              className={`mt-1.5 text-xs font-bold ${isVisibleNow ? 'text-[var(--status-success-fg)]' : 'text-[var(--status-warning-fg)]'}`}
             >
               {isVisibleNow
                 ? t('visibility.visibleNow') || 'Visible now'

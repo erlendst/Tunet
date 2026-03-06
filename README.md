@@ -76,6 +76,7 @@ npm run dev:all
 
 See [SETUP.md](SETUP.md) for detailed setup, configuration, and troubleshooting.
 See [CARD_OPTIONS.md](CARD_OPTIONS.md) for card-by-card options and screenshots.
+See [CSS_VARIABLES.md](src/docs/CSS_VARIABLES.md) for theme token naming and usage.
 
 ## Technologies
 

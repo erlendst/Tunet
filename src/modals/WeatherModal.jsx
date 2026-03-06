@@ -34,9 +34,13 @@ const getWeatherInfo = (condition, t) => {
     cloudy: {
       label: t?.('weather.condition.cloudy') || 'Cloudy',
       Icon: Cloud,
-      color: 'text-gray-400',
+      color: 'text-[var(--text-secondary)]',
     },
-    fog: { label: t?.('weather.condition.fog') || 'Fog', Icon: Cloud, color: 'text-gray-400' },
+    fog: {
+      label: t?.('weather.condition.fog') || 'Fog',
+      Icon: Cloud,
+      color: 'text-[var(--text-secondary)]',
+    },
     hail: {
       label: t?.('weather.condition.hail') || 'Hail',
       Icon: CloudRain,
@@ -45,17 +49,17 @@ const getWeatherInfo = (condition, t) => {
     lightning: {
       label: t?.('weather.condition.lightning') || 'Lightning',
       Icon: Zap,
-      color: 'text-yellow-400',
+      color: 'text-[var(--status-warning-fg)]',
     },
     'lightning-rainy': {
       label: t?.('weather.condition.lightning') || 'Lightning',
       Icon: Zap,
-      color: 'text-yellow-400',
+      color: 'text-[var(--status-warning-fg)]',
     },
     partlycloudy: {
       label: t?.('weather.condition.partlyCloudy') || 'Partly cloudy',
       Icon: CloudSun,
-      color: 'text-yellow-200',
+      color: 'text-[var(--status-warning-fg)]',
     },
     pouring: {
       label: t?.('weather.condition.pouring') || 'Heavy rain',
@@ -80,21 +84,29 @@ const getWeatherInfo = (condition, t) => {
     sunny: {
       label: t?.('weather.condition.sunny') || 'Sunny',
       Icon: Sun,
-      color: 'text-yellow-400',
+      color: 'text-[var(--status-warning-fg)]',
     },
-    windy: { label: t?.('weather.condition.windy') || 'Wind', Icon: Wind, color: 'text-gray-300' },
+    windy: {
+      label: t?.('weather.condition.windy') || 'Wind',
+      Icon: Wind,
+      color: 'text-[var(--text-secondary)]',
+    },
     'windy-variant': {
       label: t?.('weather.condition.windy') || 'Wind',
       Icon: Wind,
-      color: 'text-gray-300',
+      color: 'text-[var(--text-secondary)]',
     },
     exceptional: {
       label: t?.('weather.condition.exceptional') || 'Extreme',
       Icon: AlertTriangle,
-      color: 'text-red-400',
+      color: 'text-[var(--status-error-fg)]',
     },
   };
-  return map[condition] || { label: condition || 'Unknown', Icon: Cloud, color: 'text-gray-400' };
+  return map[condition] || {
+    label: condition || 'Unknown',
+    Icon: Cloud,
+    color: 'text-[var(--text-secondary)]',
+  };
 };
 
 const formatValue = (value, unit, fallback = '--') => {

@@ -379,19 +379,19 @@ export default function CostModal({
                 {translate('cost.noData')}
               </div>
             ) : chartType === 'bars' ? (
-              <BarChart data={series} height={220} color="#34d399" />
+              <BarChart data={series} height={220} color="var(--status-success-fg)" />
             ) : (
               <SensorHistoryGraph
                 data={series}
                 height={220}
-                color="#34d399"
+                color="var(--status-success-fg)"
                 noDataLabel={translate('cost.noData')}
               />
             )}
           </div>
           <div className="space-y-4 lg:col-span-2">
             <div className="popup-surface flex items-center gap-3 rounded-2xl p-4">
-              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              <TrendingUp className="h-5 w-5 text-[var(--status-success-fg)]" />
               <div>
                 <p className="text-[10px] tracking-widest text-[var(--text-secondary)] uppercase">
                   {translate('cost.stats.last')}
@@ -420,7 +420,7 @@ export default function CostModal({
               </div>
             </div>
             <div className="popup-surface flex items-center gap-3 rounded-2xl p-4">
-              <BarChart3 className="h-5 w-5 text-emerald-400" />
+              <BarChart3 className="h-5 w-5 text-[var(--status-success-fg)]" />
               <div>
                 <p className="text-[10px] tracking-widest text-[var(--text-secondary)] uppercase">
                   {translate('cost.stats.avg')}

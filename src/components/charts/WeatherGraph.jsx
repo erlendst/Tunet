@@ -1,4 +1,5 @@
 import { useId, useMemo } from 'react';
+import { WEATHER_BAND_COLORS } from '../../utils/chartColors';
 
 // Helper function to create smooth Bezier curves
 const createBezierPath = (points, smoothing = 0.4) => {
@@ -151,11 +152,11 @@ export default function WeatherGraph({
   const colorStops = useMemo(() => {
     const getColorForTemp = (temp) => {
       const [l1, l2, l3, l4] = sortedLimits;
-      if (temp <= l1) return '#3b82f6';
-      if (temp <= l2) return '#06b6d4';
-      if (temp <= l3) return '#22c55e';
-      if (temp <= l4) return '#eab308';
-      return '#ef4444';
+      if (temp <= l1) return WEATHER_BAND_COLORS.cold;
+      if (temp <= l2) return WEATHER_BAND_COLORS.cool;
+      if (temp <= l3) return WEATHER_BAND_COLORS.mild;
+      if (temp <= l4) return WEATHER_BAND_COLORS.warm;
+      return WEATHER_BAND_COLORS.hot;
     };
 
     const thresholds = [yMin, ...sortedLimits, yMax]

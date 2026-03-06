@@ -116,7 +116,7 @@ const LightCard = ({
             <span
               className={`text-lg leading-none font-medium tracking-wide transition-colors ${
                 isUnavailable
-                  ? 'text-red-500'
+                  ? 'text-[var(--status-error-fg)]'
                   : isOn
                     ? 'text-amber-400'
                     : 'text-[var(--text-secondary)] opacity-50'
@@ -188,7 +188,7 @@ const LightCard = ({
           />
         </button>
         <div
-          className={`flex items-center gap-1.5 rounded-full border px-3 py-1 transition-all ${isUnavailable ? 'border-red-500/20 bg-red-500/10 text-red-500' : isOn ? 'border-amber-500/20 bg-amber-500/10 text-amber-500' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+          className={`flex items-center gap-1.5 rounded-full border px-3 py-1 transition-all ${isUnavailable ? 'border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-[var(--status-error-fg)]' : isOn ? 'border-amber-500/20 bg-amber-500/10 text-amber-500' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
         >
           <span className="text-xs font-bold tracking-widest uppercase">
             {isUnavailable

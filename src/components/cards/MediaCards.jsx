@@ -39,15 +39,15 @@ export const MediaPlayerCard = memo(({
         <div
           key={mpId}
           {...dragProps}
-          className="glass-texture touch-feedback relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-red-500/50 bg-[var(--card-bg)] p-4"
+          className="glass-texture touch-feedback relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-[var(--status-error-border)] bg-[var(--card-bg)] p-4"
           style={cardStyle}
         >
           {controls}
-          <AlertTriangle className="mb-2 h-8 w-8 text-red-500 opacity-80" />
-          <p className="text-center text-xs font-bold tracking-widest text-red-500 uppercase">
+          <AlertTriangle className="mb-2 h-8 w-8 text-[var(--status-error-fg)] opacity-80" />
+          <p className="text-center text-xs font-bold tracking-widest text-[var(--status-error-fg)] uppercase">
             {t('common.missing')}
           </p>
-          <p className="mt-1 line-clamp-2 text-center font-mono text-[10px] break-all text-red-400/70">
+          <p className="mt-1 line-clamp-2 text-center font-mono text-[10px] break-all text-[var(--status-error-fg)]/70">
             {mpId}
           </p>
         </div>
@@ -117,7 +117,7 @@ export const MediaPlayerCard = memo(({
               e.stopPropagation();
               callService('media_player', powerAction, { entity_id: mpId });
             }}
-            className={`mt-4 rounded-full p-2.5 transition-colors active:scale-95 ${isPowerOffAction ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'}`}
+            className={`mt-4 rounded-full p-2.5 transition-colors active:scale-95 ${isPowerOffAction ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)] hover:opacity-90' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
             title={isPowerOffAction ? t('status.off') : t('status.on')}
           >
             <Power className="h-4 w-4" />
@@ -184,7 +184,7 @@ export const MediaPlayerCard = memo(({
         <div className={`flex flex-col overflow-hidden ${isCoverMode ? 'mt-auto pt-8' : 'pt-1'}`}>
           <div className="mb-1 flex items-center gap-2">
             <p
-              className={`truncate text-xs font-bold tracking-widest uppercase ${isCoverMode ? 'text-gray-300' : 'text-[var(--text-secondary)]'}`}
+              className={`truncate text-xs font-bold tracking-widest uppercase ${isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'}`}
             >
               {name}
             </p>
@@ -196,7 +196,7 @@ export const MediaPlayerCard = memo(({
           </h3>
           {subtitle && (
             <p
-              className={`${picture || isCoverMode ? 'text-gray-300' : 'text-[var(--text-secondary)]'} truncate text-xs font-medium`}
+              className={`${picture || isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'} truncate text-xs font-medium`}
             >
               {subtitle}
             </p>
@@ -209,7 +209,7 @@ export const MediaPlayerCard = memo(({
             e.stopPropagation();
             callService('media_player', 'media_previous_track', { entity_id: mpId });
           }}
-          className={`${picture || isCoverMode ? 'text-gray-300 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+          className={`${picture || isCoverMode ? 'text-white/80 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
         >
           <SkipBack className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />
         </button>
@@ -231,7 +231,7 @@ export const MediaPlayerCard = memo(({
             e.stopPropagation();
             callService('media_player', 'media_next_track', { entity_id: mpId });
           }}
-          className={`${picture || isCoverMode ? 'text-gray-300 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+          className={`${picture || isCoverMode ? 'text-white/80 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
         >
           <SkipForward className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />
         </button>
@@ -241,7 +241,7 @@ export const MediaPlayerCard = memo(({
               e.stopPropagation();
               callService('media_player', powerAction, { entity_id: mpId });
             }}
-            className={`${picture || isCoverMode ? (isPowerOffAction ? 'text-red-300 hover:text-red-100' : 'text-emerald-300 hover:text-emerald-100') : isPowerOffAction ? 'text-red-400 hover:text-red-500' : 'text-emerald-500 hover:text-emerald-600'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+            className={`${picture || isCoverMode ? (isPowerOffAction ? 'text-[var(--status-error-fg)] hover:text-white' : 'text-[var(--status-success-fg)] hover:text-white') : isPowerOffAction ? 'text-[var(--status-error-fg)] hover:opacity-80' : 'text-[var(--status-success-fg)] hover:opacity-80'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
             title={isPowerOffAction ? t('status.off') : t('status.on')}
           >
             <Power className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />
@@ -358,7 +358,7 @@ export const MediaGroupCard = memo(({
               e.stopPropagation();
               callService('media_player', powerAction, { entity_id: mpId });
             }}
-            className={`mt-4 rounded-full p-2.5 transition-colors active:scale-95 ${isPowerOffAction ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'}`}
+            className={`mt-4 rounded-full p-2.5 transition-colors active:scale-95 ${isPowerOffAction ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)] hover:opacity-90' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
             title={isPowerOffAction ? t('status.off') : t('status.on')}
           >
             <Power className="h-4 w-4" />
@@ -465,7 +465,7 @@ export const MediaGroupCard = memo(({
           </h3>
           {subtitle && (
             <p
-              className={`${picture || isCoverMode ? 'text-gray-300' : 'text-[var(--text-secondary)]'} truncate text-xs font-medium`}
+              className={`${picture || isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'} truncate text-xs font-medium`}
             >
               {subtitle}
             </p>
@@ -478,7 +478,7 @@ export const MediaGroupCard = memo(({
             e.stopPropagation();
             callService('media_player', 'media_previous_track', { entity_id: mpId });
           }}
-          className={`${picture || isCoverMode ? 'text-gray-300 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+          className={`${picture || isCoverMode ? 'text-white/80 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
         >
           <SkipBack className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />
         </button>
@@ -500,7 +500,7 @@ export const MediaGroupCard = memo(({
             e.stopPropagation();
             callService('media_player', 'media_next_track', { entity_id: mpId });
           }}
-          className={`${picture || isCoverMode ? 'text-gray-300 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+          className={`${picture || isCoverMode ? 'text-white/80 hover:text-white' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
         >
           <SkipForward className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />
         </button>
@@ -510,7 +510,7 @@ export const MediaGroupCard = memo(({
               e.stopPropagation();
               callService('media_player', powerAction, { entity_id: mpId });
             }}
-            className={`${picture || isCoverMode ? (isPowerOffAction ? 'text-red-300 hover:text-red-100' : 'text-emerald-300 hover:text-emerald-100') : isPowerOffAction ? 'text-red-400 hover:text-red-500' : 'text-emerald-500 hover:text-emerald-600'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
+            className={`${picture || isCoverMode ? (isPowerOffAction ? 'text-[var(--status-error-fg)] hover:text-white' : 'text-[var(--status-success-fg)] hover:text-white') : isPowerOffAction ? 'text-[var(--status-error-fg)] hover:opacity-80' : 'text-[var(--status-success-fg)] hover:opacity-80'} shrink-0 p-[clamp(0.15rem,0.9vw,0.5rem)] transition-colors active:scale-90`}
             title={isPowerOffAction ? t('status.off') : t('status.on')}
           >
             <Power className="h-[clamp(0.85rem,2.2vw,1.5rem)] w-[clamp(0.85rem,2.2vw,1.5rem)]" />

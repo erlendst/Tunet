@@ -20,7 +20,7 @@ class CalendarErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-full flex-col rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 text-red-400">
+        <div className="flex h-full flex-col rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 text-[var(--status-error-fg)]">
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5" />
             <span className="text-sm font-semibold">Calendar error</span>
@@ -422,7 +422,7 @@ const CalendarCard = memo(function CalendarCard({
             </p>
           </div>
         ) : error ? (
-          <div className="flex flex-1 flex-col items-center justify-center text-red-400">
+          <div className="flex flex-1 flex-col items-center justify-center text-[var(--status-error-fg)]">
             <AlertCircle className="mb-2 h-8 w-8" />
             <p className="px-4 text-center text-xs font-bold tracking-widest uppercase">{error}</p>
           </div>
@@ -524,8 +524,8 @@ const CalendarCard = memo(function CalendarCard({
                         className="absolute right-0 left-0 z-20 flex items-center"
                         style={{ top: nowTop }}
                       >
-                        <div className="-ml-[3px] h-1.5 w-1.5 rounded-full bg-red-500" />
-                        <div className="h-[1.5px] flex-1 bg-red-500/70" />
+                        <div className="-ml-[3px] h-1.5 w-1.5 rounded-full bg-[var(--status-error-fg)]" />
+                        <div className="h-[1.5px] flex-1 bg-[var(--status-error-fg)]/70" />
                       </div>
                     )}
 
@@ -596,7 +596,7 @@ const CalendarCard = memo(function CalendarCard({
             </p>
           </div>
         ) : error ? (
-          <div className="flex h-full flex-col items-center justify-center text-red-400">
+          <div className="flex h-full flex-col items-center justify-center text-[var(--status-error-fg)]">
             <AlertCircle className="mb-2 h-8 w-8" />
             <p className="px-4 text-center text-xs font-bold tracking-widest uppercase">{error}</p>
           </div>

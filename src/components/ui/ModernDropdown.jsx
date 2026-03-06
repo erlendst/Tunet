@@ -26,7 +26,7 @@ export default function ModernDropdown({
     <div className="relative w-full" ref={dropdownRef}>
       <p
         className="mb-3 ml-1 text-xs font-bold uppercase"
-        style={{ color: 'rgba(107, 114, 128, 1)', letterSpacing: '0.2em' }}
+        style={{ color: 'var(--text-muted)', letterSpacing: '0.2em' }}
       >
         {label}
       </p>
@@ -35,7 +35,7 @@ export default function ModernDropdown({
         className="group popup-surface popup-surface-hover flex w-full items-center justify-between rounded-2xl px-6 py-4 transition-all"
       >
         <div className="flex items-center gap-3">
-          <Icon className="h-4 w-4 text-gray-400 transition-colors group-hover:text-[var(--accent-color)]" />
+          <Icon className="h-4 w-4 text-[var(--text-muted)] transition-colors group-hover:text-[var(--accent-color)]" />
           <span
             className="text-xs font-bold tracking-widest uppercase italic"
             style={{ color: 'var(--text-secondary)' }}
@@ -44,7 +44,7 @@ export default function ModernDropdown({
           </span>
         </div>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-gray-600 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-3.5 w-3.5 text-[var(--text-muted)] transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       {isOpen && (

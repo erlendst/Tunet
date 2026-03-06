@@ -107,7 +107,7 @@ const PersonStatus = ({
           ) : picture ? (
             <img src={picture} alt={name} className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs font-bold text-gray-500">
+            <div className="flex h-full w-full items-center justify-center text-xs font-bold text-[var(--text-muted)]">
               {name.substring(0, 1)}
             </div>
           )}
@@ -125,7 +125,7 @@ const PersonStatus = ({
 
         <div
           className="absolute right-0 bottom-0 h-3 w-3 rounded-full border-2 border-[var(--card-bg)] transition-colors duration-500"
-          style={{ backgroundColor: isHome ? '#22c55e' : '#52525b' }}
+          style={{ backgroundColor: isHome ? 'var(--status-success-fg)' : '#52525b' }}
         />
       </div>
 

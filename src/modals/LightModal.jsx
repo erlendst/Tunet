@@ -165,7 +165,7 @@ export default function LightModal({
           {/* Header */}
           <div className="relative z-10 mb-6 flex shrink-0 items-center gap-4">
             <div
-              className={`rounded-2xl p-4 transition-all duration-500 ${isUnavailable ? 'bg-red-500/10 text-red-400' : isOn ? 'bg-amber-500/15 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+              className={`rounded-2xl p-4 transition-all duration-500 ${isUnavailable ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]' : isOn ? 'bg-amber-500/15 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
             >
               <LightIcon className="h-8 w-8" />
             </div>
@@ -177,10 +177,10 @@ export default function LightModal({
                 {getA(activeLightId, 'friendly_name', t('common.light'))}
               </h2>
               <div
-                className={`mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 ${isUnavailable ? 'border-red-500/20 bg-red-500/10 text-red-400' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+                className={`mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 ${isUnavailable ? 'border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-[var(--status-error-fg)]' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
               >
                 <div
-                  className={`h-1.5 w-1.5 rounded-full ${isUnavailable ? 'bg-red-400' : isOn ? 'bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.5)]' : 'bg-slate-600'}`}
+                  className={`h-1.5 w-1.5 rounded-full ${isUnavailable ? 'bg-[var(--status-error-fg)]' : isOn ? 'bg-[var(--status-success-fg)] shadow-[0_0_6px_var(--status-success-fg)]' : 'bg-slate-600'}`}
                 />
                 <span className="text-[10px] font-bold tracking-widest uppercase italic">
                   {isUnavailable
@@ -214,7 +214,7 @@ export default function LightModal({
               disabled={isUnavailable}
               className={`relative flex h-24 w-24 items-center justify-center rounded-full transition-all duration-700 md:h-36 md:w-36 ${
                 isUnavailable
-                  ? 'cursor-not-allowed bg-red-500/5 text-red-500'
+                  ? 'cursor-not-allowed bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'
                   : isOn
                     ? 'cursor-pointer bg-[var(--glass-bg)] text-[var(--text-primary)] shadow-2xl active:scale-95'
                     : 'cursor-pointer bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] active:scale-95'

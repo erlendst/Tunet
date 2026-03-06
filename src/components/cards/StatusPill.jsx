@@ -346,7 +346,7 @@ const StatusPill = memo(function StatusPill({
 
     const IconComponent = pill.icon ? getIconComponent(pill.icon) || Clapperboard : Clapperboard;
     const bgColor = pill.bgColor || 'rgba(255, 255, 255, 0.03)';
-    const iconColor = pill.iconColor || 'text-green-400';
+    const iconColor = pill.iconColor || 'text-[var(--status-success-fg)]';
     const iconBgColor = pill.iconBgColor || 'rgba(74, 222, 128, 0.1)';
     const labelColor = resolveHeadingColorClass(pill.labelColor);
     const sublabelColor = pill.sublabelColor || 'text-[var(--text-muted)]';

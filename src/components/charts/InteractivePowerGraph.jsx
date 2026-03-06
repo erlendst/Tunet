@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { CHART_STATUS_COLORS, getThresholdColor } from '../../utils/chartColors';
 
 export default function InteractivePowerGraph({ data, currentIndex, t, locale, unit }) {
   const translate = t || ((key) => key);
@@ -79,16 +80,14 @@ export default function InteractivePowerGraph({ data, currentIndex, t, locale, u
 
   const getDotColor = (val) => {
     const t = (val - min) / range;
-    if (t > 0.6) return '#ef4444';
-    if (t > 0.3) return '#eab308';
-    return '#3b82f6';
+    return getThresholdColor(t);
   };
 
   return (
     <div className="w-full">
       <div className="mb-4 flex items-end justify-between px-2">
         <div>
-          <p className="mb-0.5 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+          <p className="mb-0.5 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
             {translate('power.time')}
           </p>
           <p className="text-xl font-medium text-[var(--text-primary)]">{hoverPointData.time}</p>
@@ -102,12 +101,12 @@ export default function InteractivePowerGraph({ data, currentIndex, t, locale, u
           </p>
           <p className="text-3xl leading-none font-light tracking-tighter text-[var(--text-primary)] italic">
             {hoverPointData.val.toFixed(2)}{' '}
-            <span className="ml-1 text-sm text-gray-600 not-italic">{currency}</span>
+            <span className="ml-1 text-sm text-[var(--text-muted)] not-italic">{currency}</span>
           </p>
         </div>
       </div>
       <div className="relative h-60 w-full" onMouseLeave={() => setHoverIndex(null)}>
-        <div className="pointer-events-none absolute top-0 left-0 flex h-full flex-col justify-between py-1 text-xs font-bold text-gray-600">
+        <div className="pointer-events-none absolute top-0 left-0 flex h-full flex-col justify-between py-1 text-xs font-bold text-[var(--text-muted)]">
           <span>{max.toFixed(0)}</span>
           <span>{min.toFixed(0)}</span>
         </div>
@@ -131,14 +130,14 @@ export default function InteractivePowerGraph({ data, currentIndex, t, locale, u
         >
           <defs>
             <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#eab308" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.05" />
+              <stop offset="0%" stopColor={CHART_STATUS_COLORS.high} stopOpacity="0.3" />
+              <stop offset="50%" stopColor={CHART_STATUS_COLORS.mid} stopOpacity="0.2" />
+              <stop offset="100%" stopColor={CHART_STATUS_COLORS.low} stopOpacity="0.05" />
             </linearGradient>
             <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ef4444" />
-              <stop offset="50%" stopColor="#eab308" />
-              <stop offset="100%" stopColor="#3b82f6" />
+              <stop offset="0%" stopColor={CHART_STATUS_COLORS.high} />
+              <stop offset="50%" stopColor={CHART_STATUS_COLORS.mid} />
+              <stop offset="100%" stopColor={CHART_STATUS_COLORS.low} />
             </linearGradient>
           </defs>
           <path d={areaData} fill="url(#areaGrad)" />
@@ -156,7 +155,7 @@ export default function InteractivePowerGraph({ data, currentIndex, t, locale, u
             y1="0"
             x2={currentPointData.x}
             y2={height}
-            stroke="rgba(59, 130, 246, 0.3)"
+            stroke="color-mix(in srgb, var(--status-info-fg) 30%, transparent)"
             strokeWidth="1.5"
             strokeDasharray="3,2"
           />

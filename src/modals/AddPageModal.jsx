@@ -81,7 +81,7 @@ export default function AddPageModal({
           {activeTab === 'standard' ? (
             <>
               <div className="space-y-2">
-                <label className="ml-4 text-xs font-bold text-gray-500 uppercase">
+                <label className="ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
                   {t('form.name')}
                 </label>
                 <input
@@ -95,7 +95,7 @@ export default function AddPageModal({
               </div>
 
               <div className="space-y-2">
-                <label className="ml-4 text-xs font-bold text-gray-500 uppercase">
+                <label className="ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
                   {t('form.chooseIcon')}
                 </label>
                 <IconPicker
@@ -117,7 +117,7 @@ export default function AddPageModal({
           ) : activeTab === 'media' ? (
             <>
               <div className="popup-surface rounded-2xl p-4 text-sm text-[var(--text-secondary)]">
-                <p className="mb-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                <p className="mb-2 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                   {t('addCard.type.media')}
                 </p>
                 <p className="leading-relaxed">{t('media.chooseMedia')}</p>
@@ -132,7 +132,7 @@ export default function AddPageModal({
           ) : (
             <>
               <div className="popup-surface rounded-2xl p-4 text-sm text-[var(--text-secondary)]">
-                <p className="mb-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                <p className="mb-2 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                   {t('sonos.createTitle')}
                 </p>
                 <p className="leading-relaxed">{t('sonos.createDescription')}</p>

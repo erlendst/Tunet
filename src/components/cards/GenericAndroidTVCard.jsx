@@ -120,7 +120,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
 
         <div className="flex min-w-0 items-center gap-4">
           <div
-            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl transition-all group-hover:scale-110 ${isOn ? 'bg-green-500/20 text-green-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+            className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl transition-all group-hover:scale-110 ${isOn ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
           >
             {picture ? (
               <img src={picture} alt="" className="h-full w-full object-cover" />
@@ -136,7 +136,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
           </div>
           <div className="flex min-w-0 flex-col">
             <p
-              className={`${picture || appLogo ? 'text-gray-300' : 'text-[var(--text-secondary)]'} truncate text-xs font-bold tracking-widest uppercase opacity-70`}
+              className={`${picture || appLogo ? 'text-white/80' : 'text-[var(--text-secondary)]'} truncate text-xs font-bold tracking-widest uppercase opacity-70`}
             >
               {deviceName}
             </p>
@@ -145,7 +145,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
             </p>
             {title && (
               <p
-                className={`${picture || appLogo ? 'text-gray-200' : 'text-[var(--text-muted)]'} truncate text-xs font-medium`}
+                className={`${picture || appLogo ? 'text-white/90' : 'text-[var(--text-muted)]'} truncate text-xs font-medium`}
               >
                 {title}
               </p>
@@ -154,7 +154,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
         </div>
 
         <div
-          className={`flex items-center gap-1.5 rounded-full border px-3 py-1 transition-all ${isOn ? 'border-green-500/20 bg-green-500/10 text-green-400' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+          className={`flex items-center gap-1.5 rounded-full border px-3 py-1 transition-all ${isOn ? 'border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
         >
           <span className="text-[10px] font-bold tracking-widest uppercase">
             {isOn ? (isPlaying ? t('status.playing') : t('common.on')) : t('common.off')}
@@ -180,13 +180,13 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
 
       <div className="relative z-10 flex items-start justify-between">
         <div
-          className={`rounded-2xl p-3 transition-all group-hover:scale-110 ${isOn ? 'bg-green-500/20 text-green-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+          className={`rounded-2xl p-3 transition-all group-hover:scale-110 ${isOn ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
         >
           <Tv className="h-5 w-5" />
         </div>
         {!linkedActive && (
           <div
-            className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 transition-all ${isOn ? 'border-green-500/20 bg-green-500/10 text-green-400' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+            className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 transition-all ${isOn ? 'border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
           >
             <span className="text-xs font-bold tracking-widest uppercase">
               {isOn ? (isPlaying ? t('status.playing') : t('common.on')) : t('common.off')}
@@ -198,7 +198,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
       <div className="relative z-10 flex items-end justify-between gap-4">
         <div className="min-w-0">
           <p
-            className={`${picture || appLogo ? 'text-gray-400' : 'text-[var(--text-secondary)]'} mb-1 text-xs font-bold tracking-widest uppercase opacity-60`}
+            className={`${picture || appLogo ? 'text-white/70' : 'text-[var(--text-secondary)]'} mb-1 text-xs font-bold tracking-widest uppercase opacity-60`}
           >
             {deviceName}
           </p>
@@ -207,7 +207,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
           </h3>
           {title && (
             <p
-              className={`text-xs ${picture || appLogo ? 'text-gray-300' : 'text-[var(--text-muted)]'} line-clamp-1 font-medium`}
+              className={`text-xs ${picture || appLogo ? 'text-white/80' : 'text-[var(--text-muted)]'} line-clamp-1 font-medium`}
             >
               {title}
             </p>

@@ -102,7 +102,7 @@ export default function NordpoolModal({
                 saveCardSetting(cardId, 'showWithSupport', newValue);
               }
             }}
-            className={`flex h-9 items-center gap-2 rounded-full border px-4 shadow-lg backdrop-blur-md transition-all ${showWithSupport ? 'border-green-500/30 bg-green-500/20 text-green-400 hover:bg-green-500/30' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
+            className={`flex h-9 items-center gap-2 rounded-full border px-4 shadow-lg backdrop-blur-md transition-all ${showWithSupport ? 'border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
           >
             {showWithSupport ? (
               <ToggleRight className="h-4 w-4" />
@@ -178,13 +178,13 @@ export default function NordpoolModal({
                     <span className="text-6xl leading-none font-light text-[var(--accent-color)] italic">
                       {displayPriceStats.avg.toFixed(2)}
                     </span>
-                    <span className="text-xl font-medium text-gray-500">{currency}</span>
+                    <span className="text-xl font-medium text-[var(--text-muted)]">{currency}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-3xl p-6">
-                    <p className="mb-1 text-xs font-bold tracking-[0.2em] text-green-400 uppercase">
+                    <p className="mb-1 text-xs font-bold tracking-[0.2em] text-[var(--status-success-fg)] uppercase">
                       {translate('power.low')}
                     </p>
                     <p className="text-3xl font-light text-[var(--text-primary)]">
@@ -192,7 +192,7 @@ export default function NordpoolModal({
                     </p>
                   </div>
                   <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-3xl p-6">
-                    <p className="mb-1 text-xs font-bold tracking-[0.2em] text-red-400 uppercase">
+                    <p className="mb-1 text-xs font-bold tracking-[0.2em] text-[var(--status-error-fg)] uppercase">
                       {translate('power.high')}
                     </p>
                     <p className="text-3xl font-light text-[var(--text-primary)]">

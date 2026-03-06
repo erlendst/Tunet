@@ -19,6 +19,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md,yml,yaml,mjs,cjs,html}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md,yml,yaml,mjs,cjs,html}\"",
     "lint": "eslint src",
+    "lint:theme-colors": "node scripts/lint-theme-colors.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { CHART_STATUS_COLORS, getThresholdColor } from '../../utils/chartColors';
 
 // Helper function to create smooth Bezier curves
 const createBezierPath = (points, smoothing = 0.3) => {
@@ -69,9 +70,7 @@ export default function SparkLine({
 
   const getValueColor = (val) => {
     const t = (val - min) / range;
-    if (t > 0.6) return '#ef4444';
-    if (t > 0.3) return '#eab308';
-    return '#3b82f6';
+    return getThresholdColor(t);
   };
 
   if (variant === 'bar') {
@@ -170,16 +169,16 @@ export default function SparkLine({
         <defs>
           {/* Area gradient - more opaque at top */}
           <linearGradient id={areaId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ef4444" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="#eab308" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.04" />
+            <stop offset="0%" stopColor={CHART_STATUS_COLORS.high} stopOpacity="0.2" />
+            <stop offset="50%" stopColor={CHART_STATUS_COLORS.mid} stopOpacity="0.12" />
+            <stop offset="100%" stopColor={CHART_STATUS_COLORS.low} stopOpacity="0.04" />
           </linearGradient>
 
           {/* Line gradient - color based on value */}
           <linearGradient id={lineId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ef4444" />
-            <stop offset="50%" stopColor="#eab308" />
-            <stop offset="100%" stopColor="#3b82f6" />
+            <stop offset="0%" stopColor={CHART_STATUS_COLORS.high} />
+            <stop offset="50%" stopColor={CHART_STATUS_COLORS.mid} />
+            <stop offset="100%" stopColor={CHART_STATUS_COLORS.low} />
           </linearGradient>
 
           {/* Fade mask for smooth bottom */}

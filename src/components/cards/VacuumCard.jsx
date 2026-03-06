@@ -62,15 +62,15 @@ const VacuumCard = ({
         <div
           key={vacuumId}
           {...dragProps}
-          className="touch-feedback relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-red-500/50 bg-[var(--card-bg)] p-4"
+          className="touch-feedback relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-dashed border-[var(--status-error-border)] bg-[var(--card-bg)] p-4"
           style={cardStyle}
         >
           {controls}
-          <AlertTriangle className="mb-2 h-8 w-8 text-red-500 opacity-80" />
-          <p className="text-center text-xs font-bold tracking-widest text-red-500 uppercase">
+          <AlertTriangle className="mb-2 h-8 w-8 text-[var(--status-error-fg)] opacity-80" />
+          <p className="text-center text-xs font-bold tracking-widest text-[var(--status-error-fg)] uppercase">
             {t('common.missing')}
           </p>
-          <p className="mt-1 line-clamp-2 text-center font-mono text-[10px] break-all text-red-400/70">
+          <p className="mt-1 line-clamp-2 text-center font-mono text-[10px] break-all text-[var(--status-error-fg)]/70">
             {vacuumId}
           </p>
         </div>
@@ -110,14 +110,14 @@ const VacuumCard = ({
         style={{
           ...cardStyle,
           backgroundColor: isErrorState
-            ? 'rgba(239, 68, 68, 0.08)'
+            ? 'var(--status-error-bg)'
             : state === 'cleaning'
               ? 'rgba(59, 130, 246, 0.08)'
               : 'var(--card-bg)',
           borderColor: editMode
             ? 'rgba(59, 130, 246, 0.2)'
             : isErrorState
-              ? 'rgba(239, 68, 68, 0.35)'
+              ? 'var(--status-error-border)'
               : state === 'cleaning'
                 ? 'rgba(59, 130, 246, 0.3)'
                 : 'var(--card-border)',
@@ -140,7 +140,7 @@ const VacuumCard = ({
                 {statusText}
               </span>
               {isErrorState && (
-                <span className="flex items-center gap-1 rounded-full border border-red-500/50 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold tracking-widest text-red-300 uppercase">
+                <span className="flex items-center gap-1 rounded-full border border-[var(--status-error-border)] bg-[var(--status-error-bg)] px-2 py-0.5 text-[10px] font-bold tracking-widest text-[var(--status-error-fg)] uppercase">
                   <AlertTriangle className="h-3 w-3" />
                   {t('room.vacuumStatus.error') || 'Error'}
                 </span>
@@ -195,14 +195,14 @@ const VacuumCard = ({
       style={{
         ...cardStyle,
         backgroundColor: isErrorState
-          ? 'rgba(239, 68, 68, 0.08)'
+          ? 'var(--status-error-bg)'
           : state === 'cleaning'
             ? 'rgba(59, 130, 246, 0.08)'
             : 'var(--card-bg)',
         borderColor: editMode
           ? 'rgba(59, 130, 246, 0.2)'
           : isErrorState
-            ? 'rgba(239, 68, 68, 0.35)'
+            ? 'var(--status-error-border)'
             : state === 'cleaning'
               ? 'rgba(59, 130, 246, 0.3)'
               : 'var(--card-border)',
@@ -217,7 +217,7 @@ const VacuumCard = ({
         </div>
         <div className="flex flex-col items-end gap-2">
           {isErrorState && (
-            <div className="flex items-center gap-1.5 rounded-full border border-red-500/50 bg-red-500/10 px-3 py-1 text-red-300">
+            <div className="flex items-center gap-1.5 rounded-full border border-[var(--status-error-border)] bg-[var(--status-error-bg)] px-3 py-1 text-[var(--status-error-fg)]">
               <AlertTriangle className="h-3 w-3" />
               <span className="text-xs font-bold tracking-widest uppercase">
                 {t('room.vacuumStatus.error') || 'Error'}

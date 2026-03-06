@@ -117,12 +117,12 @@ function RoomSection({
 
   return (
     <div className="space-y-6">
-      <p className="ml-4 text-xs font-bold text-gray-500 uppercase">{t('addCard.selectArea')}</p>
+      <p className="ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">{t('addCard.selectArea')}</p>
       {loading && (
-        <p className="py-4 text-center text-sm text-gray-500">{t('addCard.loadingAreas')}</p>
+        <p className="py-4 text-center text-sm text-[var(--text-muted)]">{t('addCard.loadingAreas')}</p>
       )}
       {!loading && filteredAreas.length === 0 && (
-        <p className="py-4 text-center text-sm text-gray-500 italic">{t('addCard.noAreas')}</p>
+        <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">{t('addCard.noAreas')}</p>
       )}
       <div className="space-y-3">
         {filteredAreas.map((area) => {
@@ -145,7 +145,7 @@ function RoomSection({
                   {area.name || area.area_id}
                 </span>
                 <span
-                  className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                  className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                 >
                   {area.area_id}
                   {isSelected &&
@@ -154,7 +154,7 @@ function RoomSection({
                 </span>
               </div>
               <div
-                className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+                className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
               >
                 {isSelected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
               </div>
@@ -319,7 +319,7 @@ function AddCardContent({
           {displayName || entities[id]?.attributes?.friendly_name || id}
         </span>
         <span
-          className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+          className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
         >
           {id}
         </span>
@@ -330,7 +330,7 @@ function AddCardContent({
         </span>
       ) : (
         <div
-          className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+          className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
         >
           {isSelected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
         </div>
@@ -439,7 +439,7 @@ function AddCardContent({
     return (
       <div className="space-y-8">
         <div>
-          <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.weatherRequired')}
           </p>
           <div className="space-y-3">
@@ -453,7 +453,7 @@ function AddCardContent({
               />
             ))}
             {weatherOptionsSnapshot.length === 0 && (
-              <p className="py-4 text-center text-sm text-gray-500 italic">
+              <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
                 {t('addCard.noWeatherSensors')}
               </p>
             )}
@@ -461,7 +461,7 @@ function AddCardContent({
         </div>
 
         <div>
-          <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.tempSensorOptional')}
           </p>
           <div className="space-y-3">
@@ -477,13 +477,13 @@ function AddCardContent({
                   {t('addCard.useWeatherTemp')}
                 </span>
                 <span
-                  className={`truncate text-[11px] font-medium ${!selectedTempId ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                  className={`truncate text-[11px] font-medium ${!selectedTempId ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                 >
                   weather.temperature
                 </span>
               </div>
               <div
-                className={`flex-shrink-0 rounded-full p-2 transition-colors ${!selectedTempId ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+                className={`flex-shrink-0 rounded-full p-2 transition-colors ${!selectedTempId ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
               >
                 {!selectedTempId ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
               </div>
@@ -498,7 +498,7 @@ function AddCardContent({
               />
             ))}
             {tempOptionsSnapshot.length === 0 && (
-              <p className="py-4 text-center text-sm text-gray-500 italic">
+              <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
                 {t('addCard.noTempSensors')}
               </p>
             )}
@@ -512,7 +512,7 @@ function AddCardContent({
     return (
       <div className="space-y-8">
         <div>
-          <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.mediaPlayerRequired')}
           </p>
           <div className="space-y-3">
@@ -526,7 +526,7 @@ function AddCardContent({
               />
             ))}
             {androidTVMediaOptionsSnapshot.length === 0 && (
-              <p className="py-4 text-center text-sm text-gray-500 italic">
+              <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
                 {t('addCard.noMediaPlayers')}
               </p>
             )}
@@ -534,7 +534,7 @@ function AddCardContent({
         </div>
 
         <div>
-          <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.remoteOptional')}
           </p>
           <div className="space-y-3">
@@ -550,13 +550,13 @@ function AddCardContent({
                   {t('addCard.noRemote')}
                 </span>
                 <span
-                  className={`truncate text-[11px] font-medium ${!selectedAndroidTVRemoteId ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                  className={`truncate text-[11px] font-medium ${!selectedAndroidTVRemoteId ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                 >
                   {t('addCard.mediaControlOnly')}
                 </span>
               </div>
               <div
-                className={`flex-shrink-0 rounded-full p-2 transition-colors ${!selectedAndroidTVRemoteId ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+                className={`flex-shrink-0 rounded-full p-2 transition-colors ${!selectedAndroidTVRemoteId ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
               >
                 {!selectedAndroidTVRemoteId ? (
                   <Check className="h-4 w-4" />
@@ -585,7 +585,7 @@ function AddCardContent({
       <div className="popup-surface rounded-full border border-[var(--glass-border)] p-4 text-[var(--text-primary)]">
         <Icon className="h-8 w-8" />
       </div>
-      <p className="max-w-xs text-sm text-gray-400">{description}</p>
+      <p className="max-w-xs text-sm text-[var(--text-secondary)]">{description}</p>
       <button
         onClick={() => onAddSelected()}
         className="rounded-2xl border border-[var(--accent-color)] bg-[var(--accent-bg)] px-6 py-3 font-bold tracking-widest text-[var(--accent-color)] uppercase transition-colors hover:opacity-90"
@@ -605,7 +605,7 @@ function AddCardContent({
 
     return (
       <div className="space-y-3">
-        <p className="mb-1 ml-4 text-xs font-bold text-gray-500 uppercase">
+        <p className="mb-1 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
           {t('calendar.selectCalendars') || 'Select Calendars'}
         </p>
         <div className="space-y-3">
@@ -628,13 +628,13 @@ function AddCardContent({
                     {name}
                   </span>
                   <span
-                    className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                    className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                   >
                     {id}
                   </span>
                 </div>
                 <div
-                  className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+                  className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
                 >
                   {isSelected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                 </div>
@@ -642,12 +642,12 @@ function AddCardContent({
             );
           })}
           {calendarOptionsSnapshot.length === 0 && (
-            <p className="py-4 text-center text-sm text-gray-500 italic">
+            <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
               {t('calendar.noCalendarsFound') || 'No calendars found'}
             </p>
           )}
           {calendarOptionsSnapshot.length > 0 && visibleCalendars.length === 0 && (
-            <p className="py-4 text-center text-sm text-gray-500 italic">
+            <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
               {t('form.noResults') || 'No results'}
             </p>
           )}
@@ -661,12 +661,12 @@ function AddCardContent({
       <div className="popup-surface rounded-full border border-[var(--glass-border)] p-4 text-[var(--text-primary)]">
         <Minus className="h-8 w-8" />
       </div>
-      <p className="max-w-xs text-sm text-gray-400">
+      <p className="max-w-xs text-sm text-[var(--text-secondary)]">
         {t('addCard.spacerDescription') ||
           'Add a spacer or divider card. You can switch between spacer and divider in the edit settings.'}
       </p>
       <div className="w-full max-w-sm space-y-2">
-        <p className="text-xs font-bold text-gray-500 uppercase">
+        <p className="text-xs font-bold text-[var(--text-muted)] uppercase">
           {t('addCard.spacer.selectVariant') || 'Select variant'}
         </p>
         <div className="flex gap-2">
@@ -710,7 +710,7 @@ function AddCardContent({
     return (
       <div className="space-y-8">
         <div>
-          <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.nordpoolSensorRequired')}
           </p>
           <div className="space-y-3">
@@ -724,14 +724,14 @@ function AddCardContent({
               />
             ))}
             {nordpoolOptionsSnapshot.length === 0 && (
-              <p className="py-4 text-center text-sm text-gray-500 italic">
+              <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
                 {t('addCard.noNordpoolSensors')}
               </p>
             )}
           </div>
         </div>
         <div>
-          <p className="mb-2 ml-4 text-xs font-bold text-gray-500 uppercase">
+          <p className="mb-2 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
             {t('addCard.decimals')}
           </p>
           <div className="flex gap-2 px-4">
@@ -764,7 +764,7 @@ function AddCardContent({
       <div>
         {addCardType === 'cost' && (
           <div className="mb-5">
-            <p className="mb-2 ml-4 text-xs font-bold text-gray-500 uppercase">
+            <p className="mb-2 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
               {t('addCard.costPickTarget')}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -801,7 +801,7 @@ function AddCardContent({
             </div>
           </div>
         )}
-        <p className="mb-4 ml-4 text-xs font-bold text-gray-500 uppercase">
+        <p className="mb-4 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
           {getAddCardAvailableLabel()}
         </p>
         <div className="space-y-3">
@@ -838,7 +838,7 @@ function AddCardContent({
                     {entities[id].attributes?.friendly_name || id}
                   </span>
                   <span
-                    className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                    className={`truncate text-[11px] font-medium ${isSelected ? SELECTED_SUBTEXT : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                   >
                     {id}
                   </span>
@@ -856,14 +856,14 @@ function AddCardContent({
                       </span>
                     )}
                     {!isSelected && (
-                      <div className="rounded-full bg-[var(--glass-bg)] p-2 text-gray-500 transition-colors group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]">
+                      <div className="rounded-full bg-[var(--glass-bg)] p-2 text-[var(--text-muted)] transition-colors group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]">
                         <Plus className="h-4 w-4" />
                       </div>
                     )}
                   </div>
                 ) : (
                   <div
-                    className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
+                    className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? SELECTED_ICON : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--accent-bg)] group-hover:text-[var(--accent-color)]'}`}
                   >
                     {isSelected ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </div>
@@ -872,7 +872,7 @@ function AddCardContent({
             );
           })}
           {filteredGenericEntityIds.length === 0 && (
-            <p className="py-4 text-center text-sm text-gray-500 italic">
+            <p className="py-4 text-center text-sm text-[var(--text-muted)] italic">
               {getAddCardNoneLeftLabel()}
             </p>
           )}
@@ -930,7 +930,7 @@ function AddCardContent({
         <div className="custom-scrollbar flex-1 overflow-y-auto pr-2">
           {addCardTargetPage !== 'header' && (
             <div className="relative mb-4">
-              <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]" />
               <input
                 type="text"
                 data-autofocus
@@ -944,7 +944,7 @@ function AddCardContent({
 
           {addCardTargetPage !== 'header' && addCardTargetPage !== 'settings' && (
             <div className="mb-5">
-              <p className="mb-2 ml-4 text-xs font-bold text-gray-500 uppercase">
+              <p className="mb-2 ml-4 text-xs font-bold text-[var(--text-muted)] uppercase">
                 {t('addCard.cardType')}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -1207,3 +1207,4 @@ function areAddCardPropsEqual(prev, next) {
 }
 
 export default React.memo(AddCardContent, areAddCardPropsEqual);
+

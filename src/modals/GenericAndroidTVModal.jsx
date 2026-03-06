@@ -343,7 +343,7 @@ export default function GenericAndroidTVModal({
                 </div>
                 <button
                   onClick={() => (isOn ? controlMedia('turn_off') : controlMedia('turn_on'))}
-                  className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-bold transition-all active:scale-95 ${isOn ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-green-500/20 text-green-500 hover:bg-green-500/30'}`}
+                  className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-bold transition-all active:scale-95 ${isOn ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)] hover:opacity-90' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
                 >
                   <Power className="h-5 w-5" />
                   {isOn ? t('shield.turnOff') : t('shield.turnOn')}

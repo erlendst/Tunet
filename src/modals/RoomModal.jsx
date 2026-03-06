@@ -578,7 +578,7 @@ export default function RoomModal({
                     className="flex items-center justify-between gap-2 text-left"
                   >
                     <h4 className="flex items-center gap-2 text-xs font-bold tracking-widest text-[var(--text-secondary)] uppercase">
-                      <Flame className="h-4 w-4 text-red-400" />
+                      <Flame className="h-4 w-4 text-[var(--status-error-fg)]" />
                       {t('room.popupClimate') || 'Climate'}
                     </h4>
                     <ChevronDown

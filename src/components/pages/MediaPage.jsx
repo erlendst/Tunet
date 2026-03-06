@@ -671,7 +671,7 @@ export default function MediaPage({
         <div className="popup-surface w-full rounded-3xl border border-[var(--glass-border)] p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">
+              <h3 className="text-xs font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
                 {t('media.selectPlayers')}
               </h3>
               <p className="mt-1 text-[11px] text-[var(--text-muted)]">
@@ -752,13 +752,13 @@ export default function MediaPage({
                           {entity?.attributes?.friendly_name || id}
                         </span>
                         <span
-                          className={`truncate text-[11px] font-medium ${isSelected ? 'text-[var(--text-secondary)]' : 'text-[var(--text-muted)] group-hover:text-gray-400'}`}
+                          className={`truncate text-[11px] font-medium ${isSelected ? 'text-[var(--text-secondary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'}`}
                         >
                           {id}
                         </span>
                       </div>
                       <div
-                        className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? '' : 'bg-[var(--glass-bg)] text-gray-500 group-hover:bg-green-500/20 group-hover:text-green-400'}`}
+                        className={`flex-shrink-0 rounded-full p-2 transition-colors ${isSelected ? '' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] group-hover:bg-[var(--status-success-bg)] group-hover:text-[var(--status-success-fg)]'}`}
                         style={
                           isSelected
                             ? {
@@ -813,9 +813,9 @@ export default function MediaPage({
                       onError={() => markImageFailed(currentArtworkUrl)}
                     />
                   ) : isTV ? (
-                    <Tv className="h-24 w-24 text-gray-700" />
+                    <Tv className="h-24 w-24 text-[var(--text-muted)]" />
                   ) : (
-                    <Speaker className="h-24 w-24 text-gray-700" />
+                    <Speaker className="h-24 w-24 text-[var(--text-muted)]" />
                   )}
                 </div>
               </div>
@@ -921,7 +921,7 @@ export default function MediaPage({
                           onClick={() =>
                             callService('media_player', powerAction, { entity_id: mpId })
                           }
-                          className={`rounded-full p-[clamp(0.2rem,1vw,0.5rem)] transition-all active:scale-95 ${isPowerOffAction ? 'text-red-400 hover:bg-red-500/10' : 'text-emerald-400 hover:bg-emerald-500/10'}`}
+                          className={`rounded-full p-[clamp(0.2rem,1vw,0.5rem)] transition-all active:scale-95 ${isPowerOffAction ? 'text-[var(--status-error-fg)] hover:bg-[var(--status-error-bg)]' : 'text-[var(--status-success-fg)] hover:bg-[var(--status-success-bg)]'}`}
                           title={isPowerOffAction ? t('status.off') : t('status.on')}
                         >
                           <Power className="h-[clamp(1.1rem,2.6vw,1.5rem)] w-[clamp(1.1rem,2.6vw,1.5rem)]" />
@@ -1125,7 +1125,7 @@ export default function MediaPage({
                                 />
                               ) : (
                                 <div className="flex h-full w-full items-center justify-center">
-                                  <Speaker className="h-5 w-5 text-gray-600" />
+                                  <Speaker className="h-5 w-5 text-[var(--text-muted)]" />
                                 </div>
                               )}
                               {p.state === 'playing' && (
@@ -1158,7 +1158,7 @@ export default function MediaPage({
                                   });
                                 }
                               }}
-                              className={`rounded-full p-2.5 transition-all ${isMember ? '' : 'bg-[var(--glass-bg)] text-gray-500 hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
+                              className={`rounded-full p-2.5 transition-all ${isMember ? '' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
                               style={
                                 isMember
                                   ? {
@@ -1334,7 +1334,7 @@ export default function MediaPage({
                               type="button"
                               onClick={() => addPlayerSelection(id)}
                               disabled={isAdded || showAll}
-                              className={`rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase transition-colors ${isAdded || showAll ? 'cursor-not-allowed bg-[var(--glass-bg)] text-[var(--text-muted)] opacity-50' : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30'}`}
+                              className={`rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase transition-colors ${isAdded || showAll ? 'cursor-not-allowed bg-[var(--glass-bg)] text-[var(--text-muted)] opacity-50' : 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)] hover:opacity-90'}`}
                             >
                               Add
                             </button>
@@ -1365,3 +1365,4 @@ export default function MediaPage({
     </div>
   );
 }
+

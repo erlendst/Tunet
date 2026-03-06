@@ -147,14 +147,14 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
         </button>
 
         {error && (
-          <div className="absolute top-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-red-500/90 px-4 py-2 text-xs font-bold text-white shadow-lg">
+          <div className="absolute top-4 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--status-error-border)] bg-[var(--status-error-bg)] px-4 py-2 text-xs font-bold text-[var(--status-error-fg)] shadow-lg">
             {error}
           </div>
         )}
 
         {/* Header */}
         <div className="mb-2 flex items-center gap-3">
-          <div className="rounded-xl bg-emerald-500/10 p-2 text-emerald-400">
+          <div className="rounded-xl bg-[var(--status-success-bg)] p-2 text-[var(--status-success-fg)]">
             <ListChecks className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -174,13 +174,13 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
               <span className="text-[10px] font-bold tracking-widest text-[var(--text-secondary)] uppercase">
                 {completedCount}/{totalCount} {translate('todo.completed') || 'completed'}
               </span>
-              <span className="text-[10px] font-bold tracking-widest text-emerald-400 uppercase">
+              <span className="text-[10px] font-bold tracking-widest text-[var(--status-success-fg)] uppercase">
                 {totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0}%
               </span>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-[var(--glass-bg)]">
               <div
-                className="h-full rounded-full bg-emerald-400/70 transition-all duration-500"
+                className="h-full rounded-full bg-[var(--status-success-fg)]/70 transition-all duration-500"
                 style={{ width: `${totalCount > 0 ? (completedCount / totalCount) * 100 : 0}%` }}
               />
             </div>
@@ -197,12 +197,12 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
             onKeyDown={handleKeyDown}
             placeholder={translate('todo.addPlaceholder') || 'Add a new item...'}
             disabled={!todoEntityId || adding}
-            className="flex-1 rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3 text-sm text-[var(--text-primary)] transition-colors outline-none placeholder:text-[var(--text-muted)] focus:border-emerald-500/50 disabled:opacity-50"
+            className="flex-1 rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3 text-sm text-[var(--text-primary)] transition-colors outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--status-success-border)] disabled:opacity-50"
           />
           <button
             onClick={handleAdd}
             disabled={!newItemText.trim() || adding}
-            className="flex-shrink-0 rounded-2xl bg-emerald-500 px-4 py-3 font-bold text-white transition-colors hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex-shrink-0 rounded-2xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] px-4 py-3 font-bold text-[var(--status-success-fg)] transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Plus className="h-5 w-5" />
           </button>
@@ -219,14 +219,14 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
             </div>
           ) : loading && items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-[var(--text-secondary)]">
-              <div className="mb-2 h-6 w-6 animate-spin rounded-full border-b-2 border-emerald-500" />
+              <div className="mb-2 h-6 w-6 animate-spin rounded-full border-b-2 border-[var(--status-success-fg)]" />
               <p className="text-xs font-bold tracking-widest uppercase">
                 {translate('common.loading') || 'Loading...'}
               </p>
             </div>
           ) : pendingItems.length === 0 && completedItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-[var(--text-secondary)] opacity-60">
-              <CheckCircle2 className="mb-3 h-10 w-10 text-emerald-400" />
+              <CheckCircle2 className="mb-3 h-10 w-10 text-[var(--status-success-fg)]" />
               <p className="text-sm font-medium">{translate('todo.allDone') || 'All done!'}</p>
               <p className="mt-1 text-xs text-[var(--text-muted)]">
                 {translate('todo.addHint') || 'Add a new item above'}
@@ -242,7 +242,7 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
                 >
                   <button
                     onClick={() => handleToggle(item)}
-                    className="mt-0.5 flex-shrink-0 text-[var(--text-secondary)] opacity-40 transition-colors hover:text-emerald-400 hover:opacity-100"
+                    className="mt-0.5 flex-shrink-0 text-[var(--text-secondary)] opacity-40 transition-colors hover:text-[var(--status-success-fg)] hover:opacity-100"
                     title={translate('todo.markDone') || 'Mark as done'}
                   >
                     <Circle className="h-5 w-5" />
@@ -264,7 +264,7 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
                   </div>
                   <button
                     onClick={() => handleDelete(item)}
-                    className="mt-0.5 flex-shrink-0 text-transparent transition-colors group-hover:text-red-400/60 hover:!text-red-400"
+                    className="mt-0.5 flex-shrink-0 text-transparent transition-colors group-hover:text-[var(--status-error-fg)]/60 hover:!text-[var(--status-error-fg)]"
                     title={translate('todo.delete') || 'Delete'}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -277,7 +277,7 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
                 <div className="mt-2 border-t border-[var(--glass-border)] pt-3">
                   <button
                     onClick={() => setShowCompleted((prev) => !prev)}
-                    className="flex w-full items-center justify-between px-3 py-2 text-[10px] font-bold tracking-widest text-emerald-400/60 uppercase transition-colors hover:text-emerald-400"
+                    className="flex w-full items-center justify-between px-3 py-2 text-[10px] font-bold tracking-widest text-[var(--status-success-fg)]/60 uppercase transition-colors hover:text-[var(--status-success-fg)]"
                   >
                     <span>
                       {translate('todo.completed') || 'Completed'} ({completedCount})
@@ -292,7 +292,7 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
                       >
                         <button
                           onClick={() => handleToggle(item)}
-                          className="mt-0.5 flex-shrink-0 text-emerald-400 transition-colors"
+                          className="mt-0.5 flex-shrink-0 text-[var(--status-success-fg)] transition-colors"
                           title={translate('todo.markUndone') || 'Mark as not done'}
                         >
                           <CheckCircle2 className="h-5 w-5" />
@@ -302,7 +302,7 @@ export default function TodoModal({ show, onClose, conn, entities, settings, t }
                         </p>
                         <button
                           onClick={() => handleDelete(item)}
-                          className="mt-0.5 flex-shrink-0 text-transparent transition-colors group-hover:text-red-400/60 hover:!text-red-400"
+                          className="mt-0.5 flex-shrink-0 text-transparent transition-colors group-hover:text-[var(--status-error-fg)]/60 hover:!text-[var(--status-error-fg)]"
                           title={translate('todo.delete') || 'Delete'}
                         >
                           <Trash2 className="h-4 w-4" />

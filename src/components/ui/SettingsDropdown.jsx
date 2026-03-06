@@ -98,7 +98,7 @@ export default function SettingsDropdown({
             onClick={() => handleSelect(onOpenSettings)}
             className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-white/10"
           >
-            <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-400 transition-colors group-hover:bg-emerald-500 group-hover:text-white">
+            <div className="rounded-lg bg-[var(--status-success-bg)] p-2 text-[var(--status-success-fg)] transition-colors group-hover:opacity-90">
               <Server className="h-4 w-4" />
             </div>
             <div>

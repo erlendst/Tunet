@@ -58,7 +58,7 @@ export function getServerInfo(id) {
     return {
       name: 'Media',
       icon: HardDrive,
-      color: 'text-gray-400',
+      color: 'text-[var(--text-muted)]',
       bg: 'bg-white/5',
       border: 'border-white/10',
     };
@@ -66,9 +66,9 @@ export function getServerInfo(id) {
     return {
       name: 'NRK',
       icon: NRKLogo,
-      color: 'text-red-400',
-      bg: 'bg-red-500/10',
-      border: 'border-red-500/20',
+      color: 'text-[var(--status-error-fg)]',
+      bg: 'bg-[var(--status-error-bg)]',
+      border: 'border-[var(--status-error-border)]',
     };
   if (id.includes('jellyfin'))
     return {
@@ -82,14 +82,14 @@ export function getServerInfo(id) {
     return {
       name: 'Emby',
       icon: EmbyLogo,
-      color: 'text-green-400',
-      bg: 'bg-green-500/10',
-      border: 'border-green-500/20',
+      color: 'text-[var(--status-success-fg)]',
+      bg: 'bg-[var(--status-success-bg)]',
+      border: 'border-[var(--status-success-border)]',
     };
   return {
     name: 'Media',
     icon: HardDrive,
-    color: 'text-gray-400',
+    color: 'text-[var(--text-muted)]',
     bg: 'bg-white/5',
     border: 'border-white/10',
   };

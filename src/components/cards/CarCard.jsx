@@ -153,7 +153,7 @@ const CarCard = ({
         {controls}
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <div
-            className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-green-500/15 text-green-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+            className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
           >
             <Icon className="h-6 w-6 stroke-[1.5px]" />
           </div>
@@ -163,7 +163,7 @@ const CarCard = ({
             </p>
             <div className="flex flex-col gap-0.5 leading-tight">
               <span
-                className={`text-sm font-bold ${isCharging ? 'text-green-400' : 'text-[var(--text-primary)]'}`}
+                className={`text-sm font-bold ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}
               >
                 {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
               </span>
@@ -202,7 +202,7 @@ const CarCard = ({
       {controls}
       <div className="flex items-start justify-between font-sans">
         <div
-          className={`rounded-2xl p-3 transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-green-500/15 text-green-400' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+          className={`rounded-2xl p-3 transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
         >
           <Icon className="h-5 w-5 stroke-[1.5px]" />
         </div>
@@ -225,7 +225,7 @@ const CarCard = ({
             </div>
           )}
           {isHtg && (
-            <div className="flex animate-pulse items-center gap-1.5 rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1.5 text-orange-400">
+            <div className="flex animate-pulse items-center gap-1.5 rounded-full border border-[var(--status-warning-border)] bg-[var(--status-warning-bg)] px-3 py-1.5 text-[var(--status-warning-fg)]">
               <Flame className="h-3 w-3" />
               <span className="text-xs font-bold tracking-widest uppercase">
                 {t('car.heating')}
@@ -241,13 +241,13 @@ const CarCard = ({
           </p>
           <div className="flex items-baseline gap-2 font-sans leading-none">
             <span
-              className={`text-4xl leading-none font-thin ${isCharging ? 'text-green-400' : 'text-[var(--text-primary)]'}`}
+              className={`text-4xl leading-none font-thin ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}
             >
               {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
             </span>
             {isCharging && (
               <Zap
-                className="mb-1 -ml-1 h-5 w-5 animate-pulse text-green-400"
+                className="mb-1 -ml-1 h-5 w-5 animate-pulse text-[var(--status-success-fg)]"
                 fill="currentColor"
               />
             )}

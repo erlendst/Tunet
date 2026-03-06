@@ -327,7 +327,7 @@ export function RoomSettingsSection({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-gray-500 uppercase">
+        <div className="flex items-center gap-2 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
           <span>
             {roomEntityIds.length} {t('room.entityCount')}
           </span>
@@ -352,7 +352,7 @@ export function RoomSettingsSection({
           onClick={() => setShowEntityFilter((prev) => !prev)}
           className="flex w-full items-center justify-between gap-3 text-left"
         >
-          <div className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+          <div className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
             {t('room.entityFilter') || 'Entity filter'}
           </div>
           <span className="text-[var(--text-secondary)] transition-transform">
@@ -389,7 +389,7 @@ export function RoomSettingsSection({
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <div className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                <div className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                   {t('room.filterAreaEntities') || 'Area entities'}
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -397,7 +397,7 @@ export function RoomSettingsSection({
                     type="button"
                     onClick={handleIncludeAllEntities}
                     disabled={!domainScopedEntityIds.length || !hasExcludedDomainEntities}
-                    className="rounded-lg border border-green-400/40 bg-green-500/10 px-2.5 py-1 text-[10px] font-bold tracking-widest text-green-300 uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[var(--status-success-border)] bg-[var(--status-success-bg)] px-2.5 py-1 text-[10px] font-bold tracking-widest text-[var(--status-success-fg)] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {t('room.includeAll') || 'Include all'}
                   </button>
@@ -405,7 +405,7 @@ export function RoomSettingsSection({
                     type="button"
                     onClick={handleExcludeAllEntities}
                     disabled={!domainScopedEntityIds.length || areAllDomainEntitiesExcluded}
-                    className="rounded-lg border border-red-400/40 bg-red-500/10 px-2.5 py-1 text-[10px] font-bold tracking-widest text-red-300 uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[var(--status-error-border)] bg-[var(--status-error-bg)] px-2.5 py-1 text-[10px] font-bold tracking-widest text-[var(--status-error-fg)] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {t('room.excludeAll') || 'Exclude all'}
                   </button>
@@ -566,7 +566,7 @@ export function RoomSettingsSection({
                         <button
                           type="button"
                           onClick={() => toggleEntityListMembership('excludedEntityIds', id)}
-                          className={`rounded-lg border px-2 py-1 text-[10px] font-bold tracking-widest uppercase transition-colors ${isExcluded ? 'border-red-400/40 bg-red-500/15 text-red-300' : 'popup-surface popup-surface-hover border-transparent text-[var(--text-secondary)]'}`}
+                          className={`rounded-lg border px-2 py-1 text-[10px] font-bold tracking-widest uppercase transition-colors ${isExcluded ? 'border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-[var(--status-error-fg)]' : 'popup-surface popup-surface-hover border-transparent text-[var(--text-secondary)]'}`}
                         >
                           {isExcluded
                             ? t('room.excluded') || 'Excluded'
@@ -593,7 +593,7 @@ export function RoomSettingsSection({
           onClick={() => setShowCardFeatures((prev) => !prev)}
           className="flex w-full items-center justify-between gap-3 text-left"
         >
-          <div className="text-xs font-bold tracking-widest text-gray-500 uppercase">
+          <div className="text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
             {t('room.cardFeatures') || 'Card features'}
           </div>
           <span className="text-[var(--text-secondary)] transition-transform">
@@ -614,7 +614,7 @@ export function RoomSettingsSection({
                   key={opt.key}
                   className="flex items-center justify-between gap-2 rounded-xl bg-[var(--glass-bg)]/60 px-2.5 py-2"
                 >
-                  <span className="truncate pr-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                  <span className="truncate pr-2 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                     {opt.label}
                   </span>
                   <button

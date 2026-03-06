@@ -145,7 +145,7 @@ export default function GenericClimateModal({
               <div className="text-center font-sans">
                 <div className="mb-6 flex items-center justify-between px-4 italic">
                   <p
-                    className="text-xs font-bold text-gray-400 uppercase"
+                    className="text-xs font-bold text-[var(--text-muted)] uppercase"
                     style={{ letterSpacing: '0.5em' }}
                   >
                     {t('climate.indoorTemp')}
@@ -172,7 +172,7 @@ export default function GenericClimateModal({
                   >
                     {displayTargetTemp.value}
                   </span>
-                  <span className="mt-10 text-5xl leading-none font-medium text-gray-700 italic">
+                  <span className="mt-10 text-5xl leading-none font-medium text-[var(--text-muted)] italic">
                     {displayTempUnit}
                   </span>
                 </div>

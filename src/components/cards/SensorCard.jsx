@@ -100,9 +100,9 @@ const SensorCard = memo(function SensorCard({
     : binaryDisplayState || toggleDisplayState || sceneDisplayState || scriptDisplayState || state;
   const iconToneClass = isBinaryLike
     ? isUnavailable
-      ? 'bg-red-500/10 text-red-400'
+      ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'
       : isActiveState
-        ? 'bg-green-500/15 text-green-400'
+        ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'
         : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'
     : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]';
 
@@ -407,7 +407,7 @@ const SensorCard = memo(function SensorCard({
           <div className="flex flex-col items-center gap-1 rounded-lg bg-[var(--glass-bg)] p-0.5">
             <button
               onClick={handleRun}
-              className={`flex h-5 w-6 items-center justify-center rounded-md transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 ${showActive ? 'bg-green-500/20 text-green-400' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
+              className={`flex h-5 w-6 items-center justify-center rounded-md transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 ${showActive ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'}`}
             >
               <Play className="h-3 w-3 fill-current" />
             </button>
@@ -419,7 +419,7 @@ const SensorCard = memo(function SensorCard({
         <div className="mt-4 flex w-full items-center">
           <button
             onClick={handleRun}
-            className={`w-full rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] py-2 hover:bg-[var(--glass-bg-hover)] ${showActive ? 'border-green-500/30 bg-green-500/10 text-green-400' : 'text-[var(--text-primary)]'} flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase transition-all active:scale-95`}
+            className={`w-full rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] py-2 hover:bg-[var(--glass-bg-hover)] ${showActive ? 'border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'} flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase transition-all active:scale-95`}
           >
             <Play className="h-3 w-3 fill-current" /> {label}
           </button>
@@ -750,3 +750,4 @@ const SensorCard = memo(function SensorCard({
 });
 
 export default SensorCard;
+

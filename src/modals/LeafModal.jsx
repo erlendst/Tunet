@@ -222,7 +222,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 </p>
               </div>
               {lastUpdatedId && (
-                <div className="inline-flex items-center gap-2 rounded-full bg-[var(--glass-bg)] px-3 py-1.5 text-gray-500">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[var(--glass-bg)] px-3 py-1.5 text-[var(--text-muted)]">
                   <Clock className="h-3 w-3" />
                   <span className="text-[10px] font-bold tracking-widest uppercase opacity-80">
                     {formatRelativeTime(entities[lastUpdatedId]?.state, t)}
@@ -273,7 +273,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div
-                      className={`rounded-full p-1 ${isHeating ? 'bg-orange-500/20 text-orange-400' : 'bg-[var(--glass-bg)] text-gray-500'}`}
+                      className={`rounded-full p-1 ${isHeating ? 'bg-orange-500/20 text-orange-400' : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'}`}
                     >
                       <Thermometer className="h-3.5 w-3.5" />
                     </div>
@@ -281,7 +281,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                       <p className="text-xs font-bold tracking-widest text-[var(--text-primary)] uppercase">
                         {t('car.climate')}
                       </p>
-                      <p className="text-[10px] font-bold text-gray-500 uppercase">
+                      <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                         {isHeating ? t('common.on') : t('common.off')}
                       </p>
                     </div>
@@ -302,7 +302,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
 
                 <div className="space-y-2 border-t border-[var(--glass-border)]/50 pt-1.5">
                   <div className="flex items-end justify-between">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       {t('car.target')}
                     </span>
                     <span className="text-base font-light text-[var(--text-primary)]">
@@ -337,21 +337,21 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
             <div className="grid grid-cols-2 gap-3">
               {batteryId && (
                 <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl p-3.5">
-                  <span className="mb-1 flex items-center gap-1 text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
-                    {isCharging && <Zap className="h-3.5 w-3.5 animate-pulse text-green-400" />}
+                  <span className="mb-1 flex items-center gap-1 text-[10px] font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
+                    {isCharging && <Zap className="h-3.5 w-3.5 animate-pulse text-[var(--status-success-fg)]" />}
                     {t('car.battery')}
                   </span>
                   <div className="flex items-baseline gap-1">
                     <span
-                      className={`text-2xl font-light ${isCharging ? 'text-green-400' : 'text-[var(--text-primary)]'}`}
+                      className={`text-2xl font-light ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}
                     >
                       {batteryId ? formatValue(getS(batteryId)) : '--'}
                     </span>
-                    <span className="text-xs font-bold text-gray-500">%</span>
+                    <span className="text-xs font-bold text-[var(--text-muted)]">%</span>
                   </div>
                   {pluggedId && (
                     <span
-                      className={`mt-1 text-[10px] font-bold tracking-widest uppercase ${entities[pluggedId]?.state === 'on' ? 'text-green-400' : 'text-gray-500'}`}
+                      className={`mt-1 text-[10px] font-bold tracking-widest uppercase ${entities[pluggedId]?.state === 'on' ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-muted)]'}`}
                     >
                       {entities[pluggedId]?.state === 'on' ? t('car.pluggedIn') : t('car.unplugged')}
                     </span>
@@ -361,14 +361,14 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
 
               {rangeId && (
                 <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl p-3.5">
-                  <span className="mb-1 text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">
+                  <span className="mb-1 text-[10px] font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
                     {t('car.range')}
                   </span>
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-light text-[var(--text-primary)]">
                       {formatUnitValue(displayRangeValue, { kind: 'length', fallback: '--' })}
                     </span>
-                    <span className="text-xs font-bold text-gray-500">{displayRangeUnit}</span>
+                    <span className="text-xs font-bold text-[var(--text-muted)]">{displayRangeUnit}</span>
                   </div>
                 </div>
               )}
@@ -378,7 +378,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
               <div className="popup-surface space-y-2 rounded-2xl p-3">
                 {(tempValue !== null || tempId) && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       {t('car.tempInside') || 'Temp'}
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -389,7 +389,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {odometerId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       Odo
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -399,7 +399,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {fuelLevelId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       Fuel
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -409,7 +409,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {chargingPowerId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       Power
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -419,7 +419,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {chargeRateId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       Rate
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -429,7 +429,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {timeToFullId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       Full in
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -439,7 +439,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {chargeEndTimeId && (
                   <div className="flex items-center justify-between rounded-xl bg-[var(--glass-bg)] px-3 py-2">
-                    <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <span className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       End time
                     </span>
                     <span className="text-sm font-semibold text-[var(--text-primary)]">
@@ -452,7 +452,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
 
             {(controlIds.length > 0 || chargeLimitNumberId || chargeLimitSelectId) && (
               <div className="popup-surface space-y-3 rounded-2xl p-4">
-                <div className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                <div className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                   Charge Control
                 </div>
                 {controlIds.length > 0 && (
@@ -470,7 +470,7 @@ export default function LeafModal({ show, onClose, entities, callService, getS, 
                 )}
                 {chargeLimitNumberId && (
                   <div className="space-y-2">
-                    <div className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+                    <div className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
                       {entities[chargeLimitNumberId]?.attributes?.friendly_name || 'Charge limit'}
                     </div>
                     <M3Slider

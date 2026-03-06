@@ -446,9 +446,12 @@ export default function SensorModal({
               style={{
                 backgroundColor:
                   entity.state === 'unavailable'
-                    ? 'rgba(239, 68, 68, 0.2)'
-                    : 'rgba(59, 130, 246, 0.2)',
-                color: entity.state === 'unavailable' ? '#ef4444' : '#60a5fa',
+                    ? 'var(--status-error-bg)'
+                    : 'var(--status-info-bg)',
+                color:
+                  entity.state === 'unavailable'
+                    ? 'var(--status-error-fg)'
+                    : 'var(--status-info-fg)',
               }}
             >
               <Icon className="h-8 w-8" />
@@ -461,10 +464,10 @@ export default function SensorModal({
                 {name}
               </h2>
               <div
-                className={`mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 ${entity.state === 'unavailable' ? 'border-red-500/20 bg-red-500/10 text-red-500' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
+                className={`mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 ${entity.state === 'unavailable' ? 'border-[var(--status-error-border)] bg-[var(--status-error-bg)] text-[var(--status-error-fg)]' : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
               >
                 <div
-                  className={`h-1.5 w-1.5 rounded-full ${entity.state === 'unavailable' ? 'bg-red-500' : 'bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.5)]'}`}
+                  className={`h-1.5 w-1.5 rounded-full ${entity.state === 'unavailable' ? 'bg-[var(--status-error-fg)]' : 'bg-[var(--status-success-fg)] shadow-[0_0_6px_var(--status-success-fg)]'}`}
                 />
                 <span className="pt-[1px] text-[10px] leading-none font-bold tracking-widest uppercase">
                   {String(displayState)} {displayUnit}
@@ -553,7 +556,7 @@ export default function SensorModal({
                             className="group flex items-center gap-4 rounded-xl border border-transparent p-3 transition-colors hover:border-white/5 hover:bg-white/5"
                           >
                             <div
-                              className={`h-2 w-2 flex-shrink-0 rounded-full ${event.state === 'on' || event.state === 'true' || event.state === 'open' || event.state === 'unlocked' || event.state === 'playing' || event.state > 0 ? 'bg-green-400 opacity-80' : 'bg-[var(--text-secondary)] opacity-35'}`}
+                              className={`h-2 w-2 flex-shrink-0 rounded-full ${event.state === 'on' || event.state === 'true' || event.state === 'open' || event.state === 'unlocked' || event.state === 'playing' || event.state > 0 ? 'bg-[var(--status-success-fg)] opacity-80' : 'bg-[var(--text-secondary)] opacity-35'}`}
                             />
                             <div className="flex min-w-0 flex-1 items-baseline justify-between gap-4">
                               <span className="truncate text-sm font-medium text-[var(--text-primary)]">

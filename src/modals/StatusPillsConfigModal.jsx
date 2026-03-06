@@ -309,13 +309,13 @@ export default function StatusPillsConfigModal({
     {
       name: 'Green',
       bg: 'rgba(34, 197, 94, 0.3)',
-      icon: 'text-green-400',
+      icon: 'text-[var(--status-success-fg)]',
       label: t('statusPills.colorGreen'),
     },
     {
       name: 'Red',
       bg: 'rgba(239, 68, 68, 0.3)',
-      icon: 'text-red-400',
+      icon: 'text-[var(--status-error-fg)]',
       label: t('statusPills.colorRed'),
     },
     {
@@ -327,7 +327,7 @@ export default function StatusPillsConfigModal({
     {
       name: 'Yellow',
       bg: 'rgba(234, 179, 8, 0.3)',
-      icon: 'text-yellow-400',
+      icon: 'text-[var(--status-warning-fg)]',
       label: t('statusPills.colorYellow'),
     },
     {
@@ -345,7 +345,7 @@ export default function StatusPillsConfigModal({
     {
       name: 'Emerald',
       bg: 'rgba(16, 185, 129, 0.3)',
-      icon: 'text-emerald-400',
+      icon: 'text-[var(--status-success-fg)]',
       label: t('statusPills.colorEmerald'),
     },
   ];
@@ -454,7 +454,7 @@ export default function StatusPillsConfigModal({
                       addPill('conditional');
                       setShowAddMenu(false);
                     }}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-200 transition-colors hover:bg-white/5"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-white/5"
                   >
                     <Activity className="h-4 w-4 text-[var(--accent-color)]" />{' '}
                     {t('statusPills.typeSensor')}
@@ -464,16 +464,16 @@ export default function StatusPillsConfigModal({
                       addPill('media_player');
                       setShowAddMenu(false);
                     }}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-200 transition-colors hover:bg-white/5"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-white/5"
                   >
-                    <Music className="h-4 w-4 text-green-400" /> {t('statusPills.typeMedia')}
+                    <Music className="h-4 w-4 text-[var(--status-success-fg)]" /> {t('statusPills.typeMedia')}
                   </button>
                   <button
                     onClick={() => {
                       addPill('emby');
                       setShowAddMenu(false);
                     }}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-200 transition-colors hover:bg-white/5"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-white/5"
                   >
                     <Clapperboard className="h-4 w-4 text-purple-400" /> {t('statusPills.typeEmby')}
                   </button>
@@ -482,7 +482,7 @@ export default function StatusPillsConfigModal({
                       addPill('sonos');
                       setShowAddMenu(false);
                     }}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-200 transition-colors hover:bg-white/5"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-white/5"
                   >
                     <Speaker className="h-4 w-4 text-orange-400" /> {t('statusPills.typeSonos')}
                   </button>
@@ -491,9 +491,9 @@ export default function StatusPillsConfigModal({
                       addPill('alarm');
                       setShowAddMenu(false);
                     }}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-gray-200 transition-colors hover:bg-white/5"
+                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-white/5"
                   >
-                    <Shield className="h-4 w-4 text-red-400" />{' '}
+                    <Shield className="h-4 w-4 text-[var(--status-error-fg)]" />{' '}
                     {t('statusPills.typeAlarm') === 'statusPills.typeAlarm'
                       ? 'Alarm'
                       : t('statusPills.typeAlarm')}
@@ -553,7 +553,7 @@ export default function StatusPillsConfigModal({
                             {typeLabel}
                           </span>
                           <span
-                            className={`rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${pill.visible === false ? 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-muted)]' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400'}`}
+                            className={`rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${pill.visible === false ? 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-muted)]' : 'border-[var(--status-success-border)] bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'}`}
                           >
                             {pill.visible === false ? t('statusPills.hide') : t('statusPills.show')}
                           </span>
@@ -594,14 +594,14 @@ export default function StatusPillsConfigModal({
                         title={pill.visible ? t('statusPills.hide') : t('statusPills.show')}
                       >
                         {pill.visible ? (
-                          <Eye className="h-4 w-4 text-emerald-400" />
+                          <Eye className="h-4 w-4 text-[var(--status-success-fg)]" />
                         ) : (
-                          <EyeOff className="h-4 w-4 text-gray-500" />
+                          <EyeOff className="h-4 w-4 text-[var(--text-muted)]" />
                         )}
                       </button>
                       <button
                         onClick={() => deletePill(pill.id)}
-                        className="flex items-center justify-center rounded-xl bg-[var(--glass-bg)] p-2.5 text-red-400 transition-all hover:bg-red-500/20"
+                        className="flex items-center justify-center rounded-xl bg-[var(--glass-bg)] p-2.5 text-[var(--status-error-fg)] transition-all hover:bg-[var(--status-error-bg)]"
                         title={t('statusPills.delete')}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -618,7 +618,7 @@ export default function StatusPillsConfigModal({
               )}
 
               {pills.length === 0 && (
-                <p className="py-8 text-center text-sm whitespace-pre-line text-gray-500">
+                <p className="py-8 text-center text-sm whitespace-pre-line text-[var(--text-muted)]">
                   {getSafeTranslationText('statusPills.noPillsYet')}
                 </p>
               )}
@@ -731,7 +731,7 @@ export default function StatusPillsConfigModal({
                             <div className="h-1 w-1 rounded-full bg-gray-500"></div>
                           )}
                           {(pill.type === 'conditional' || pill.type === 'alarm') && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-[var(--text-muted)]">
                               {t('statusPills.standardPill')}
                             </span>
                           )}
@@ -741,7 +741,7 @@ export default function StatusPillsConfigModal({
                           value={pill.name || ''}
                           onChange={(e) => updatePill(pill.id, { name: e.target.value })}
                           placeholder={t('statusPills.pillNamePlaceholder')}
-                          className="w-full bg-transparent text-xl font-bold text-[var(--text-primary)] outline-none placeholder:text-gray-600"
+                          className="w-full bg-transparent text-xl font-bold text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
                         />
                       </div>
                       {/* Live preview */}
@@ -774,7 +774,7 @@ export default function StatusPillsConfigModal({
 
                           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.heading')}
                               </label>
                               <input
@@ -786,7 +786,7 @@ export default function StatusPillsConfigModal({
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.subtitle')}
                               </label>
                               <input
@@ -798,7 +798,7 @@ export default function StatusPillsConfigModal({
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.unitSource')}
                               </label>
                               <select
@@ -836,7 +836,7 @@ export default function StatusPillsConfigModal({
 
                           {pill.unitSource === 'custom' && (
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.unitOverrideLabel')}
                               </label>
                               <input
@@ -853,7 +853,7 @@ export default function StatusPillsConfigModal({
 
                           <div className="flex flex-col gap-3 sm:flex-row">
                             <div className="flex-1 space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.icon')}
                               </label>
                               <div className="relative" ref={iconPickerRef}>
@@ -902,7 +902,7 @@ export default function StatusPillsConfigModal({
                             </div>
 
                             <div className="min-w-0 flex-1 space-y-1">
-                              <label className="text-[10px] font-bold text-gray-600 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.colorLabel')}
                               </label>
                               <div className="no-scrollbar flex h-[38px] items-center gap-1 overflow-x-auto pb-1">
@@ -1016,7 +1016,7 @@ export default function StatusPillsConfigModal({
                             {(pill.type === 'sonos' || pill.type === 'media_player') && (
                               <div className="mt-2 space-y-2 rounded-xl border border-[var(--glass-border)]/60 bg-[var(--modal-bg)] p-2.5">
                                 <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
-                                  <span className="rounded-full bg-green-500/15 px-2 py-0.5 font-bold text-green-300">
+                                  <span className="rounded-full bg-[var(--status-success-bg)] px-2 py-0.5 font-bold text-[var(--status-success-fg)]">
                                     Included {sonosMatchedIds.length}
                                   </span>
                                   <span className="rounded-full bg-[var(--glass-bg)] px-2 py-0.5 font-bold text-[var(--text-muted)]">
@@ -1054,7 +1054,7 @@ export default function StatusPillsConfigModal({
                                   <div className="custom-scrollbar max-h-48 space-y-1 overflow-y-auto rounded-lg bg-[var(--glass-bg)] p-1">
                                     {sonosIncludedPreviewRows.length > 0 && (
                                       <div className="px-2 py-1">
-                                        <div className="mb-1 text-[10px] font-bold tracking-wider text-green-300 uppercase">
+                                        <div className="mb-1 text-[10px] font-bold tracking-wider text-[var(--status-success-fg)] uppercase">
                                           Included
                                         </div>
                                         <div className="space-y-1">
@@ -1064,7 +1064,7 @@ export default function StatusPillsConfigModal({
                                             return (
                                               <div
                                                 key={id}
-                                                className="flex items-center justify-between gap-2 rounded-md bg-green-500/5 px-2 py-1.5 text-xs text-[var(--text-primary)]"
+                                                className="flex items-center justify-between gap-2 rounded-md bg-[var(--status-success-bg)]/40 px-2 py-1.5 text-xs text-[var(--text-primary)]"
                                               >
                                                 <div className="min-w-0">
                                                   <div className="truncate font-semibold">
@@ -1074,7 +1074,7 @@ export default function StatusPillsConfigModal({
                                                     {id}
                                                   </div>
                                                 </div>
-                                                <span className="shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[10px] font-bold text-green-300">
+                                                <span className="shrink-0 rounded-full bg-[var(--status-success-bg)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--status-success-fg)]">
                                                   In
                                                 </span>
                                               </div>
@@ -1268,7 +1268,7 @@ export default function StatusPillsConfigModal({
                         {pill.type === 'emby' && (
                           <div className="rounded-xl bg-[var(--glass-bg)] p-3">
                             <div className="mb-2 flex items-center justify-between">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.sessionSensors')}
                               </label>
                             </div>
@@ -1489,7 +1489,7 @@ export default function StatusPillsConfigModal({
                           pill.type === 'emby' ||
                           pill.type === 'sonos') && (
                           <div className="space-y-1 rounded-xl bg-[var(--glass-bg)] p-3">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase">
+                            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                               {t('statusPills.playerNameDisplayFilter')}
                             </label>
                             <input
@@ -1506,7 +1506,7 @@ export default function StatusPillsConfigModal({
                         {pill.type === 'sonos' && (
                           <div className="grid grid-cols-1 gap-2 rounded-xl bg-[var(--glass-bg)] p-3 md:grid-cols-2">
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.headingSource') || 'Heading content'}
                               </label>
                               <select
@@ -1539,7 +1539,7 @@ export default function StatusPillsConfigModal({
                               </select>
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase">
+                              <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase">
                                 {t('statusPills.subheadingSource') || 'Subheading content'}
                               </label>
                               <select
@@ -1591,7 +1591,7 @@ export default function StatusPillsConfigModal({
                             onClick={() => updatePill(pill.id, { clickable: !pill.clickable })}
                             className={`rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
                               pill.clickable
-                                ? 'bg-green-500/20 text-green-400'
+                                ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'
                                 : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'
                             }`}
                           >
@@ -1635,7 +1635,7 @@ export default function StatusPillsConfigModal({
                 );
               })()
             ) : (
-              <div className="flex h-full items-center justify-center text-gray-500">
+              <div className="flex h-full items-center justify-center text-[var(--text-muted)]">
                 <div className="space-y-3 text-center">
                   <p className="whitespace-pre-line">
                     {getSafeTranslationText('statusPills.selectPillHint')}
@@ -1664,7 +1664,7 @@ export default function StatusPillsConfigModal({
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 rounded-xl bg-green-500 py-3 font-bold tracking-widest text-white uppercase shadow-lg shadow-green-500/20 transition-colors hover:bg-green-600"
+            className="flex-1 rounded-xl border border-[var(--status-success-border)] bg-[var(--status-success-bg)] py-3 font-bold tracking-widest text-[var(--status-success-fg)] uppercase shadow-lg transition-colors hover:opacity-90"
           >
             <Check className="mr-2 inline h-5 w-5" />
             {t('statusPills.save')}
@@ -1691,3 +1691,4 @@ StatusPillsConfigModal.propTypes = {
   entities: PropTypes.objectOf(statusEntityShape),
   t: PropTypes.func,
 };
+
