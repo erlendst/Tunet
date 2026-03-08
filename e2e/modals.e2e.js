@@ -1,6 +1,13 @@
 import { test, expect } from './fixtures';
 
 test.describe('Modal Interactions', () => {
+  const enableEditMode = async (page) => {
+    const editButton = page.getByRole('button', { name: 'Edit' });
+    await expect(editButton).toBeVisible();
+    await editButton.click();
+    await page.waitForTimeout(200);
+  };
+
   const openSettingsDropdown = async (page) => {
     const trigger = page.getByTestId('settings-dropdown-trigger');
     await expect(trigger).toBeVisible();
@@ -29,6 +36,15 @@ test.describe('Modal Interactions', () => {
       localStorage.setItem('ha_url', 'http://localhost:8123');
       localStorage.setItem('ha_auth_method', 'token');
       localStorage.setItem('ha_token', 'test_token');
+      localStorage.setItem(
+        'tunet_pages_config',
+        JSON.stringify({
+          header: [],
+          pages: ['home'],
+          home: ['light.bedroom', 'light.kitchen'],
+        })
+      );
+      localStorage.setItem('tunet_card_settings', JSON.stringify({}));
       localStorage.setItem(
         'tunet_auth_cache_v1',
         JSON.stringify({
@@ -133,31 +149,16 @@ test.describe('Modal Interactions', () => {
   });
 
   test('should show card edit modal when clicking card settings', async ({ page }) => {
-    // Find a card with settings option (usually 3-dot menu or edit icon)
-    const cardOptions = page.locator('button[aria-label*="card"], [data-card-menu]').first();
-    
-    if (await cardOptions.isVisible()) {
-      await cardOptions.click();
-      await page.waitForTimeout(300);
+    await enableEditMode(page);
+    const firstCard = page.locator('[data-card-id]').first();
+    await expect(firstCard).toBeVisible();
+    const editCardButton = firstCard.locator('button[aria-label="Edit card"]').first();
+    await expect(editCardButton).toBeVisible();
+    await editCardButton.evaluate((el) => el.click());
+    await page.waitForTimeout(300);
 
-      // Context menu should appear
-      const menu = page.locator('[role="menu"], .context-menu').first();
-      
-      if (await menu.isVisible()) {
-        const editOption = page.locator('[role="menuitem"]:has-text("Edit"), button:has-text("Settings")').first();
-        
-        if (await editOption.isVisible()) {
-          await editOption.click();
-          await page.waitForTimeout(300);
-
-          // Card edit modal should open.
-          const modal = page.locator('[role="dialog"]').first();
-          await expect(modal).toBeVisible();
-        }
-      }
-    } else {
-      test.skip(true, 'Card options trigger not found in this layout.');
-    }
+    const modal = page.locator('[role="dialog"]').first();
+    await expect(modal).toBeVisible();
   });
 
   test('should handle modal transition animation', async ({ page }) => {

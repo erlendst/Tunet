@@ -1,11 +1,27 @@
 import { test, expect } from './fixtures';
 
 test.describe('Drag and Drop Interactions', () => {
+  const enableEditMode = async (page) => {
+    const editButton = page.getByRole('button', { name: 'Edit' });
+    await expect(editButton).toBeVisible();
+    await editButton.click();
+    await page.waitForTimeout(200);
+  };
+
   test.beforeEach(async ({ page, mockHAConnection }) => {
     await page.addInitScript(() => {
       localStorage.setItem('ha_url', 'http://localhost:8123');
       localStorage.setItem('ha_auth_method', 'token');
       localStorage.setItem('ha_token', 'test_token');
+      localStorage.setItem(
+        'tunet_pages_config',
+        JSON.stringify({
+          header: [],
+          pages: ['home'],
+          home: ['light.bedroom', 'light.kitchen'],
+        })
+      );
+      localStorage.setItem('tunet_card_settings', JSON.stringify({}));
       localStorage.setItem(
         'tunet_auth_cache_v1',
         JSON.stringify({
@@ -22,51 +38,18 @@ test.describe('Drag and Drop Interactions', () => {
   });
 
   test('should enable edit mode with button or long-press', async ({ page }) => {
-    // Look for edit/drag button (usually in header)
-    const editButton = page.locator('button[aria-label*="edit"], button[aria-label*="drag"], button:has-text("Edit")');
-    
-    if (await editButton.isVisible()) {
-      await editButton.click();
-    } else {
-      // Try long-press on dashboard area
-      const dashboard = page.locator('[role="main"], main, .dashboard');
-      if (await dashboard.isVisible()) {
-        // Long press typically shown by visual feedback
-        await dashboard.dispatchEvent('pointerdown');
-        await page.waitForTimeout(600);
-        await dashboard.dispatchEvent('pointerup');
-      }
-    }
-
-    // Check if visual indicator shows edit mode (usually styling changes)
+    await enableEditMode(page);
     const cards = page.locator('[draggable="true"]');
     const count = await cards.count();
-
-    if (count === 0) {
-      test.skip(true, 'Edit mode did not expose draggable cards in this layout/state.');
-    }
-
-    // Edit mode must expose draggable cards.
     expect(count).toBeGreaterThan(0);
     await expect(cards.first()).toHaveAttribute('draggable', 'true');
   });
 
-  test('should allow dragging card to new position', async ({ page, context }) => {
-    // Enable edit mode
-    const editButton = page.locator('button:has-text("Edit"), [aria-label*="edit"]').first();
-    if (await editButton.isVisible()) {
-      await editButton.click();
-      await page.waitForTimeout(200);
-    }
+  test('should allow dragging card to new position', async ({ page }) => {
+    await enableEditMode(page);
 
-    // Find draggable cards
-    const cards = page.locator('[draggable="true"]').filter({ hasNot: page.locator('text=Spacer') });
+    const cards = page.locator('[draggable="true"]');
     const draggableCount = await cards.count();
-
-    if (draggableCount < 2) {
-      test.skip(true, 'Need at least two draggable cards for reorder verification.');
-    }
-
     expect(draggableCount).toBeGreaterThan(1);
 
     const firstCard = cards.first();
@@ -74,48 +57,18 @@ test.describe('Drag and Drop Interactions', () => {
     await expect(firstCard).toBeVisible();
     await expect(secondCard).toBeVisible();
 
-    const firstBox = await firstCard.boundingBox();
-    const secondBox = await secondCard.boundingBox();
-    expect(firstBox).not.toBeNull();
-    expect(secondBox).not.toBeNull();
+    const firstHandle = page.locator('[data-drag-handle]').first();
+    await expect(firstHandle).toBeVisible();
+    await firstHandle.focus();
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(200);
 
-    if (firstBox && secondBox) {
-      const initialYDiff = Math.abs(firstBox.y - secondBox.y);
+    const storedConfig = await page.evaluate(() => {
+      const raw = localStorage.getItem('tunet_pages_config');
+      return raw ? JSON.parse(raw) : null;
+    });
 
-        // Start drag from center of card
-        const startX = firstBox.x + firstBox.width / 2;
-        const startY = firstBox.y + firstBox.height / 2;
-
-        // Drag 100px to the right
-        const endX = startX + 100;
-        const endY = startY;
-
-        // Use Playwright's drag operations
-        await firstCard.dragTo(secondCard, {
-          sourcePosition: { x: firstBox.width / 2, y: firstBox.height / 2 },
-        }).catch(() => {
-          // Drag might not be supported, use mouse events instead
-        });
-
-        // Alternative: manual drag simulation
-        await page.mouse.move(startX, startY);
-        await page.mouse.down();
-        await page.waitForTimeout(100);
-        await page.mouse.move(endX, endY, { steps: 10 });
-        await page.waitForTimeout(100);
-        await page.mouse.up();
-
-        // Wait for potential reorder animation
-        await page.waitForTimeout(300);
-
-        const movedBox = await firstCard.boundingBox();
-        expect(movedBox).not.toBeNull();
-        if (movedBox) {
-          const movedYDiff = Math.abs(movedBox.y - secondBox.y);
-          // Either card moved closer to target slot or remains clearly interactive.
-          expect(movedYDiff <= initialYDiff || movedBox.width > 0).toBe(true);
-        }
-    }
+    expect(storedConfig?.home).toEqual(['light.kitchen', 'light.bedroom']);
   });
 
   test('should persist card order changes', async ({ page }) => {
@@ -233,6 +186,15 @@ test.describe('Drag and Drop Interactions', () => {
       localStorage.setItem('ha_url', 'http://localhost:8123');
       localStorage.setItem('ha_auth_method', 'token');
       localStorage.setItem('ha_token', 'test_token');
+      localStorage.setItem(
+        'tunet_pages_config',
+        JSON.stringify({
+          header: [],
+          pages: ['home'],
+          home: ['light.bedroom', 'light.kitchen'],
+        })
+      );
+      localStorage.setItem('tunet_card_settings', JSON.stringify({}));
       localStorage.setItem(
         'tunet_auth_cache_v1',
         JSON.stringify({
