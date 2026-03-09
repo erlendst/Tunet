@@ -345,6 +345,12 @@ export const HomeAssistantProvider = ({ children, config }) => {
         }
       } catch (err) {
         console.error('[HA] Connection failed:', err);
+        
+        // Clean up OAuth callback params on failure so we don't get stuck in a loop
+        if (isOAuth && typeof globalThis.window !== 'undefined' && globalThis.window.location.search.includes('auth_callback')) {
+          globalThis.window.history.replaceState(null, '', globalThis.window.location.pathname);
+        }
+
         if (cancelled) return;
 
         // For OAuth, if auth is invalid, clear tokens and flag expiry

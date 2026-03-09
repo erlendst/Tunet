@@ -86,7 +86,19 @@ export function useConnectionSetup({
       loadTokens: () => Promise.resolve(loadTokens()),
     }).catch((err) => {
       console.error('OAuth login redirect failed:', err);
-      setConnectionTestResult({ success: false, message: t('system.oauth.redirectFailed') });
+      // Ensure we clear any leftover auth_callback from URL so subsequent clicks actually attempt a redirect
+      if (typeof window !== 'undefined' && window.location.search.includes('auth_callback')) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+      
+      if (err === 5) { // 5 = ERR_INVALID_HTTPS_TO_HTTP in HAWS
+        setConnectionTestResult({ 
+          success: false, 
+          message: 'Cannot use an HTTP Home Assistant URL when accessing the dashboard via HTTPS. Please use an HTTPS URL for Home Assistant (e.g. Nabu Casa / DuckDNS), or use a Long-Lived Access Token.' 
+        });
+      } else {
+        setConnectionTestResult({ success: false, message: t('system.oauth.redirectFailed') + (err ? ` (${err.message || err})` : '') });
+      }
     });
   };
 
