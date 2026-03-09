@@ -4,7 +4,10 @@
  * and Express serves directly in production.
  */
 
-import { getHomeAssistantRequestHeaders } from './apiAuth';
+import {
+  getValidatedHomeAssistantRequestHeaders,
+  notifyHomeAssistantApiUnauthorized,
+} from './apiAuth';
 
 const API_BASE = './api';
 
@@ -23,6 +26,9 @@ async function request(path, options = {}) {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      throw notifyHomeAssistantApiUnauthorized(body.error || 'Home Assistant authentication failed');
+    }
     const error = new Error(body.error || `API error ${res.status}`);
     error.status = res.status;
     error.body = body;
@@ -32,7 +38,7 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-const requestHeaders = () => getHomeAssistantRequestHeaders();
+const requestHeaders = () => getValidatedHomeAssistantRequestHeaders();
 
 // ── Profiles ─────────────────────────────────────────────────────────
 

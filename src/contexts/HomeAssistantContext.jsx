@@ -14,6 +14,7 @@ import {
   getAuth,
 } from 'home-assistant-js-websocket';
 import { saveTokens, loadTokens, clearOAuthTokens, hasOAuthTokens } from '../services/oauthStorage';
+import { HOME_ASSISTANT_API_UNAUTHORIZED_EVENT } from '../services/apiAuth';
 import { isEntityDataStale } from '../utils';
 
 /** @typedef {import('../types/dashboard').EntityMap} EntityMap */
@@ -445,6 +446,27 @@ export const HomeAssistantProvider = ({ children, config }) => {
     const timer = setTimeout(() => setHaUnavailableVisible(true), 2500);
     return () => clearTimeout(timer);
   }, [haUnavailable]);
+
+  useEffect(() => {
+    if (typeof globalThis.window === 'undefined') return undefined;
+
+    const handleUnauthorized = (event) => {
+      const authMethod = event?.detail?.authMethod || 'oauth';
+      setHaUnavailable(true);
+      setDisconnectedSince(Date.now());
+      if (authMethod === 'oauth') {
+        setOauthExpired(true);
+      }
+    };
+
+    globalThis.window.addEventListener(HOME_ASSISTANT_API_UNAUTHORIZED_EVENT, handleUnauthorized);
+    return () => {
+      globalThis.window.removeEventListener(
+        HOME_ASSISTANT_API_UNAUTHORIZED_EVENT,
+        handleUnauthorized
+      );
+    };
+  }, []);
 
   /** @type {HomeAssistantMetaValue} */
   const metaValue = useMemo(

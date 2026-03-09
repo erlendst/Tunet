@@ -1,6 +1,9 @@
 const API_BASE = './api';
 
-import { getHomeAssistantRequestHeaders } from './apiAuth';
+import {
+  getValidatedHomeAssistantRequestHeaders,
+  notifyHomeAssistantApiUnauthorized,
+} from './apiAuth';
 
 async function request(path, options = {}) {
   const mergedHeaders = options.headers
@@ -17,6 +20,9 @@ async function request(path, options = {}) {
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      throw notifyHomeAssistantApiUnauthorized(body.error || 'Home Assistant authentication failed');
+    }
     const error = new Error(body.error || `API error ${res.status}`);
     error.status = res.status;
     error.body = body;
@@ -26,7 +32,7 @@ async function request(path, options = {}) {
   return res.json();
 }
 
-const requestHeaders = () => getHomeAssistantRequestHeaders();
+const requestHeaders = () => getValidatedHomeAssistantRequestHeaders();
 
 export function fetchCurrentSettings(haUserId, deviceId, revision) {
   const revisionQuery = Number.isFinite(Number(revision))
