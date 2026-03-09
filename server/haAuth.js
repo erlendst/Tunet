@@ -274,6 +274,7 @@ export const createHomeAssistantAuthMiddleware = ({
     }
 
     let lastError = null;
+    let hasInvalidAuthError = false;
 
     for (const haUrl of haUrls) {
       try {
@@ -284,10 +285,17 @@ export const createHomeAssistantAuthMiddleware = ({
         return;
       } catch (error) {
         lastError = error;
+        if (isInvalidAuthError(error)) {
+          hasInvalidAuthError = true;
+        }
       }
     }
 
     const message = String(lastError?.message || 'Home Assistant authentication failed');
-    sendUnauthorized(res, `Home Assistant authentication failed: ${message}`);
+    if (hasInvalidAuthError) {
+      sendUnauthorized(res, `Home Assistant authentication failed: ${message}`);
+    } else {
+      res.status(503).json({ error: `Could not reach Home Assistant to verify credentials: ${message}` });
+    }
   };
 };

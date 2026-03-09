@@ -569,7 +569,7 @@
   "person.heading": "Kurs",
   "person.distanceFromHome": "Avstånd från hem",
   "map.locationUnknown": "Plats inte tillgänglig",
-  "profiles.backendUnavailable": "Profilservern är inte tillgänglig.",
+  "profiles.backendUnavailable": "Profilservern är inte tillgänglig. Det kan bero på att Home Assistant inte är nåbar eller ett nätverkskonfigurationsproblem.",
   "profiles.blankActive": "Instrumentpanelen återställdes. Du kan ångra för att återställa din tidigare layout.",
   "profiles.cancelEdit": "Avbryt",
   "profiles.edit": "Redigera",

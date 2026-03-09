@@ -569,7 +569,7 @@
   "person.heading": "标题",
   "person.distanceFromHome": "离家的距离",
   "map.locationUnknown": "位置不可用",
-  "profiles.backendUnavailable": "配置文件服务器不可用。",
+  "profiles.backendUnavailable": "配置文件服务器不可用。这可能是由于 Home Assistant 无法访问或网络配置问题造成的。",
   "profiles.blankActive": "仪表板已重置。您可以撤消以恢复之前的设置。",
   "profiles.cancelEdit": "取消",
   "profiles.edit": "编辑",

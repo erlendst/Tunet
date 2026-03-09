@@ -555,7 +555,7 @@
   "person.heading": "Kurs",
   "person.distanceFromHome": "Entfernung von Zuhause",
   "map.locationUnknown": "Standort nicht verfügbar",
-  "profiles.backendUnavailable": "Profil-Server nicht verfügbar.",
+  "profiles.backendUnavailable": "Profil-Server nicht verfügbar. Möglicherweise ist Home Assistant nicht erreichbar oder es liegt ein Netzwerkkonfigurationsproblem vor.",
   "profiles.blankActive": "Dashboard wurde zurückgesetzt. Du kannst dies rückgängig machen, um dein vorheriges Setup wiederherzustellen.",
   "profiles.cancelEdit": "Abbrechen",
   "profiles.edit": "Bearbeiten",

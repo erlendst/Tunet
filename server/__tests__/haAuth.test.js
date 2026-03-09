@@ -205,4 +205,43 @@ describe('createHomeAssistantAuthMiddleware', () => {
     expect(req.authenticatedHaUrl).toBe('http://host.docker.internal:8123');
     expect(next).toHaveBeenCalledTimes(1);
   });
+
+  it('returns 503 when all URL candidates fail with connectivity errors (not auth errors)', async () => {
+    const validateHomeAssistantUser = vi
+      .fn()
+      .mockRejectedValue(new Error('connect ECONNREFUSED 192.168.1.1:8123'));
+    const middleware = createHomeAssistantAuthMiddleware({ validateHomeAssistantUser });
+    const req = createRequest({
+      authorization: 'Bearer token-1',
+      'x-ha-url': 'http://192.168.1.1:8123',
+    });
+    const res = createResponse();
+    const next = vi.fn();
+
+    await middleware(req, res, next);
+
+    expect(res.statusCode).toBe(503);
+    expect(res.body.error).toMatch(/Could not reach Home Assistant/);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('returns 401 when at least one URL candidate fails with an auth error', async () => {
+    const validateHomeAssistantUser = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('connect ECONNREFUSED 192.168.1.1:8123'))
+      .mockRejectedValueOnce(new Error('Invalid auth'));
+    const middleware = createHomeAssistantAuthMiddleware({ validateHomeAssistantUser });
+    const req = createRequest({
+      authorization: 'Bearer bad-token',
+      'x-ha-url': 'http://192.168.1.1:8123',
+      'x-ha-fallback-url': 'http://192.168.1.2:8123',
+    });
+    const res = createResponse();
+    const next = vi.fn();
+
+    await middleware(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(next).not.toHaveBeenCalled();
+  });
 });

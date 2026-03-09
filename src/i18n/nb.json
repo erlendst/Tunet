@@ -59,7 +59,7 @@
   "onboarding.back": "Tilbake",
   "onboarding.next": "Neste",
   "onboarding.finish": "Start",
-  "profiles.backendUnavailable": "Profilserver er ikke tilgjengelig.",
+  "profiles.backendUnavailable": "Profilserver er ikke tilgjengelig. Dette kan skyldes at Home Assistant ikke er nåbar eller et nettverkskonfigurasjonsproblem.",
   "profiles.blankActive": "Dashboardet ble nullstilt. Du kan angre for å gjenopprette oppsettet ditt.",
   "profiles.cancelEdit": "Avbryt",
   "profiles.edit": "Rediger",
