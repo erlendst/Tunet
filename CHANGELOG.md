@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.14.6] — 2026-03-10
+
+### Changed
+- Improved the Updates panel layout so long update names wrap cleanly without pushing actions outside the card.
+
+### Fixed
+- Restored a clean typecheck pass by typing the API unauthorized error shape used by backend-authenticated requests.
+
+### Security
+- Restricted Supervisor ingress header trust to explicit add-on mode so standalone and generic proxy deployments no longer accept those headers by default.
+
+
 ## [1.14.5] — 2026-03-10
 
 ### Fixed
