@@ -24,6 +24,8 @@ const CARD_SPAN_RULES = [
 ];
 
 const getLegacyRowSpan = (cardId, getCardSettingsKey, cardSettings, activePage) => {
+  const settings = cardSettings[getCardSettingsKey(cardId)] || cardSettings[cardId] || {};
+
   // Automations have their own logic based on type sub-setting
   if (cardId.startsWith('automation.')) {
     if (['sensor', 'entity', 'toggle'].includes(settings.type)) {

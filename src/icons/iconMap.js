@@ -961,7 +961,7 @@ export function getIconComponent(iconName, fallbackIcon = FALLBACK_ICON) {
     const initialPath = mdiPathByName.get(iconName);
     if (initialPath) {
       return (props) =>
-        React.createElement(MdiIcon, { path: initialPath, size: '1.4em', ...props });
+        React.createElement(MdiIcon, { path: initialPath, size: '1.4em', ...props, style: { ...(props.style || {}) } });
     }
 
     return function LazyMdiIcon(props) {
@@ -986,7 +986,7 @@ export function getIconComponent(iconName, fallbackIcon = FALLBACK_ICON) {
       }, [path]);
 
       if (!path) return React.createElement(fallbackIcon, props);
-      return React.createElement(MdiIcon, { path, size: '1.4em', ...props });
+      return React.createElement(MdiIcon, { path, size: '1.4em', ...props, style: { ...(props.style || {}) } });
     };
   }
   return fallbackIcon;

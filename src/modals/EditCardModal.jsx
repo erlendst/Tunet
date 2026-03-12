@@ -3505,7 +3505,7 @@ export default function EditCardModal({
           </button>
         </div>
       </>
-        </>
+      </>
       )}
     </AccessibleModalShell>
   );
