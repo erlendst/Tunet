@@ -20,6 +20,7 @@ import {
   Shield,
   Sparkles,
   Thermometer,
+  Bus,
   X,
   Zap,
 } from '../icons';
@@ -352,6 +353,7 @@ function AddCardContent({
       if (addCardType === 'cost') return id.startsWith('sensor.') || id.startsWith('input_number.');
       if (addCardType === 'media') return id.startsWith('media_player.');
       if (addCardType === 'sonos') return id.startsWith('media_player.') && isSonosEntity(entities[id]);
+      if (addCardType === 'travel') return id.startsWith('sensor.');
       if (addCardType === 'sensor') {
         return (
           (id.startsWith('sensor.') ||

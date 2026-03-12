@@ -9,7 +9,7 @@ export {
   isConditionConfigured,
   resolveConditionEntityId,
 } from './conditionUtils';
-export { getCardGridSpan, getCardColSpan, buildGridLayout } from './gridLayout';
+export { getCardGridSpan, getCardGridSize, getCardColSpan, buildGridLayout } from './gridLayout';
 export { createDragAndDropHandlers } from './dragAndDrop';
 export {
   getEffectiveUnitMode,
@@ -28,3 +28,4 @@ export {
 export { getEffectiveRoomEntityIds, filterEntitiesByDomain } from './roomEntities';
 export { matchCarEntities } from './carEntityMatcher';
 export { CHART_STATUS_COLORS, WEATHER_BAND_COLORS, getThresholdColor } from './chartColors';
+export { getLocaleFromLanguage } from './locale';

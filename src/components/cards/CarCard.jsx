@@ -88,6 +88,8 @@ const CarCard = ({
     pluggedId,
     climateId,
     imageUrl,
+    tempId,
+    vehicleImageUrl
   } = settings;
   const effectiveChargingId = chargingStateId || chargingId;
 
@@ -151,6 +153,14 @@ const CarCard = ({
         }}
       >
         {controls}
+        {vehicleImageUrl && (
+          <img
+            src={vehicleImageUrl}
+            alt=""
+            aria-hidden="true"
+            className="absolute right-0 bottom-0 w-2/5 h-4/5 object-contain object-right-bottom pointer-events-none select-none"
+          />
+        )}
         <div className="flex min-w-0 flex-1 items-center gap-4">
           <div
             className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'}`}
@@ -201,6 +211,14 @@ const CarCard = ({
       }}
     >
       {controls}
+      {vehicleImageUrl && (
+        <img
+          src={vehicleImageUrl}
+          alt=""
+          aria-hidden="true"
+          className="absolute right-0 bottom-0 w-3/5 h-3/5 object-contain object-right-bottom pointer-events-none select-none"
+        />
+      )}
       <div className={`flex items-start justify-between font-sans ${isDenseMobile ? 'gap-3' : ''}`}>
         <div
           className={`transition-all group-hover:scale-110 ${isHtg ? 'animate-pulse bg-orange-500/20 text-orange-400' : isCharging ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'} ${isDenseMobile ? 'rounded-xl p-2.5' : 'rounded-2xl p-3'}`}

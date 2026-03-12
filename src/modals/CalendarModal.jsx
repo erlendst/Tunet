@@ -19,6 +19,7 @@ export default function CalendarModal({ show, onClose, conn, entities, language,
   const locale = getLocaleForLanguage(language);
   const modalTitleId = 'calendar-modal-title';
 
+
   // Get all calendar entities
   const allCalendars = Object.keys(entities || {})
     .filter((id) => id.startsWith('calendar.'))

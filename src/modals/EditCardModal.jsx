@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Check, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Check, Plus, ChevronDown, ChevronUp, RefreshCw, Upload, Trash2 } from 'lucide-react';
 import IconPicker from '../components/ui/IconPicker';
 import ConditionBuilder from '../components/ui/ConditionBuilder';
 import AccessibleModalShell from '../components/ui/AccessibleModalShell';
@@ -733,6 +733,7 @@ export default function EditCardModal({
   isEditSpacer,
   isEditCamera,
   isEditRoom,
+  isEditTravel,
   isEditAndroidTV,
   isEditFan,
   isEditVacuum,
@@ -748,6 +749,7 @@ export default function EditCardModal({
   customIcons,
   saveCustomIcon,
   saveCardSetting,
+  maxGridColumns,
 }) {
   const [mediaSearch, setMediaSearch] = React.useState('');
   const [showVisibilityLogic, setShowVisibilityLogic] = React.useState(false);
@@ -1101,6 +1103,56 @@ export default function EditCardModal({
               )}
             </div>
           )}
+
+          {editSettingsKey && (
+            <div className="space-y-3">
+              <label className="text-xs uppercase font-bold text-gray-500 ml-1">
+                {t('form.cardSpan') || 'Card span'}
+              </label>
+              <div className="popup-surface rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] uppercase font-bold tracking-widest text-[var(--text-secondary)]">
+                      {t('form.gridColsSpan') || 'Columns'}
+                    </span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">
+                      {editSettings.gridCols || 1}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={1}
+                    max={Math.max(1, Math.min(8, maxGridColumns || 4))}
+                    step={1}
+                    value={editSettings.gridCols || 1}
+                    onChange={(e) => saveCardSetting(editSettingsKey, 'gridCols', parseInt(e.target.value, 10))}
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] uppercase font-bold tracking-widest text-[var(--text-secondary)]">
+                      {t('form.gridRowsSpan') || 'Rows'}
+                    </span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">
+                      {editSettings.gridRows || 1}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={1}
+                    max={8}
+                    step={1}
+                    value={editSettings.gridRows || 1}
+                    onChange={(e) => saveCardSetting(editSettingsKey, 'gridRows', parseInt(e.target.value, 10))}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+
 
           {canEditIcon && (
             <div className="space-y-2">
@@ -2122,6 +2174,100 @@ export default function EditCardModal({
               </p>
             </div>
           )}
+          {isEditTravel && editSettingsKey && (
+            <div className="space-y-3">
+              {(() => {
+                const sensorOptions = sortByName(byDomain('sensor'));
+                const travelIds = Array.isArray(editSettings.travelIds) ? editSettings.travelIds.filter(Boolean).slice(0, 2) : [];
+                const primaryTravelId = travelIds[0] || editSettings.travelId || null;
+                const secondaryTravelId = travelIds[1] || editSettings.travelIdSecondary || null;
+                const saveTravelIds = (primary, secondary) => {
+                  const next = Array.from(new Set([primary, secondary].filter(Boolean))).slice(0, 2);
+                  saveCardSetting(editSettingsKey, 'travelIds', next);
+                  saveCardSetting(editSettingsKey, 'travelId', next[0] || null);
+                  saveCardSetting(editSettingsKey, 'travelIdSecondary', next[1] || null);
+                };
+
+                return (
+                  <div className="space-y-3">
+                    <SearchableSelect
+                      label={t('travel.primaryStop') || 'Primary stop'}
+                      value={primaryTravelId}
+                      options={sensorOptions}
+                      onChange={(id) => saveTravelIds(id, secondaryTravelId)}
+                      placeholder={t('travel.selectPrimaryStop') || 'Select primary stop'}
+                      entities={entities}
+                      t={t}
+                    />
+                    <SearchableSelect
+                      label={t('travel.secondaryStop') || 'Secondary stop (optional)'}
+                      value={secondaryTravelId}
+                      options={sensorOptions.filter((id) => id !== primaryTravelId)}
+                      onChange={(id) => saveTravelIds(primaryTravelId, id)}
+                      placeholder={t('travel.selectSecondaryStop') || 'Select secondary stop'}
+                      entities={entities}
+                      t={t}
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
+                          {t('travel.primaryTitle') || 'Primary stop title'}
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 rounded-xl popup-surface text-sm text-[var(--text-primary)] outline-none focus:border-blue-500/50"
+                          defaultValue={editSettings.travelTitlePrimary || ''}
+                          onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitlePrimary', e.target.value.trim() || null)}
+                          placeholder={t('travel.primaryTitlePlaceholder') || 'Optional custom name'}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
+                          {t('travel.secondaryTitle') || 'Secondary stop title'}
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 rounded-xl popup-surface text-sm text-[var(--text-primary)] outline-none focus:border-blue-500/50"
+                          defaultValue={editSettings.travelTitleSecondary || ''}
+                          onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitleSecondary', e.target.value.trim() || null)}
+                          placeholder={t('travel.secondaryTitlePlaceholder') || 'Optional custom name'}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <label className="text-xs uppercase font-bold text-gray-500 ml-1">
+                {t('travel.itemsToShow') || 'Departures to show'}
+              </label>
+              <div className="popup-surface rounded-2xl p-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  {[1, 2, 3, 4, 5].map((count) => {
+                    const selected = (editSettings.listCount || 3) === count;
+                    return (
+                      <button
+                        key={count}
+                        type="button"
+                        onClick={() => saveCardSetting(editSettingsKey, 'listCount', count)}
+                        className={`w-9 h-9 rounded-xl text-sm font-bold transition-colors ${selected ? 'bg-blue-500 text-white' : 'bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'}`}
+                      >
+                        {count}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] text-[var(--text-muted)]">
+                  {t('travel.itemsToShowHint') || 'Choose how many departures are listed on this card (max 5).'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {isEditCar && editSettingsKey && (() => {
+            const [showAddSensor, setShowAddSensor] = React.useState(false);
+            const [sensorType, setSensorType] = React.useState('');
+            const [sensorEntity, setSensorEntity] = React.useState('');
 
           {isEditCar && editSettingsKey && (
             <CarMappingsSection
@@ -2159,6 +2305,92 @@ export default function EditCardModal({
               updateButtonOptions={updateButtonOptions}
             />
           )}
+
+          {isEditCar && editSettingsKey && (() => {
+            const currentImage = (editSettings || {}).vehicleImageUrl || null;
+            const fileInputRef = React.useRef(null);
+            const [uploading, setUploading] = React.useState(false);
+            const [uploadError, setUploadError] = React.useState(null);
+
+            const handleUpload = async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setUploading(true);
+              setUploadError(null);
+              try {
+                const formData = new FormData();
+                formData.append('image', file);
+                const res = await fetch('/api/uploads/car-image', { method: 'POST', body: formData });
+                if (!res.ok) throw new Error('Upload failed');
+                const { url } = await res.json();
+                saveCardSetting(editSettingsKey, 'vehicleImageUrl', url);
+              } catch (err) {
+                setUploadError(t('car.image.uploadError'));
+              } finally {
+                setUploading(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+              }
+            };
+
+            const handleRemove = async () => {
+              if (!currentImage) return;
+              const filename = currentImage.split('/').pop();
+              saveCardSetting(editSettingsKey, 'vehicleImageUrl', null);
+              try {
+                await fetch('/api/uploads/car-image', {
+                  method: 'DELETE',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ filename })
+                });
+              } catch (_) { /* ignore cleanup errors */ }
+            };
+
+            return (
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-xs font-bold uppercase tracking-widest text-gray-500">
+                  {t('car.image.title')}
+                </div>
+                {currentImage ? (
+                  <div className="relative rounded-2xl overflow-hidden bg-[var(--glass-bg)] border border-[var(--glass-border)]" style={{ aspectRatio: '16/7' }}>
+                    <img
+                      src={currentImage}
+                      alt={t('car.image.preview')}
+                      className="w-full h-full object-contain p-4"
+                    />
+                    <button
+                      onClick={handleRemove}
+                      className="absolute top-2 right-2 p-2 rounded-xl bg-red-500/80 text-white hover:bg-red-600 transition-colors"
+                      title={t('car.image.remove')}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="w-full py-8 rounded-2xl border border-dashed border-[var(--glass-border)] bg-[var(--glass-bg)] hover:bg-[var(--glass-bg-hover)] text-[var(--text-secondary)] flex flex-col items-center gap-2 transition-colors disabled:opacity-50"
+                  >
+                    <Upload className="w-6 h-6" />
+                    <span className="text-xs font-bold uppercase tracking-widest">
+                      {uploading ? t('car.image.uploading') : t('car.image.upload')}
+                    </span>
+                    <span className="text-[10px] opacity-60">{t('car.image.hint')}</span>
+                  </button>
+                )}
+                {uploadError && (
+                  <p className="text-xs text-red-400 text-center">{uploadError}</p>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpload}
+                />
+              </div>
+            );
+          })()}
 
           {canEditStatus && !isEditSensor && (
             <div className="popup-surface space-y-4 rounded-2xl p-4">

@@ -3,59 +3,27 @@
  * Pure functions with zero React / UI dependencies.
  */
 
-/**
- * Determine how many grid columns a card should span.
- *
- * @param {string} cardId
- * @param {Function} getCardSettingsKey  (cardId) => settingsKey
- * @param {Object}  cardSettings         Full card-settings map
- * @param {string}  activePage           Current active page id
- * @param {{rowPx?: number, gapPx?: number}} [layoutMetrics] Runtime layout metrics
- * @returns {number} 1+
- */
-// Size-to-span mappings per card type category
+// Size-to-rowspan mappings per card type category
 const SPAN_TABLE = {
-  // { small, medium, large } → row span
-  triSize: { small: 1, medium: 2, default: 4 }, // calendar, todo
-  dualSize: { small: 1, default: 2 }, // light, car, room
+  // { small, medium, large } → row count
+  triSize:  { small: 1, medium: 2, default: 4 },   // calendar, todo
+  dualSize: { small: 1, default: 2 },               // light, car, room, travel
 };
 
 const CARD_SPAN_RULES = [
   // prefix match → category  (checked in order)
   { prefix: 'calendar_card_', category: 'triSize' },
-  { prefix: 'todo_card_', category: 'triSize' },
-  { prefix: 'light_', category: 'dualSize' },
-  { prefix: 'light.', category: 'dualSize' },
-  { prefix: 'car_card_', category: 'dualSize' },
-  { prefix: 'room_card_', category: 'dualSize' },
-  { prefix: 'camera_card_', category: 'dualSize' },
-  { prefix: 'spacer_card_', category: 'dualSize' },
+  { prefix: 'todo_card_',     category: 'triSize' },
+  { prefix: 'light_',         category: 'dualSize' },
+  { prefix: 'light.',         category: 'dualSize' },
+  { prefix: 'car_card_',      category: 'dualSize' },
+  { prefix: 'room_card_',     category: 'dualSize' },
+  { prefix: 'travel_card_',   category: 'dualSize' },
+  { prefix: 'camera_card_',   category: 'dualSize' },
+  { prefix: 'spacer_card_',   category: 'dualSize' },
 ];
 
-export const getCardGridSpan = (
-  cardId,
-  getCardSettingsKey,
-  cardSettings,
-  activePage,
-  layoutMetrics = {}
-) => {
-  const settings = cardSettings[getCardSettingsKey(cardId)] || cardSettings[cardId] || {};
-  const rowPx = Number.isFinite(layoutMetrics?.rowPx) ? layoutMetrics.rowPx : 100;
-  const gapPx = Number.isFinite(layoutMetrics?.gapPx) ? layoutMetrics.gapPx : 20;
-
-  if (cardId.startsWith('spacer_card_')) {
-    const rawHeightPx = Number(settings.heightPx);
-    if (Number.isFinite(rawHeightPx) && rawHeightPx > 0) {
-      const estimatedRows = Math.ceil((rawHeightPx + gapPx) / (rowPx + gapPx));
-      return Math.max(1, estimatedRows);
-    }
-
-    const rawHeightRows = Number(settings.heightRows);
-    if (Number.isFinite(rawHeightRows) && rawHeightRows >= 1) {
-      return Math.max(1, Math.round(rawHeightRows));
-    }
-  }
-
+const getLegacyRowSpan = (cardId, getCardSettingsKey, cardSettings, activePage) => {
   // Automations have their own logic based on type sub-setting
   if (cardId.startsWith('automation.')) {
     if (['sensor', 'entity', 'toggle'].includes(settings.type)) {
@@ -88,6 +56,29 @@ export const getCardGridSpan = (
   return 2;
 };
 
+const toPositiveInt = (value) => {
+  const num = parseInt(value, 10);
+  return Number.isFinite(num) && num > 0 ? num : null;
+};
+
+/**
+ * Determine card size in grid cells.
+ *
+ * @returns {{ rows: number, cols: number }}
+ */
+export const getCardGridSize = (cardId, getCardSettingsKey, cardSettings, activePage) => {
+  const settings = cardSettings[getCardSettingsKey(cardId)] || cardSettings[cardId] || {};
+  const defaultRows = getLegacyRowSpan(cardId, getCardSettingsKey, cardSettings, activePage);
+  return {
+    rows: toPositiveInt(settings.gridRows) || defaultRows,
+    cols: toPositiveInt(settings.gridCols) || 1,
+  };
+};
+
+// Backwards-compatible helper used by legacy tests/callers.
+export const getCardGridSpan = (cardId, getCardSettingsKey, cardSettings, activePage) =>
+  getCardGridSize(cardId, getCardSettingsKey, cardSettings, activePage).rows;
+
 /**
  * Determine how many grid columns a card should occupy horizontally.
  *
@@ -107,11 +98,10 @@ export const getCardColSpan = (cardId, getCardSettingsKey, cardSettings) => {
  *
  * @param {string[]}  ids       Ordered card ids
  * @param {number}    columns   Number of grid columns
- * @param {Function}  spanFn    (cardId) => number  – pre-bound getCardGridSpan (row span)
- * @param {Function}  [colSpanFn] (cardId) => number  – pre-bound getCardColSpan
- * @returns {Object}  { [cardId]: { row, col, span, colSpan } }
+ * @param {Function}  sizeFn    (cardId) => number | { rows:number, cols:number }
+ * @returns {Object}  { [cardId]: { row, col, rowSpan, colSpan, span } }
  */
-export const buildGridLayout = (ids, columns, spanFn, colSpanFn) => {
+export const buildGridLayout = (ids, columns, sizeFn) => {
   if (!columns || columns < 1) return {};
   const occupancy = [];
   const positions = {};
@@ -148,7 +138,7 @@ export const buildGridLayout = (ids, columns, spanFn, colSpanFn) => {
       for (let col = 0; col < columns; col += 1) {
         if (canPlace(row, col, rowSpan, colSpan)) {
           place(row, col, rowSpan, colSpan);
-          positions[id] = { row: row + 1, col: col + 1, span: rowSpan, colSpan };
+          positions[id] = { row: row + 1, col: col + 1, rowSpan, colSpan, span: rowSpan };
           placed = true;
           break;
         }
@@ -159,8 +149,9 @@ export const buildGridLayout = (ids, columns, spanFn, colSpanFn) => {
 
   for (let i = 0; i < ids.length; i += 1) {
     const id = ids[i];
-    const rowSpan = spanFn(id);
-    const colSpan = colSpanFn ? Math.min(colSpanFn(id), columns) : 1;
+    const rawSize = sizeFn(id);
+    const rowSpan = Math.max(1, typeof rawSize === 'number' ? rawSize : (rawSize?.rows || 1));
+    const colSpan = Math.max(1, Math.min(columns, typeof rawSize === 'number' ? 1 : (rawSize?.cols || 1)));
     placeSingle(id, rowSpan, colSpan);
   }
 

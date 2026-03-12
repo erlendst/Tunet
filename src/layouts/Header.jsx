@@ -77,6 +77,7 @@ export default function Header({
     ? { hour: 'numeric', minute: '2-digit', hour12: true }
     : { hour: '2-digit', minute: '2-digit', hour12: false };
 
+
   const timeStr = now.toLocaleTimeString(locale, timeOptions);
   const headingFontSize = `calc(clamp(3rem, 5vw, 3.75rem) * ${headerScale})`;
   const clockFontSize = `calc(clamp(3rem, 5vw, 3.75rem) * ${headerScale} * ${clockScale})`;

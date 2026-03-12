@@ -60,6 +60,8 @@ export const handleAddSelected = (ctx) => {
         return selectedEntities.filter((id) => id.startsWith('media_player.'));
       case 'alarm':
         return selectedEntities.filter((id) => id.startsWith('alarm_control_panel.'));
+      case 'travel':
+        return selectedEntities.filter((id) => id.startsWith('sensor.'));
       default:
         return selectedEntities;
     }
@@ -200,6 +202,26 @@ export const handleAddSelected = (ctx) => {
         const cardId = `alarm_card_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         const settingsKey = getCardSettingsKey(cardId, addCardTargetPage);
         newSettings[settingsKey] = { ...(newSettings[settingsKey] || {}), alarmId: entityId };
+        return cardId;
+      });
+      persistCardSettings(newSettings);
+      commitCards(newCardIds);
+      setSelectedEntities([]);
+      return;
+    }
+
+    case 'travel': {
+      const travelEntities = selectedEntitiesForType();
+      if (travelEntities.length === 0) return;
+      const newSettings = { ...cardSettings };
+      const newCardIds = travelEntities.map((entityId) => {
+        const cardId = `travel_card_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const settingsKey = getCardSettingsKey(cardId, addCardTargetPage);
+        newSettings[settingsKey] = {
+          ...(newSettings[settingsKey] || {}),
+          travelId: entityId,
+          travelIds: [entityId],
+        };
         return cardId;
       });
       persistCardSettings(newSettings);

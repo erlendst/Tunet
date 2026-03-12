@@ -313,6 +313,99 @@ html[data-theme='flat'] .popup-surface-hover {
   box-shadow: none !important;
 }
 
+html[data-theme='oled'] * {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+html[data-theme='oled'] .modal-close,
+html[data-theme='oled'] .modal-close-dark,
+html[data-theme='oled'] .popup-surface,
+html[data-theme='oled'] .popup-surface-hover {
+  box-shadow: none !important;
+}
+html[data-theme='oled'] .touch-feedback:hover {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* OLED theme: keep warm accent tokens black-on-white without killing hover/active classes */
+html[data-theme='oled'] .text-amber-400,
+html[data-theme='oled'] .text-amber-500,
+html[data-theme='oled'] .text-orange-400,
+html[data-theme='oled'] .text-orange-500,
+html[data-theme='oled'] .text-yellow-300,
+html[data-theme='oled'] .text-yellow-400 {
+  color: #000000 !important;
+}
+
+html[data-theme='oled'] .border-amber-500\/20,
+html[data-theme='oled'] .border-amber-500\/30,
+html[data-theme='oled'] .border-orange-500\/20,
+html[data-theme='oled'] .border-yellow-500\/20 {
+  border-color: #000000 !important;
+}
+
+html[data-theme='oled'] .bg-amber-500\/10 {
+  background-color: #ffffff !important;
+}
+html[data-theme='oled'] .bg-amber-500\/15 {
+  background-color: #ffffff !important;
+}
+html[data-theme='oled'] .bg-amber-500\/20,
+html[data-theme='oled'] .bg-orange-500\/20 {
+  background-color: #ffffff !important;
+}
+html[data-theme='oled'] .bg-amber-500\/30,
+html[data-theme='oled'] .bg-orange-500\/30 {
+  background-color: #ffffff !important;
+}
+html[data-theme='oled'] .bg-amber-500,
+html[data-theme='oled'] .bg-orange-500 {
+  background-color: #ffffff !important;
+}
+html[data-theme='oled'] .bg-yellow-500\/10 {
+  background-color: #ffffff !important;
+}
+
+html[data-theme='oled'] .fill-amber-400\/20 {
+  fill: #000000 !important;
+}
+
+/* Catch hardcoded inline warm tones used by some cards */
+html[data-theme='oled'] [style*='249, 115, 22'],
+html[data-theme='oled'] [style*='217, 119, 6'] {
+  background-color: var(--color-white) !important;
+  border-color: var(--color-white) !important;
+}
+
+/* OLED sliders: remove gray tracks and keep strict black/white */
+html[data-theme='oled'] .bg-white\/10,
+html[data-theme='oled'] .bg-white\/5 {
+  background-color: #000000 !important;
+}
+
+html[data-theme='oled'] .border-white\/5 {
+  border-color: #ffffff !important;
+}
+
+/* OLED: force full-contrast text everywhere */
+html[data-theme='oled'] :is(
+  h1, h2, h3, h4, h5, h6,
+  p, span, label, a, button, li, dt, dd, small, strong, em
+) {
+  opacity: 1 !important;
+}
+
+html[data-theme='oled'] [class*='text-gray-'],
+html[data-theme='oled'] [class*='text-slate-'],
+html[data-theme='oled'] [class*='text-zinc-'],
+html[data-theme='oled'] [class*='text-neutral-'],
+html[data-theme='oled'] [class*='text-stone-'],
+html[data-theme='oled'] [class*='text-[var(--text-secondary)]'],
+html[data-theme='oled'] [class*='text-[var(--text-muted)]'] {
+  color: #ffffff !important;
+}
+
 /* Custom scrollbar for modal content */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;

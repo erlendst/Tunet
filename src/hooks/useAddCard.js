@@ -118,6 +118,7 @@ export function useAddCard({
     if (addCardType === 'media') return t('addCard.available.players');
     if (addCardType === 'sonos') return t('addCard.available.sonos');
     if (addCardType === 'car') return t('addCard.available.cars');
+    if (addCardType === 'travel') return t('addCard.available.travels');
     if (addCardType === 'toggle') return t('addCard.available.toggles');
     if (addCardType === 'sensor') return t('addCard.available.sensors');
     if (addCardType === 'entity') return t('addCard.available.entities');
@@ -150,13 +151,15 @@ export function useAddCard({
                             ? 'addCard.item.players'
                           : addCardType === 'car'
                             ? 'addCard.item.cars'
-                            : addCardType === 'toggle'
-                              ? 'addCard.item.toggles'
-                              : addCardType === 'sensor'
-                                ? 'addCard.item.sensors'
-                                : addCardType === 'entity'
-                                  ? 'addCard.item.entities'
-                                  : 'addCard.item.lights';
+                            : addCardType === 'travel'
+                              ? 'addCard.item.travels'
+                              : addCardType === 'toggle'
+                                ? 'addCard.item.toggles'
+                                : addCardType === 'sensor'
+                                  ? 'addCard.item.sensors'
+                                  : addCardType === 'entity'
+                                    ? 'addCard.item.entities'
+                                    : 'addCard.item.lights';
 
     return t('addCard.noneLeft').replace('{item}', t(itemKey));
   };

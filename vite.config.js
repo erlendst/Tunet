@@ -5,7 +5,6 @@ import { readFileSync } from 'fs';
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default defineConfig({
-  base: './',
   plugins: [react()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
@@ -118,6 +117,10 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+      },
+      '/uploads': {
         target: 'http://localhost:3002',
         changeOrigin: true,
       },
