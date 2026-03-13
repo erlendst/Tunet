@@ -2264,11 +2264,6 @@ export default function EditCardModal({
             </div>
           )}
 
-          {isEditCar && editSettingsKey && (() => {
-            const [showAddSensor, setShowAddSensor] = React.useState(false);
-            const [sensorType, setSensorType] = React.useState('');
-            const [sensorEntity, setSensorEntity] = React.useState('');
-
           {isEditCar && editSettingsKey && (
             <CarMappingsSection
               t={t}

@@ -158,7 +158,7 @@ const CarCard = ({
             src={vehicleImageUrl}
             alt=""
             aria-hidden="true"
-            className="absolute right-0 bottom-0 w-2/5 h-4/5 object-contain object-right-bottom pointer-events-none select-none"
+            className="absolute top-2 right-2 h-[55%] max-w-[40%] object-contain object-right-top pointer-events-none select-none drop-shadow-md"
           />
         )}
         <div className="flex min-w-0 flex-1 items-center gap-4">
@@ -216,7 +216,7 @@ const CarCard = ({
           src={vehicleImageUrl}
           alt=""
           aria-hidden="true"
-          className="absolute right-0 bottom-0 w-3/5 h-3/5 object-contain object-right-bottom pointer-events-none select-none"
+          className="absolute top-4 right-4 h-[58%] max-w-[50%] object-contain object-right-top pointer-events-none select-none drop-shadow-lg"
         />
       )}
       <div className={`flex items-start justify-between font-sans ${isDenseMobile ? 'gap-3' : ''}`}>
