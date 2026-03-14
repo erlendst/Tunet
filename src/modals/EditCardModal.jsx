@@ -740,6 +740,10 @@ export default function EditCardModal({
   editSettingsKey,
   editSettings,
   isEditWeatherTemp,
+  isEditToday,
+  isEditClimateOverview,
+  isEditScenes,
+  isEditRoomLights,
   gridColumns,
   conn,
   pagesConfig,
@@ -2383,6 +2387,267 @@ export default function EditCardModal({
                   className="hidden"
                   onChange={handleUpload}
                 />
+              </div>
+            );
+          })()}
+
+          {isEditToday && editSettingsKey && (() => {
+            const sensorOptions = sortByName([...byDomain('sensor'), ...byDomain('weather')]);
+            const sensors = [
+              { key: 'sensor1', iconKey: 'sensor1Icon' },
+              { key: 'sensor2', iconKey: 'sensor2Icon' },
+              { key: 'sensor3', iconKey: 'sensor3Icon' },
+            ];
+            return (
+              <div className="space-y-4">
+                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                  Sensorer (I dag-kort)
+                </label>
+                {sensors.map(({ key, iconKey }, idx) => (
+                  <div key={key} className="popup-surface space-y-2 rounded-2xl p-4">
+                    <span className="text-xs font-bold text-[var(--text-secondary)]">Sensor {idx + 1}</span>
+                    <SearchableSelect
+                      label="Entity"
+                      value={editSettings[key + 'Id'] || null}
+                      options={sensorOptions}
+                      onChange={(id) => saveCardSetting(editSettingsKey, key + 'Id', id)}
+                      placeholder="Velg sensor"
+                      entities={entities}
+                      t={t}
+                    />
+                    <input
+                      type="text"
+                      className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                      defaultValue={editSettings[iconKey] || ''}
+                      onBlur={(e) => saveCardSetting(editSettingsKey, iconKey, e.target.value.trim() || null)}
+                      placeholder="Ikon (f.eks. thermometer, cloud-rain, wind)"
+                    />
+                  </div>
+                ))}
+                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                  Kalender
+                </label>
+                <div className="popup-surface custom-scrollbar max-h-48 space-y-2 overflow-y-auto rounded-2xl p-4">
+                  {calendarOptions.length === 0 && (
+                    <p className="py-4 text-center text-xs text-[var(--text-muted)]">Ingen kalendere funnet</p>
+                  )}
+                  {calendarOptions.map((id) => {
+                    const sel = Array.isArray(editSettings.calendarIds) && editSettings.calendarIds.includes(id);
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => {
+                          const cur = Array.isArray(editSettings.calendarIds) ? editSettings.calendarIds : [];
+                          saveCardSetting(editSettingsKey, 'calendarIds', sel ? cur.filter((x) => x !== id) : [...cur, id]);
+                        }}
+                        className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${sel ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'}`}
+                      >
+                        <div className="truncate text-sm font-bold">{entities[id]?.attributes?.friendly_name || id}</div>
+                        <div className="truncate text-[10px] text-[var(--text-muted)]">{id}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {isEditClimateOverview && editSettingsKey && (() => {
+            const sensorOptions = sortByName(byDomain('sensor'));
+            const rooms = Array.isArray(editSettings.rooms) ? editSettings.rooms : [];
+            const updateRoom = (index, field, value) => {
+              const next = [...rooms];
+              next[index] = { ...next[index], [field]: value };
+              saveCardSetting(editSettingsKey, 'rooms', next);
+            };
+            return (
+              <div className="space-y-3">
+                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                  Romklimavisning
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                  defaultValue={editSettings.name || ''}
+                  onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Hjemme')}
+                  placeholder="Tittel (f.eks. Hjemme)"
+                />
+                <div className="space-y-2">
+                  {rooms.map((room, idx) => (
+                    <div key={idx} className="popup-surface space-y-2 rounded-2xl p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[var(--text-secondary)]">Rom {idx + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => saveCardSetting(editSettingsKey, 'rooms', rooms.filter((_, i) => i !== idx))}
+                          className="text-xs text-red-400 hover:text-red-300"
+                        >
+                          Fjern
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                        defaultValue={room.name || ''}
+                        onBlur={(e) => updateRoom(idx, 'name', e.target.value.trim())}
+                        placeholder="Romnavn"
+                      />
+                      <input
+                        type="text"
+                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                        defaultValue={room.icon || ''}
+                        onBlur={(e) => updateRoom(idx, 'icon', e.target.value.trim())}
+                        placeholder="Ikon (f.eks. sofa, bed-double)"
+                      />
+                      <SearchableSelect
+                        label="Temperatursensor"
+                        value={room.tempId || null}
+                        options={sensorOptions}
+                        onChange={(id) => updateRoom(idx, 'tempId', id)}
+                        placeholder="Velg temperatursensor"
+                        entities={entities}
+                        t={t}
+                      />
+                      <SearchableSelect
+                        label="Luftfuktighetssensor"
+                        value={room.humidityId || null}
+                        options={sensorOptions}
+                        onChange={(id) => updateRoom(idx, 'humidityId', id)}
+                        placeholder="Velg luftfuktighetssensor"
+                        entities={entities}
+                        t={t}
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => saveCardSetting(editSettingsKey, 'rooms', [...rooms, { name: '', icon: '', tempId: null, humidityId: null }])}
+                    className="w-full rounded-xl border border-dashed border-[var(--glass-border)] py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]"
+                  >
+                    + Legg til rom
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+
+          {isEditScenes && editSettingsKey && (() => {
+            const sceneOptions = sortByName(byDomain('scene'));
+            return (
+              <div className="space-y-3">
+                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                  Stemningstilpasning
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                  defaultValue={editSettings.name || ''}
+                  onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Stemninger')}
+                  placeholder="Tittel (f.eks. Stemninger)"
+                />
+                <div className="popup-surface custom-scrollbar max-h-56 space-y-2 overflow-y-auto rounded-2xl p-4">
+                  {sceneOptions.length === 0 && (
+                    <p className="py-4 text-center text-xs text-[var(--text-muted)]">Ingen scener funnet i HA</p>
+                  )}
+                  {sceneOptions.map((id) => {
+                    const sel = Array.isArray(editSettings.scenes) && editSettings.scenes.includes(id);
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => {
+                          const cur = Array.isArray(editSettings.scenes) ? editSettings.scenes : [];
+                          saveCardSetting(editSettingsKey, 'scenes', sel ? cur.filter((x) => x !== id) : [...cur, id]);
+                        }}
+                        className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${sel ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'}`}
+                      >
+                        <div className="truncate text-sm font-bold">{entities[id]?.attributes?.friendly_name || id}</div>
+                        <div className="truncate text-[10px] text-[var(--text-muted)]">{id}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {isEditRoomLights && editSettingsKey && (() => {
+            const lightOptions = sortByName(byDomain('light'));
+            const sceneOptions = sortByName(byDomain('scene'));
+            const rooms = Array.isArray(editSettings.rooms) ? editSettings.rooms : [];
+            const updateRoom = (index, field, value) => {
+              const next = [...rooms];
+              next[index] = { ...next[index], [field]: value };
+              saveCardSetting(editSettingsKey, 'rooms', next);
+            };
+            return (
+              <div className="space-y-3">
+                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                  Lysromoppsett
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                  defaultValue={editSettings.name || ''}
+                  onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Lys')}
+                  placeholder="Tittel (f.eks. Lys)"
+                />
+                <div className="space-y-2">
+                  {rooms.map((room, idx) => (
+                    <div key={idx} className="popup-surface space-y-2 rounded-2xl p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[var(--text-secondary)]">Rom {idx + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => saveCardSetting(editSettingsKey, 'rooms', rooms.filter((_, i) => i !== idx))}
+                          className="text-xs text-red-400 hover:text-red-300"
+                        >
+                          Fjern
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                        defaultValue={room.name || ''}
+                        onBlur={(e) => updateRoom(idx, 'name', e.target.value.trim())}
+                        placeholder="Romnavn"
+                      />
+                      <input
+                        type="text"
+                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
+                        defaultValue={room.icon || ''}
+                        onBlur={(e) => updateRoom(idx, 'icon', e.target.value.trim())}
+                        placeholder="Ikon (f.eks. sofa, lamp)"
+                      />
+                      <SearchableSelect
+                        label="Lysenhet (for av/på-status)"
+                        value={room.lightEntityId || null}
+                        options={lightOptions}
+                        onChange={(id) => updateRoom(idx, 'lightEntityId', id)}
+                        placeholder="Velg lysenhet"
+                        entities={entities}
+                        t={t}
+                      />
+                      <SearchableSelect
+                        label="Scene (aktiveres ved klikk)"
+                        value={room.sceneId || null}
+                        options={sceneOptions}
+                        onChange={(id) => updateRoom(idx, 'sceneId', id)}
+                        placeholder="Velg scene"
+                        entities={entities}
+                        t={t}
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => saveCardSetting(editSettingsKey, 'rooms', [...rooms, { name: '', icon: '', lightEntityId: null, sceneId: null }])}
+                    className="w-full rounded-xl border border-dashed border-[var(--glass-border)] py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]"
+                  >
+                    + Legg til rom
+                  </button>
+                </div>
               </div>
             );
           })()}

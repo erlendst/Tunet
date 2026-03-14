@@ -23,6 +23,10 @@ import {
   renderCameraCard,
   renderSpacerCard,
   renderTravelCard,
+  renderTodayCard,
+  renderClimateOverviewCard,
+  renderScenesCard,
+  renderRoomLightsCard,
 } from './cards';
 
 /**
@@ -51,6 +55,10 @@ export const CARD_REGISTRY = [
   { prefix: 'alarm_card_', renderer: renderAlarmCard },
   { prefix: 'spacer_card_', renderer: renderSpacerCard },
   { prefix: 'travel_card_', renderer: renderTravelCard },
+  { prefix: 'today_card_', renderer: renderTodayCard },
+  { prefix: 'climate_overview_card_', renderer: renderClimateOverviewCard },
+  { prefix: 'scenes_card_', renderer: renderScenesCard },
+  { prefix: 'room_lights_card_', renderer: renderRoomLightsCard },
 ];
 
 export function dispatchCardRender(cardId, dragProps, getControls, cardStyle, settingsKey, ctx) {

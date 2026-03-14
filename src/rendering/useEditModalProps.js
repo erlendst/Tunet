@@ -41,6 +41,7 @@ export function useEditModalProps({
     const isEditSpacer = !!editId && editId.startsWith('spacer_card_');
     const isEditCamera = !!editId && editId.startsWith('camera_card_');
     const isEditFan = !!editId && (editId.startsWith('fan.') || editId.startsWith('fan_card_'));
+    const isEditTravel = !!editId && editId.startsWith('travel_card_');
 
     const editSettings = isEditCar ? resolveCarSettings(editId, rawEditSettings) : rawEditSettings;
     const isEditGenericType =
@@ -56,6 +57,10 @@ export function useEditModalProps({
       isEditFan;
     const isEditSensor = !!editSettings?.type && editSettings.type === 'sensor';
     const isEditWeatherTemp = !!editId && editId.startsWith('weather_temp_');
+    const isEditToday = !!editId && editId.startsWith('today_card_');
+    const isEditClimateOverview = !!editId && editId.startsWith('climate_overview_card_');
+    const isEditScenes = !!editId && editId.startsWith('scenes_card_');
+    const isEditRoomLights = !!editId && editId.startsWith('room_lights_card_');
 
     const canEditName =
       !!editId &&
@@ -109,6 +114,11 @@ export function useEditModalProps({
       isEditWeatherTemp,
       isEditFan,
       isEditAlarm,
+      isEditTravel,
+      isEditToday,
+      isEditClimateOverview,
+      isEditScenes,
+      isEditRoomLights,
       editSettingsKey,
       editSettings,
     };

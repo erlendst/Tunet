@@ -1077,6 +1077,34 @@ function AddCardContent({
                   onSelect={setAddCardType}
                 />
                 <TypeButton
+                  type="today"
+                  icon={Calendar}
+                  label={t('addCard.type.today') || 'I dag'}
+                  isActive={addCardType === 'today'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
+                  type="climate_overview"
+                  icon={Thermometer}
+                  label={t('addCard.type.climateOverview') || 'Klima'}
+                  isActive={addCardType === 'climate_overview'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
+                  type="scenes"
+                  icon={Sparkles}
+                  label={t('addCard.type.scenes') || 'Stemninger'}
+                  isActive={addCardType === 'scenes'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
+                  type="room_lights"
+                  icon={Lightbulb}
+                  label={t('addCard.type.roomLights') || 'Lys'}
+                  isActive={addCardType === 'room_lights'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
                   type="spacer"
                   icon={Minus}
                   label={getLabel('addCard.type.spacer', 'Spacer')}
@@ -1124,6 +1152,14 @@ function AddCardContent({
                 selectedAreaEntitiesById={selectedRoomEntitiesById}
                 setSelectedAreaEntitiesById={setSelectedRoomEntitiesById}
               />
+            ) : addCardType === 'today' ? (
+              renderSimpleAddSection(Calendar, t('addCard.todayDescription') || 'Legg til et "I dag"-kort med værsensorer og kalenderoppføringer.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'climate_overview' ? (
+              renderSimpleAddSection(Thermometer, t('addCard.climateOverviewDescription') || 'Legg til et klimaoversiktskort med temperatur og luftfuktighet per rom.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'scenes' ? (
+              renderSimpleAddSection(Sparkles, t('addCard.scenesDescription') || 'Legg til et stemningskort med knapper for å aktivere scener.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'room_lights' ? (
+              renderSimpleAddSection(Lightbulb, t('addCard.roomLightsDescription') || 'Legg til et lyskort med romknapper som viser av/på-status.', t('addCard.add') || 'Legg til')
             ) : (
               renderGenericEntityList()
             )}

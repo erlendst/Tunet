@@ -1,17 +1,12 @@
 import { Profiler, memo, useCallback } from 'react';
-import { Plus } from '../icons';
-import Header from './Header';
-import StatusBar from './StatusBar';
 import BackgroundLayer from './BackgroundLayer';
 import ConnectionBanner from './ConnectionBanner';
 import DragOverlaySVG from './DragOverlaySVG';
-import EditToolbar from './EditToolbar';
 import { PageNavigation } from '../components';
 import DashboardGrid from '../rendering/DashboardGrid';
 import ModalManager from '../rendering/ModalManager';
 import PinLockModal from '../components/ui/PinLockModal';
 
-const MemoStatusBar = memo(StatusBar);
 const MemoDashboardGrid = memo(DashboardGrid);
 const MemoModalManager = memo(ModalManager);
 
@@ -134,94 +129,7 @@ export default function DashboardLayout(props) {
                 : 'px-6 md:px-20'
         } ${isCompactCards ? 'compact-cards' : ''}`}
       >
-        <Header
-          now={now}
-          headerTitle={resolvedHeaderTitle}
-          headerScale={headerScale}
-          editMode={editMode}
-          headerSettings={headerSettings}
-          setShowHeaderEditModal={setShowHeaderEditModal}
-          t={t}
-          isMobile={isMobile}
-          sectionSpacing={sectionSpacing}
-        >
-          <div
-            className={`mt-0 w-full font-sans ${isMobile ? 'flex flex-col items-start gap-3' : 'flex items-center justify-between'}`}
-            style={{ marginTop: `${sectionSpacing?.headerToStatus ?? 0}px` }}
-          >
-            <div
-              className={`flex min-w-0 flex-wrap items-center gap-2.5 ${isMobile ? 'w-full origin-left scale-90' : ''}`}
-            >
-              {(pagesConfig.header || []).map((id) => personStatus(id))}
-              {editMode && (
-                <button
-                  onClick={() => {
-                    requestSettingsAccess(() => {
-                      setAddCardTargetPage('header');
-                      setShowAddCardModal(true);
-                    });
-                  }}
-                  className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold tracking-[0.2em] uppercase transition-all"
-                  style={{
-                    backgroundColor: 'color-mix(in srgb, var(--accent-color) 14%, transparent)',
-                    borderColor: 'color-mix(in srgb, var(--accent-color) 28%, transparent)',
-                    color: 'var(--accent-color)',
-                  }}
-                >
-                  <Plus className="h-3 w-3" /> {t('addCard.type.entity')}
-                </button>
-              )}
-              {(pagesConfig.header || []).length > 0 && (
-                <div className="mx-2 h-8 w-px bg-[var(--glass-border)]"></div>
-              )}
-            </div>
-            <div className={`min-w-0 ${isMobile ? 'w-full' : 'flex-1'}`}>
-              {withProfiler(
-                'StatusBar',
-                <MemoStatusBar
-                  editMode={editMode}
-                  t={t}
-                  isSonosActive={isSonosActive}
-                  isMediaActive={isMediaActive}
-                  getA={getA}
-                  getEntityImageUrl={getEntityImageUrl}
-                  isMobile={isMobile}
-                />
-              )}
-            </div>
-          </div>
-        </Header>
-
         <ConnectionBanner t={t} />
-
-        <div
-          className="flex flex-nowrap items-center justify-between gap-4"
-          style={{ marginBottom: `${sectionSpacing?.navToGrid ?? 24}px` }}
-        >
-          <PageNavigation
-            pages={pages}
-            activePage={activePage}
-            setActivePage={setActivePage}
-            editMode={editMode}
-            setEditingPage={setEditingPage}
-            t={t}
-          />
-          <EditToolbar
-            editMode={editMode}
-            setEditMode={guardedSetEditMode}
-            activePage={activePage}
-            setActivePage={setActivePage}
-            setShowAddCardModal={guardedSetShowAddCardModal}
-            setShowConfigModal={guardedSetShowConfigModal}
-            setConfigTab={setConfigTab}
-            setShowThemeSidebar={guardedSetShowThemeSidebar}
-            setShowLayoutSidebar={guardedSetShowLayoutSidebar}
-            setShowHeaderEditModal={guardedSetShowHeaderEditModal}
-            connected={connected}
-            updateCount={updateCount}
-            t={t}
-          />
-        </div>
 
         {withProfiler(
           'DashboardGrid',
@@ -234,6 +142,26 @@ export default function DashboardLayout(props) {
             t={t}
           />
         )}
+
+        <div className="mt-4 flex justify-center pb-4">
+          <PageNavigation
+            pages={pages}
+            activePage={activePage}
+            setActivePage={setActivePage}
+            editMode={editMode}
+            setEditMode={guardedSetEditMode}
+            setEditingPage={setEditingPage}
+            setShowAddCardModal={guardedSetShowAddCardModal}
+            setShowConfigModal={guardedSetShowConfigModal}
+            setConfigTab={setConfigTab}
+            setShowThemeSidebar={guardedSetShowThemeSidebar}
+            setShowLayoutSidebar={guardedSetShowLayoutSidebar}
+            setShowHeaderEditModal={guardedSetShowHeaderEditModal}
+            connected={connected}
+            updateCount={updateCount}
+            t={t}
+          />
+        </div>
 
         {withProfiler(
           'ModalManager',

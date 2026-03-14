@@ -52,6 +52,10 @@ const SPECIAL_CARD_PREFIXES = [
   'camera_card_',
   'alarm_card_',
   'spacer_card_',
+  'today_card_',
+  'climate_overview_card_',
+  'scenes_card_',
+  'room_lights_card_',
 ];
 
 /**

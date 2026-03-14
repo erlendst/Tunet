@@ -267,6 +267,30 @@ export const handleAddSelected = (ctx) => {
       return;
     }
 
+    case 'today': {
+      const cardId = `today_card_${Date.now()}`;
+      commitSingleCard(cardId, {}, { openEdit: true });
+      return;
+    }
+
+    case 'climate_overview': {
+      const cardId = `climate_overview_card_${Date.now()}`;
+      commitSingleCard(cardId, { rooms: [] }, { openEdit: true });
+      return;
+    }
+
+    case 'scenes': {
+      const cardId = `scenes_card_${Date.now()}`;
+      commitSingleCard(cardId, { scenes: [] }, { openEdit: true });
+      return;
+    }
+
+    case 'room_lights': {
+      const cardId = `room_lights_card_${Date.now()}`;
+      commitSingleCard(cardId, { rooms: [] }, { openEdit: true });
+      return;
+    }
+
     case 'spacer': {
       const cardId = `spacer_card_${Date.now()}`;
       const variant = selectedSpacerVariant || 'spacer';

@@ -7,6 +7,8 @@ export default function SettingsDropdown({
   onOpenTheme,
   onOpenLayout,
   onOpenHeader,
+  upward,
+  buttonClassName,
   t,
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +34,7 @@ export default function SettingsDropdown({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group relative z-50 rounded-full p-2 transition-all duration-300 ${isOpen ? 'bg-[var(--accent-color)] text-white shadow-lg ' : 'text-slate-400 hover:bg-white/10 hover:text-white'}`}
+        className={buttonClassName ?? `group relative z-50 rounded-full p-2 transition-all duration-300 ${isOpen ? 'bg-[var(--accent-color)] text-white shadow-lg' : 'text-slate-400 hover:bg-white/10 hover:text-white'}`}
         aria-label="Settings"
         data-testid="settings-dropdown-trigger"
       >
@@ -43,10 +45,12 @@ export default function SettingsDropdown({
 
       {/* Dropdown Menu */}
       <div
-        className={`absolute top-full right-0 z-50 mt-2 w-56 origin-top-right transform rounded-2xl border border-white/10 bg-[#0f172a]/95 p-2 shadow-2xl backdrop-blur-xl transition-all duration-200 ${
+        className={`absolute z-50 w-56 transform rounded-2xl border border-white/10 bg-[#0f172a]/95 p-2 shadow-2xl backdrop-blur-xl transition-all duration-200 ${upward ? 'bottom-full right-0 mb-2 origin-bottom-right' : 'top-full right-0 mt-2 origin-top-right'} ${
           isOpen
             ? 'translate-y-0 scale-100 opacity-100'
-            : 'pointer-events-none -translate-y-2 scale-95 opacity-0'
+            : upward
+              ? 'pointer-events-none translate-y-2 scale-95 opacity-0'
+              : 'pointer-events-none -translate-y-2 scale-95 opacity-0'
         }`}
         style={{ backgroundColor: 'var(--card-bg)', backdropFilter: 'blur(20px)' }}
         data-testid="settings-dropdown-menu"

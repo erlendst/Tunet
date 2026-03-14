@@ -19,3 +19,7 @@ export { renderRoomCard } from './roomRenderer';
 export { renderCameraCard } from './cameraRenderer';
 export { renderSpacerCard } from './spacerRenderer';
 export { renderTravelCard } from './travelRenderer';
+export { renderTodayCard } from './todayRenderer';
+export { renderClimateOverviewCard } from './climateOverviewRenderer';
+export { renderScenesCard } from './scenesRenderer';
+export { renderRoomLightsCard } from './roomLightsRenderer';

@@ -160,6 +160,13 @@ const getCustomStopTitle = (settings, index) => {
   return null;
 };
 
+// Infer transport icon from entity ID/name. Placeholder — user can customize icon.
+const getTransportIcon = (entity, customIconName) => {
+  if (customIconName) return getIconComponent(customIconName) || Bus;
+  // Placeholder: always returns Bus. In future, detect tram/metro from entity ID.
+  return Bus;
+};
+
 export default function TravelCard({
   cardId,
   entity,
@@ -183,66 +190,58 @@ export default function TravelCard({
     .map((source, index) => ({
       title: getCustomStopTitle(settings, index) || getStopTitle(source),
       rows: buildDepartureRows(source, translate).slice(0, rowsToShow),
+      entity: source,
     }))
     .filter((section) => section.rows.length > 0 || section.title);
 
   if (sources.length === 0) return null;
 
-  const name = customNames?.[cardId] || translate('addCard.type.travel') || 'Travel';
-  const Icon = customIcons?.[cardId] ? (getIconComponent(customIcons[cardId]) || Bus) : Bus;
-
   return (
     <div
       key={cardId}
       {...dragProps}
-      data-haptic={editMode ? undefined : 'card'}
       onClick={(e) => { e.stopPropagation(); if (!editMode) onOpen?.(); }}
-      className={`touch-feedback rounded-3xl border transition-all duration-500 relative overflow-hidden font-sans h-full p-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
 
-      <div className="relative z-10 h-full flex flex-col">
-        <div className="flex items-center gap-3 min-w-0 mb-4">
-          <div className="w-11 h-11 rounded-2xl bg-sky-500/15 text-sky-300 flex items-center justify-center shrink-0">
-            <Icon className="w-5 h-5 stroke-[1.7px]" />
-          </div>
-          <p className="text-xs uppercase tracking-widest font-bold text-[var(--text-secondary)] opacity-75 truncate">
-            {name}
-          </p>
-        </div>
+      {sources.map((section, sectionIndex) => {
+        const TransportIcon = getTransportIcon(section.entity, customIcons?.[cardId]);
+        return (
+          <div key={`${section.title || 'section'}-${sectionIndex}`}>
+            {/* Platform header */}
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <span className="text-sm font-bold text-[var(--text-primary)]">
+                {section.title || '–'}
+              </span>
+              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--text-muted)]" strokeWidth={1.5} />
+            </div>
 
-        <div className="space-y-4">
-          {sources.map((section, sectionIndex) => (
-            <div key={`${section.title || 'section'}-${sectionIndex}`}>
-              {section.title && (
-                <p className="text-[11px] uppercase tracking-widest font-bold text-[var(--text-secondary)] mb-2 truncate">
-                  {section.title}
-                </p>
-              )}
-
-              {section.rows.length > 0 ? (
-                <div className="rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] divide-y divide-[var(--glass-border)] overflow-hidden">
-                  {section.rows.map((row, index) => (
-                    <div key={`${row.route}-${row.displayTime}-${index}`} className="grid grid-cols-[1fr_auto] items-center gap-3 px-4 py-3">
-                      <span className="text-sm font-medium text-[var(--text-primary)] truncate">
-                        {row.route || translate('travel.departureFallback')}
-                      </span>
-                      <span className="text-sm font-semibold text-[var(--text-secondary)] whitespace-nowrap">
-                        {row.displayTime || '--'}
-                      </span>
-                    </div>
-                  ))}
+            {/* Departure rows */}
+            <div className="flex flex-col">
+              {section.rows.map((row, index) => (
+                <div key={`${row.route}-${row.displayTime}-${index}`}>
+                  {index > 0 && <div className="h-px bg-[var(--card-border)]" />}
+                  <div className="flex items-center justify-between gap-3 py-2">
+                    <span className="truncate text-sm text-[var(--text-primary)]">
+                      {row.route || translate('travel.departureFallback')}
+                    </span>
+                    <span className="shrink-0 text-sm font-medium text-[var(--text-secondary)]">
+                      {row.displayTime || '--'}
+                    </span>
+                  </div>
                 </div>
-              ) : (
-                <div className="mt-2 text-sm text-[var(--text-secondary)]">
+              ))}
+              {section.rows.length === 0 && (
+                <span className="text-xs text-[var(--text-muted)]">
                   {translate('travel.noDepartures')}
-                </div>
+                </span>
               )}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
