@@ -32,6 +32,30 @@ const formatValue = (num) => {
   return Math.round(parsed * 10) / 10;
 };
 
+const isLockedState = (entity) => {
+  const state = entity?.state;
+  if (typeof state !== 'string') return false;
+  const normalized = state.trim().toLowerCase();
+  const deviceClass = String(entity?.attributes?.device_class || '').trim().toLowerCase();
+
+  if (['locked', 'lock', 'true'].includes(normalized)) return true;
+  if (deviceClass === 'lock') {
+    if (normalized === 'off') return true;
+    if (normalized === 'on') return false;
+  }
+  return ['closed'].includes(normalized);
+};
+
+const formatMinutesLabel = (value, t) => {
+  if (value === null || value === undefined || value === '') return '--';
+  const asText = String(value).trim();
+  if (!asText) return '--';
+  const parsed = Number(asText.replace(',', '.'));
+  if (!Number.isFinite(parsed)) return asText;
+  if (parsed <= 0) return t('car.notCharging') || 'Lader ikke';
+  return `${Math.round(parsed)} min`;
+};
+
 /* ─── CarCard ─── */
 
 const CarCard = ({
@@ -110,12 +134,22 @@ const CarCard = ({
   const chargingState = getSafeState(entities, effectiveChargingId);
   const pluggedState = getSafeState(entities, pluggedId);
   const climateEntity = climateId ? entities[climateId] : null;
+  const lockEntity = lockId ? entities[lockId] : null;
   const lockState = lockId ? getSafeState(entities, lockId) : null;
   const timeToFullState = timeToFullId ? getSafeState(entities, timeToFullId) : null;
 
   const isCharging = chargingState === 'on' || chargingState === 'charging';
-  const isLocked = lockState === 'locked';
+  const isLocked = lockState !== null ? isLockedState(lockEntity) : false;
   const isHtg = climateEntity && !['off', 'unavailable', 'unknown'].includes(climateEntity.state);
+  const lockLabel = isLocked ? t('state.locked') || 'Låst' : t('state.unlocked') || 'Ikke låst';
+  const chargingTimeSource = timeToFullState ?? chargingState;
+  const chargingTimeLabel = formatMinutesLabel(chargingTimeSource, t);
+  const rangeLabel =
+    displayRangeValue !== null
+      ? `${formatUnitValue(displayRangeValue, { fallback: '--' })} ${rangeUnit}`
+      : '--';
+  const locationDisplay =
+    locationLabel && locationLabel !== '--' ? String(locationLabel) : '--';
 
   const resolvedImageUrl = vehicleImageUrl || (imageUrl
     ? getEntityImageUrl
@@ -171,69 +205,71 @@ const CarCard = ({
         e.stopPropagation();
         if (!editMode) onOpen();
       }}
-      className={`relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
+      className={`relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] px-5 pt-5 pb-4 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
 
-      {/* Top row: name + lock status */}
-      <div className="mb-1 flex items-start justify-between gap-2">
-        <span className="text-base font-bold text-[var(--text-primary)]">{name}</span>
+      <div className="mb-2 flex items-start justify-between gap-4">
+        <div className="flex min-w-0 flex-col">
+          <span className="text-[1.75rem] leading-none font-semibold tracking-tight text-[var(--text-primary)]">
+            {name}
+          </span>
+          <span
+            className={`mt-3 text-[3rem] leading-none font-light tracking-tight ${
+              isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'
+            }`}
+          >
+            {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
+          </span>
+        </div>
+
         {lockId && (
-          <div className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+          <div className="flex shrink-0 items-center gap-2 pt-1 text-[var(--text-primary)]">
+            <span className="text-xl font-light leading-none">{lockLabel}</span>
             {isLocked ? (
-              <Lock className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Lock className="h-5 w-5" strokeWidth={1.6} />
             ) : (
-              <Unlock className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Unlock className="h-5 w-5" strokeWidth={1.6} />
             )}
-            <span>{isLocked ? (t('car.locked') || 'Låst') : (t('car.unlocked') || 'Ulåst')}</span>
           </div>
         )}
       </div>
 
-      {/* Battery % */}
-      <div className="mb-2">
-        <span className={`text-4xl font-light leading-none ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}>
-          {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
-        </span>
-      </div>
-
-      {/* Vehicle image — flex-1 min-h-0 so it shrinks when space is tight */}
       {resolvedImageUrl && (
-        <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden py-2">
+        <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 py-3">
           <img
             src={resolvedImageUrl}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none h-full max-h-32 w-auto max-w-full object-contain drop-shadow-md select-none"
+            className="pointer-events-none h-full max-h-[240px] w-[88%] object-contain drop-shadow-md select-none"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
         </div>
       )}
 
-      {/* Bottom info row — show when any sensor is configured */}
       {(rangeId || locationId || timeToFullId || effectiveChargingId) && (
-        <div className="flex items-center justify-between gap-2 border-t border-[var(--card-border)] pt-3">
+        <div className="grid grid-cols-3 items-center gap-3 border-t border-[var(--card-border)] pt-4 text-[var(--text-primary)]">
           {rangeId && (
-            <div className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
-              <RotateCw className="h-3.5 w-3.5" strokeWidth={1.5} />
-              <span>
-                {displayRangeValue !== null
-                  ? `${formatUnitValue(displayRangeValue, { fallback: '--' })} ${rangeUnit}`
-                  : '--'}
-              </span>
+            <div className="flex min-w-0 items-center justify-start gap-2 text-[var(--text-primary)]">
+              <RotateCw className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
+              <span className="truncate text-[1.75rem] leading-none font-light">{rangeLabel}</span>
             </div>
           )}
           {(timeToFullId || effectiveChargingId) && (
-            <div className={`flex items-center gap-1.5 text-sm ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-secondary)]'}`}>
-              <Zap className="h-3.5 w-3.5" strokeWidth={1.5} />
-              <span>{timeToFullState || chargingState || '--'}</span>
+            <div
+              className={`flex min-w-0 items-center justify-center gap-2 ${
+                isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'
+              }`}
+            >
+              <Zap className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
+              <span className="truncate text-[1.75rem] leading-none font-light">{chargingTimeLabel}</span>
             </div>
           )}
           {locationId && (
-            <div className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
-              <MapPin className="h-3.5 w-3.5" strokeWidth={1.5} />
-              <span className="truncate">{locationLabel && locationLabel !== '--' ? String(locationLabel) : '--'}</span>
+            <div className="flex min-w-0 items-center justify-end gap-2 text-[var(--text-primary)]">
+              <MapPin className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
+              <span className="truncate text-[1.75rem] leading-none font-light">{locationDisplay}</span>
             </div>
           )}
         </div>

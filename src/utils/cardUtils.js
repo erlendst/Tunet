@@ -68,6 +68,9 @@ export function isCardRemovable(cardId, pageId, { getCardSettingsKey, cardSettin
     if (cardId.startsWith('media_player')) return false;
     return true;
   }
+  if (pageId && pageId !== 'header') {
+    return true;
+  }
   const settingsKey = getCardSettingsKey(cardId, pageId);
   const typeSetting = cardSettings[settingsKey]?.type || cardSettings[cardId]?.type;
   if (typeSetting === 'entity' || typeSetting === 'toggle' || typeSetting === 'sensor') return true;

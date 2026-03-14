@@ -1153,6 +1153,60 @@ export default function EditCardModal({
                   />
                 </div>
               </div>
+              <div className="popup-surface rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] uppercase font-bold tracking-widest text-[var(--text-secondary)]">
+                      {t('form.gridStartColumn') || 'Start column'}
+                    </span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">
+                      {editSettings.gridCol || (t('form.autoPlacement') || 'Auto')}
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    min={1}
+                    max={Math.max(1, Math.min(8, maxGridColumns || 4))}
+                    step={1}
+                    value={editSettings.gridCol ?? ''}
+                    onChange={(e) =>
+                      saveCardSetting(
+                        editSettingsKey,
+                        'gridCol',
+                        e.target.value === '' ? null : parseInt(e.target.value, 10)
+                      )
+                    }
+                    placeholder={t('form.autoPlacement') || 'Auto'}
+                    className="popup-surface w-full rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] uppercase font-bold tracking-widest text-[var(--text-secondary)]">
+                      {t('form.gridStartRow') || 'Start row'}
+                    </span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">
+                      {editSettings.gridRow || (t('form.autoPlacement') || 'Auto')}
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    step={1}
+                    value={editSettings.gridRow ?? ''}
+                    onChange={(e) =>
+                      saveCardSetting(
+                        editSettingsKey,
+                        'gridRow',
+                        e.target.value === '' ? null : parseInt(e.target.value, 10)
+                      )
+                    }
+                    placeholder={t('form.autoPlacement') || 'Auto'}
+                    className="popup-surface w-full rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                  />
+                </div>
+              </div>
             </div>
           )}
 
@@ -3770,4 +3824,3 @@ export default function EditCardModal({
     </AccessibleModalShell>
   );
 }
-

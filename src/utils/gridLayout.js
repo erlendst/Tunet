@@ -74,6 +74,8 @@ export const getCardGridSize = (cardId, getCardSettingsKey, cardSettings, active
   return {
     rows: toPositiveInt(settings.gridRows) || defaultRows,
     cols: toPositiveInt(settings.gridCols) || 1,
+    row: toPositiveInt(settings.gridRow),
+    col: toPositiveInt(settings.gridCol),
   };
 };
 
@@ -100,7 +102,7 @@ export const getCardColSpan = (cardId, getCardSettingsKey, cardSettings) => {
  *
  * @param {string[]}  ids       Ordered card ids
  * @param {number}    columns   Number of grid columns
- * @param {Function}  sizeFn    (cardId) => number | { rows:number, cols:number }
+ * @param {Function}  sizeFn    (cardId) => number | { rows:number, cols:number, preferredCol?:number }
  * @returns {Object}  { [cardId]: { row, col, rowSpan, colSpan, span } }
  */
 export const buildGridLayout = (ids, columns, sizeFn) => {
@@ -132,12 +134,26 @@ export const buildGridLayout = (ids, columns, sizeFn) => {
     }
   };
 
-  const placeSingle = (id, rowSpan, colSpan) => {
+  const placeSingle = (id, rowSpan, colSpan, preferredCol = null, fixedRow = null, fixedCol = null) => {
     let placed = false;
-    let row = 0;
+    let row = Math.max(0, (fixedRow || 1) - 1);
+    const fixedColIndex =
+      Number.isFinite(fixedCol) && fixedCol > 0
+        ? Math.max(0, Math.min(columns - colSpan, fixedCol - 1))
+        : null;
     while (!placed) {
       ensureRow(row);
+      const candidateCols = [];
+      if (fixedColIndex !== null) candidateCols.push(fixedColIndex);
+      const preferredIndex =
+        Number.isFinite(preferredCol) && preferredCol > 0
+          ? Math.min(columns, preferredCol) - 1
+          : null;
+      if (fixedColIndex === null && preferredIndex !== null) candidateCols.push(preferredIndex);
       for (let col = 0; col < columns; col += 1) {
+        if (col !== preferredIndex && col !== fixedColIndex) candidateCols.push(col);
+      }
+      for (const col of candidateCols) {
         if (canPlace(row, col, rowSpan, colSpan)) {
           place(row, col, rowSpan, colSpan);
           positions[id] = { row: row + 1, col: col + 1, rowSpan, colSpan, span: rowSpan };
@@ -153,8 +169,14 @@ export const buildGridLayout = (ids, columns, sizeFn) => {
     const id = ids[i];
     const rawSize = sizeFn(id);
     const rowSpan = Math.max(1, typeof rawSize === 'number' ? rawSize : (rawSize?.rows || 1));
-    const colSpan = Math.max(1, Math.min(columns, typeof rawSize === 'number' ? 1 : (rawSize?.cols || 1)));
-    placeSingle(id, rowSpan, colSpan);
+    const colSpan = Math.max(
+      1,
+      Math.min(columns, typeof rawSize === 'number' ? 1 : (rawSize?.cols || 1))
+    );
+    const preferredCol = typeof rawSize === 'number' ? null : rawSize?.preferredCol;
+    const fixedRow = typeof rawSize === 'number' ? null : rawSize?.row;
+    const fixedCol = typeof rawSize === 'number' ? null : rawSize?.col;
+    placeSingle(id, rowSpan, colSpan, preferredCol, fixedRow, fixedCol);
   }
 
   return positions;

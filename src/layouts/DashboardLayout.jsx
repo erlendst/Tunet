@@ -117,7 +117,7 @@ export default function DashboardLayout(props) {
       <div
         role="main"
         aria-label="Dashboard"
-        className={`relative z-10 mx-auto w-full max-w-[1600px] py-6 md:py-10 ${
+        className={`relative z-10 mx-auto w-full max-w-[1600px] py-4 md:py-6 ${
           isMobile
             ? 'mobile-grid px-2'
             : gridColCount === 1
@@ -143,7 +143,7 @@ export default function DashboardLayout(props) {
           />
         )}
 
-        <div className="mt-4 flex justify-center pb-4">
+        <div className="mt-2 flex justify-center pb-2">
           <PageNavigation
             pages={pages}
             activePage={activePage}

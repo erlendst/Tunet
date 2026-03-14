@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import GenericClimateCard from '../components/cards/GenericClimateCard';
 
@@ -41,34 +41,28 @@ const baseProps = (entityOverrides = {}) => ({
 });
 
 describe('GenericClimateCard', () => {
-  it('shows AUTO text when fan mode is auto', () => {
+  it('shows the climate name and current temperature', () => {
     render(<GenericClimateCard {...baseProps({ fan_mode: 'auto' })} />);
 
-    expect(screen.getByText('climate.fanAuto')).toBeInTheDocument();
+    expect(screen.getByText('Living Room AC')).toBeInTheDocument();
+    expect(screen.getByText('24°C')).toBeInTheDocument();
   });
 
-  it('does not show AUTO text for lowercase non-auto fan mode', () => {
-    render(<GenericClimateCard {...baseProps({ fan_mode: 'medium' })} />);
+  it('renders plus and minus controls', () => {
+    render(<GenericClimateCard {...baseProps()} />);
 
-    expect(screen.queryByText('climate.fanAuto')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button')).toHaveLength(2);
   });
 
-  it('does not show AUTO text for dashed fan mode variants', () => {
-    render(
-      <GenericClimateCard
-        {...baseProps({
-          fan_mode: 'high-mid',
-          fan_modes: ['auto', 'low', 'mid', 'high-mid', 'high'],
-        })}
-      />
-    );
+  it('steps temperature down and up from the numeric target temperature', () => {
+    const onSetTemperature = vi.fn();
+    render(<GenericClimateCard {...baseProps({ temperature: 22 })} onSetTemperature={onSetTemperature} />);
 
-    expect(screen.queryByText('climate.fanAuto')).not.toBeInTheDocument();
-  });
+    const [minusButton, plusButton] = screen.getAllByRole('button');
+    fireEvent.click(minusButton);
+    fireEvent.click(plusButton);
 
-  it('hides the fan block on mobile large cards', () => {
-    render(<GenericClimateCard {...baseProps({ fan_mode: 'auto' })} isMobile />);
-
-    expect(screen.queryByText('climate.fanAuto')).not.toBeInTheDocument();
+    expect(onSetTemperature).toHaveBeenNthCalledWith(1, 21.5);
+    expect(onSetTemperature).toHaveBeenNthCalledWith(2, 22.5);
   });
 });

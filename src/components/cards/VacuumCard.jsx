@@ -1,6 +1,5 @@
 import { memo } from 'react';
-import { getIconComponent } from '../../icons';
-import { AlertTriangle, Bot, Home, Pause, Play } from '../../icons';
+import { AlertTriangle, Battery, Home, Pause, Play } from '../../icons';
 
 function getVacuumStateLabel(state, battery, t) {
   const normalized = String(state || '').toLowerCase();
@@ -31,7 +30,7 @@ const VacuumCard = ({
   cardSettings,
   settingsKey,
   customNames,
-  customIcons,
+  getA,
   callService,
   onOpen,
   t,
@@ -67,11 +66,20 @@ const VacuumCard = ({
   const isUnavailable = state === 'unavailable' || state === 'unknown' || !state;
   const isErrorState = ['error', 'fault', 'problem', 'stuck'].includes(normalizedState);
   const isCleaning = normalizedState === 'cleaning' || normalizedState === 'vacuuming';
-  const battery = entity.attributes?.battery_level;
+  const mappedBattery = getA?.(vacuumId, 'battery_level') ?? settings?.batterySensorId ?? null;
+  const mappedBatteryEntity = typeof mappedBattery === 'string' ? entities?.[mappedBattery] : null;
+  const rawBattery =
+    (typeof mappedBattery === 'number' ? mappedBattery : null) ??
+    entity.attributes?.battery_level ??
+    mappedBatteryEntity?.state ??
+    mappedBatteryEntity?.attributes?.battery_level;
+  const batteryNumber = Number(rawBattery);
+  const battery = Number.isFinite(batteryNumber) ? Math.round(batteryNumber) : null;
   const name = customNames[vacuumId] || entity.attributes?.friendly_name || t('vacuum.name');
-  const vacuumIconName = customIcons[vacuumId] || entity?.attributes?.icon;
-  const Icon = vacuumIconName ? getIconComponent(vacuumIconName) || Bot : Bot;
   const statusText = getVacuumStateLabel(state, battery, t);
+  const secondaryText = battery !== null ? `${battery}%` : statusText;
+  const buttonBaseClass =
+    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2f684a] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   const handlePlayPause = (e) => {
     e.stopPropagation();
@@ -84,8 +92,6 @@ const VacuumCard = ({
     if (!isUnavailable) callService('vacuum', 'return_to_base', { entity_id: vacuumId });
   };
 
-  const btnBase = 'flex items-center justify-center rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)] active:scale-90';
-
   if (isSmall) {
     return (
       <div
@@ -94,24 +100,29 @@ const VacuumCard = ({
         className={`relative flex h-full items-center justify-between gap-3 overflow-hidden rounded-3xl border border-[var(--card-border)] px-4 py-3 transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
         style={{
           ...cardStyle,
-          backgroundColor: isErrorState ? 'var(--status-error-bg)' : isCleaning ? 'rgba(59,130,246,0.06)' : '#ffffff',
-          borderColor: isErrorState ? 'var(--status-error-border)' : isCleaning ? 'rgba(59,130,246,0.3)' : cardStyle?.borderColor,
+          backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
+          borderColor: isErrorState ? 'var(--status-error-border)' : cardStyle?.borderColor,
         }}
       >
         {controls}
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <Icon className={`h-5 w-5 shrink-0 ${isCleaning ? 'animate-pulse text-[var(--accent-color)]' : 'text-[var(--text-muted)]'}`} strokeWidth={1.5} />
+        <div className="min-w-0 flex-1">
           <div className="flex min-w-0 flex-col">
-            <span className="truncate text-xs font-medium text-[var(--text-secondary)]">{name}</span>
-            <span className="truncate text-sm font-bold text-[var(--text-primary)]">{statusText}</span>
+            <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
+            <span className="mt-1 inline-flex items-center gap-1.5 truncate text-sm font-medium text-[var(--text-primary)]">
+              <Battery className="h-3.5 w-3.5 shrink-0 text-[#2f684a]" strokeWidth={1.75} />
+              {secondaryText}
+            </span>
+            {battery !== null && !isUnavailable && statusText !== secondaryText ? (
+              <span className="mt-0.5 truncate text-[11px] text-[var(--text-secondary)]">{statusText}</span>
+            ) : null}
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <button onClick={handlePlayPause} className={`${btnBase} h-8 w-8`}>
-            {isCleaning ? <Pause className="h-3.5 w-3.5 fill-current" /> : <Play className="ml-0.5 h-3.5 w-3.5 fill-current" />}
+        <div className="flex shrink-0 items-center gap-2">
+          <button onClick={handleHome} className={`${buttonBaseClass} h-12 w-12`} disabled={isUnavailable}>
+            <Home className="h-4 w-4" strokeWidth={2} />
           </button>
-          <button onClick={handleHome} className={`${btnBase} h-8 w-8`}>
-            <Home className="h-3.5 w-3.5" />
+          <button onClick={handlePlayPause} className={`${buttonBaseClass} h-12 w-12`} disabled={isUnavailable}>
+            {isCleaning ? <Pause className="h-4 w-4 fill-current" /> : <Play className="ml-0.5 h-4 w-4 fill-current" />}
           </button>
         </div>
       </div>
@@ -125,33 +136,31 @@ const VacuumCard = ({
       className={`relative flex h-full items-center justify-between overflow-hidden rounded-3xl border border-[var(--card-border)] px-6 py-5 transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{
         ...cardStyle,
-        backgroundColor: isErrorState ? 'var(--status-error-bg)' : isCleaning ? 'rgba(59,130,246,0.06)' : '#ffffff',
-        borderColor: isErrorState ? 'var(--status-error-border)' : isCleaning ? 'rgba(59,130,246,0.3)' : cardStyle?.borderColor,
+        backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
+        borderColor: isErrorState ? 'var(--status-error-border)' : cardStyle?.borderColor,
       }}
     >
       {controls}
 
-      {/* Left: icon + name + status */}
-      <div className="flex items-center gap-4">
-        <Icon className={`h-6 w-6 shrink-0 ${isCleaning ? 'animate-pulse text-[var(--accent-color)]' : 'text-[var(--text-muted)]'}`} strokeWidth={1.5} />
-        <div className="flex flex-col">
-          <span className="text-sm font-bold text-[var(--text-primary)]">{name}</span>
-          <span className="text-2xl font-light leading-tight text-[var(--text-primary)]">
-            {statusText}
-            {typeof battery === 'number' && (
-              <span className="ml-2 text-sm font-normal text-[var(--text-secondary)]">{battery}%</span>
-            )}
+      <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate text-sm font-bold text-[var(--text-primary)]">{name}</span>
+          <span className="mt-2 inline-flex items-center gap-2 truncate text-2xl font-light leading-tight text-[var(--text-primary)]">
+            <Battery className="h-5 w-5 shrink-0 text-[#2f684a]" strokeWidth={1.75} />
+            {secondaryText}
           </span>
+          {battery !== null && !isUnavailable && statusText !== secondaryText ? (
+            <span className="mt-1 truncate text-sm text-[var(--text-secondary)]">{statusText}</span>
+          ) : null}
         </div>
       </div>
 
-      {/* Right: controls */}
-      <div className="flex items-center gap-2">
-        <button onClick={handlePlayPause} className={`${btnBase} h-10 w-10`}>
-          {isCleaning ? <Pause className="h-4 w-4 fill-current" /> : <Play className="ml-0.5 h-4 w-4 fill-current" />}
+      <div className="flex shrink-0 items-center gap-4">
+        <button onClick={handleHome} className={`${buttonBaseClass} h-[82px] w-[82px]`} disabled={isUnavailable}>
+          <Home className="h-7 w-7" strokeWidth={2} />
         </button>
-        <button onClick={handleHome} className={`${btnBase} h-10 w-10`}>
-          <Home className="h-4 w-4" />
+        <button onClick={handlePlayPause} className={`${buttonBaseClass} h-[82px] w-[82px]`} disabled={isUnavailable}>
+          {isCleaning ? <Pause className="h-7 w-7 fill-current" /> : <Play className="ml-1 h-7 w-7 fill-current" />}
         </button>
       </div>
     </div>

@@ -9,11 +9,21 @@ describe('getCardGridSize', () => {
 
   it('returns small lights as 1 row and 1 col', () => {
     const settings = { 'light_abc': { size: 'small' } };
-    expect(getCardGridSize('light_abc', identity, settings, 'home')).toEqual({ rows: 1, cols: 1 });
+    expect(getCardGridSize('light_abc', identity, settings, 'home')).toEqual({
+      rows: 1,
+      cols: 1,
+      row: null,
+      col: null,
+    });
   });
 
   it('returns default lights as 2 rows and 1 col', () => {
-    expect(getCardGridSize('light_abc', identity, {}, 'home')).toEqual({ rows: 2, cols: 1 });
+    expect(getCardGridSize('light_abc', identity, {}, 'home')).toEqual({
+      rows: 2,
+      cols: 1,
+      row: null,
+      col: null,
+    });
   });
 
   it('returns 1 row for small calendar cards', () => {
@@ -82,7 +92,22 @@ describe('getCardGridSize', () => {
 
   it('uses explicit gridRows/gridCols overrides when provided', () => {
     const settings = { 'sensor.xyz': { gridRows: 3, gridCols: 2 } };
-    expect(getCardGridSize('sensor.xyz', identity, settings, 'home')).toEqual({ rows: 3, cols: 2 });
+    expect(getCardGridSize('sensor.xyz', identity, settings, 'home')).toEqual({
+      rows: 3,
+      cols: 2,
+      row: null,
+      col: null,
+    });
+  });
+
+  it('includes explicit grid row/column when provided', () => {
+    const settings = { 'sensor.xyz': { gridRows: 3, gridCols: 2, gridRow: 4, gridCol: 2 } };
+    expect(getCardGridSize('sensor.xyz', identity, settings, 'home')).toEqual({
+      rows: 3,
+      cols: 2,
+      row: 4,
+      col: 2,
+    });
   });
 
   it('returns estimated spacer span when heightPx is set', () => {
@@ -110,7 +135,12 @@ describe('getCardGridSize', () => {
   it('uses getCardSettingsKey to resolve settings', () => {
     const keyFn = (id) => `page_home_${id}`;
     const settings = { 'page_home_light_abc': { size: 'small', gridCols: 2 } };
-    expect(getCardGridSize('light_abc', keyFn, settings, 'home')).toEqual({ rows: 1, cols: 2 });
+    expect(getCardGridSize('light_abc', keyFn, settings, 'home')).toEqual({
+      rows: 1,
+      cols: 2,
+      row: null,
+      col: null,
+    });
   });
 
   it('handles legacy "car" id', () => {
@@ -174,6 +204,15 @@ describe('buildGridLayout', () => {
     const result = buildGridLayout(['a', 'b'], 3, sizeFn);
     expect(result.a.colSpan).toBe(3);
     expect(result.b.row).toBe(2);
+  });
+
+  it('places cards at explicit row and column when provided', () => {
+    const sizeFn = (id) =>
+      id === 'b' ? { rows: 1, cols: 1, row: 3, col: 2 } : { rows: 1, cols: 1 };
+    const result = buildGridLayout(['a', 'b', 'c'], 3, sizeFn);
+    expect(result.a).toEqual({ row: 1, col: 1, rowSpan: 1, colSpan: 1, span: 1 });
+    expect(result.b).toEqual({ row: 3, col: 2, rowSpan: 1, colSpan: 1, span: 1 });
+    expect(result.c).toEqual({ row: 1, col: 2, rowSpan: 1, colSpan: 1, span: 1 });
   });
 
   it('returns empty object for empty ids', () => {

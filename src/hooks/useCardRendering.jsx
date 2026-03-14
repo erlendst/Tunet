@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  getCardGridSpan as _getCardGridSpan,
+  getCardGridSize as _getCardGridSize,
   getCardColSpan as _getCardColSpan,
   buildGridLayout as _buildGridLayout,
 } from '../utils/gridLayout';
 import { createDragAndDropHandlers } from '../utils/dragAndDrop';
 import { dispatchCardRender } from '../rendering/registry';
 import EditOverlay from '../components/ui/EditOverlay';
+import { DESKTOP_GRID_ROW_PX, MOBILE_GRID_ROW_PX } from '../config/constants';
 
 export function useCardRendering({
   editMode,
@@ -120,6 +121,7 @@ export function useCardRendering({
   const touchSwapCooldownRef = useRef(0);
   const pointerDragRef = useRef(false);
   const ignoreTouchRef = useRef(false);
+  const placementHintsRef = useRef({});
   const [draggingId, setDraggingId] = useState(null);
   const [entitiesMissingReady, setEntitiesMissingReady] = useState(false);
 
@@ -136,23 +138,25 @@ export function useCardRendering({
     return () => clearTimeout(timer);
   }, [entitiesLoaded]);
 
-  const getCardGridSpan = useCallback(
+  const getCardGridSize = useCallback(
     (cardId) => {
-      const rowPx = isMobile ? 82 : 100;
+      const rowPx = isMobile ? MOBILE_GRID_ROW_PX : DESKTOP_GRID_ROW_PX;
       const gapPx = isMobile ? 12 : gridGapV;
-      return _getCardGridSpan(cardId, getCardSettingsKey, cardSettings, activePage, {
+      const baseSize = _getCardGridSize(cardId, getCardSettingsKey, cardSettings, activePage, {
         rowPx,
         gapPx,
       });
+      const hintedCol = placementHintsRef.current[cardId]?.preferredCol;
+      const preferredCol = baseSize.col || hintedCol || null;
+      return {
+        rows: baseSize.rows,
+        cols: _getCardColSpan(cardId, getCardSettingsKey, cardSettings),
+        row: baseSize.row,
+        col: baseSize.col,
+        preferredCol,
+      };
     },
     [getCardSettingsKey, cardSettings, activePage, isMobile, gridGapV]
-  );
-
-  const getCardColSpan = useCallback(
-    (cardId) => {
-      return _getCardColSpan(cardId, getCardSettingsKey, cardSettings);
-    },
-    [getCardSettingsKey, cardSettings]
   );
 
   const moveCardInArray = useCallback(
@@ -175,12 +179,20 @@ export function useCardRendering({
     [pagesConfig, activePage, persistConfig]
   );
 
+  const setCardPlacementHint = useCallback((cardId, preferredCol) => {
+    if (!cardId || !Number.isFinite(preferredCol) || preferredCol < 1) return;
+    placementHintsRef.current = {
+      ...placementHintsRef.current,
+      [cardId]: { preferredCol },
+    };
+  }, []);
+
   const gridLayout = useMemo(() => {
     const ids = pagesConfig[activePage] || [];
     const visibleIds = editMode
       ? ids
       : ids.filter((id) => !(hiddenCards.includes(id) || isCardHiddenByLogic(id)));
-    return _buildGridLayout(visibleIds, gridColCount, getCardGridSpan, getCardColSpan);
+    return _buildGridLayout(visibleIds, gridColCount, getCardGridSize);
   }, [
     pagesConfig,
     activePage,
@@ -188,8 +200,7 @@ export function useCardRendering({
     hiddenCards,
     editMode,
     isCardHiddenByLogic,
-    getCardGridSpan,
-    getCardColSpan,
+    getCardGridSize,
   ]);
 
   const dragAndDrop = useMemo(
@@ -209,8 +220,18 @@ export function useCardRendering({
         setTouchTargetId,
         setDraggingId,
         ignoreTouchRef,
+        setCardPlacementHint,
       }),
-    [editMode, pagesConfig, setPagesConfig, persistConfig, activePage, touchPath, touchTargetId]
+    [
+      editMode,
+      pagesConfig,
+      setPagesConfig,
+      persistConfig,
+      activePage,
+      touchPath,
+      touchTargetId,
+      setCardPlacementHint,
+    ]
   );
 
   const renderCard = useCallback(

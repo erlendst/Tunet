@@ -2,6 +2,7 @@ import { LayoutGrid, Plus, UserCircle2 } from '../icons';
 import { MediaPage, SonosPage } from '../components';
 import CardErrorBoundary from '../components/ui/CardErrorBoundary';
 import { formatDuration } from '../utils';
+import { DESKTOP_GRID_ROW_PX, MOBILE_GRID_ROW_PX } from '../config/constants';
 
 export default function DashboardGrid({ page, media, grid, cards, actions, t }) {
   const { activePage, pagesConfig, pageSettings, editMode, isMediaPage, isSonosPage } = page;
@@ -19,6 +20,7 @@ export default function DashboardGrid({ page, media, grid, cards, actions, t }) 
   const { gridLayout, isMobile, gridGapV, gridGapH, gridColCount, isCompactCards } = grid;
   const { cardSettings, getCardSettingsKey, hiddenCards, isCardHiddenByLogic, renderCard } = cards;
   const { setShowAddCardModal, setConfigTab, setShowConfigModal } = actions;
+  const effectiveGapV = isMobile ? 8 : Math.min(gridGapV, 14);
 
   if (isMediaPage(activePage)) {
     return (
@@ -122,7 +124,7 @@ export default function DashboardGrid({ page, media, grid, cards, actions, t }) 
       key={activePage}
       className="page-transition grid items-start font-sans"
       style={{
-        gap: isMobile ? '8px' : `${gridGapV}px ${gridGapH}px`,
+        gap: isMobile ? '8px' : `${effectiveGapV}px ${gridGapH}px`,
         gridAutoRows: 'auto',
         gridTemplateColumns: `repeat(${gridColCount}, minmax(0, 1fr))`,
       }}
@@ -158,11 +160,11 @@ export default function DashboardGrid({ page, media, grid, cards, actions, t }) 
 
           if (!editMode && (hiddenCards.includes(id) || isCardHiddenByLogic(id))) return null;
 
-          const cardContent = renderCard(id, index);
+          const cardContent = renderCard(id, index, placement?.col);
           if (!cardContent) return null;
 
-          const gapPx = isMobile ? 8 : gridGapV;
-          const rowPx = isMobile ? 82 : 100;
+          const gapPx = effectiveGapV;
+          const rowPx = isMobile ? MOBILE_GRID_ROW_PX : DESKTOP_GRID_ROW_PX;
           let cardHeight;
           if (
             id.startsWith('spacer_card_') &&

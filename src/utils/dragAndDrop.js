@@ -29,9 +29,99 @@ export const createDragAndDropHandlers = ({
   setTouchTargetId,
   setDraggingId,
   ignoreTouchRef,
+  setCardPlacementHint,
 }) => {
   const pendingTouchConfigRef = { current: null };
   const touchWorkingConfigRef = { current: null };
+
+  const getTargetPlacement = (cardElement, y) => {
+    if (!cardElement || typeof y !== 'number') return 'before';
+    const rect = cardElement.getBoundingClientRect();
+    return y >= rect.top + rect.height / 2 ? 'after' : 'before';
+  };
+
+  const reorderPageCards = (list, sourceCardId, targetCardId, place = 'before') => {
+    if (!Array.isArray(list)) return list;
+    if (!sourceCardId || !targetCardId || sourceCardId === targetCardId) return list;
+
+    const sourceIndex = list.indexOf(sourceCardId);
+    const targetIndex = list.indexOf(targetCardId);
+    if (sourceIndex === -1 || targetIndex === -1) return list;
+
+    const next = [...list];
+    const [movedItem] = next.splice(sourceIndex, 1);
+    const targetIndexAfterRemoval = next.indexOf(targetCardId);
+    const insertIndex = place === 'after' ? targetIndexAfterRemoval + 1 : targetIndexAfterRemoval;
+    next.splice(Math.max(0, insertIndex), 0, movedItem);
+    return next;
+  };
+
+  const getCardsInDomOrder = (sourceCardId) =>
+    Array.from(document.querySelectorAll('[data-card-id]')).filter(
+      (card) => card.getAttribute('data-card-id') !== sourceCardId
+    );
+
+  const resolveDropTarget = (x, y, sourceCardId) => {
+    const cards = getCardsInDomOrder(sourceCardId);
+    if (cards.length === 0) return null;
+
+    const columns = new Map();
+    cards.forEach((card) => {
+      const cardId = card.getAttribute('data-card-id');
+      const colIndex = parseInt(card.getAttribute('data-col-index') || '', 10);
+      if (!cardId || !Number.isFinite(colIndex)) return;
+      const rect = card.getBoundingClientRect();
+      const existing = columns.get(colIndex);
+      const item = { card, cardId, colIndex, rect };
+      if (existing) {
+        existing.cards.push(item);
+        existing.left = Math.min(existing.left, rect.left);
+        existing.right = Math.max(existing.right, rect.right);
+        existing.centerX = (existing.left + existing.right) / 2;
+      } else {
+        columns.set(colIndex, {
+          colIndex,
+          left: rect.left,
+          right: rect.right,
+          centerX: rect.left + rect.width / 2,
+          cards: [item],
+        });
+      }
+    });
+
+    const columnList = Array.from(columns.values()).sort((a, b) => a.colIndex - b.colIndex);
+    if (columnList.length === 0) return null;
+
+    let targetColumn =
+      columnList.find((column) => x >= column.left && x <= column.right) || null;
+
+    if (!targetColumn) {
+      targetColumn = columnList.reduce((closest, column) => {
+        if (!closest) return column;
+        return Math.abs(column.centerX - x) < Math.abs(closest.centerX - x) ? column : closest;
+      }, null);
+    }
+
+    if (!targetColumn) return null;
+
+    const cardsInColumn = [...targetColumn.cards].sort((a, b) => a.rect.top - b.rect.top);
+    const beforeCard = cardsInColumn.find((item) => y < item.rect.top + item.rect.height / 2);
+    if (beforeCard) {
+      return {
+        targetId: beforeCard.cardId,
+        targetColIndex: targetColumn.colIndex,
+        place: 'before',
+      };
+    }
+
+    const lastCard = cardsInColumn[cardsInColumn.length - 1];
+    if (!lastCard) return null;
+    return {
+      targetId: lastCard.cardId,
+      targetColIndex: targetColumn.colIndex,
+      place: 'after',
+    };
+  };
 
   const saveConfig = (newConfig) => {
     if (typeof persistConfig === 'function') {
@@ -71,14 +161,12 @@ export const createDragAndDropHandlers = ({
     setDraggingId(cardId);
   };
 
-  const moveCard = ({ source, targetIndex }) => {
+  const moveCard = ({ source, targetId, place }) => {
     const baseConfig = touchWorkingConfigRef.current || pagesConfig;
     const newConfig = { ...baseConfig };
     const currentList = [...(newConfig[activePage] || [])];
-    const [movedItem] = currentList.splice(source.index, 1);
-    currentList.splice(targetIndex, 0, movedItem);
-    newConfig[activePage] = currentList;
-    source.index = targetIndex;
+    newConfig[activePage] = reorderPageCards(currentList, source.cardId, targetId, place);
+    source.index = newConfig[activePage].indexOf(source.cardId);
     touchWorkingConfigRef.current = newConfig;
 
     return { newConfig, source };
@@ -87,19 +175,11 @@ export const createDragAndDropHandlers = ({
   const updateTouchDrag = (x, y) => {
     if (!editMode || !dragSourceRef.current) return;
     setTouchPath((prev) => (prev ? { ...prev, x, y } : { startX: x, startY: y, x, y }));
-    const el = document.elementFromPoint(x, y);
-    const cardEl = el?.closest?.('[data-card-id]');
+    const resolvedTarget = resolveDropTarget(x, y, dragSourceRef.current.cardId);
+    if (!resolvedTarget?.targetId) return;
 
-    if (!cardEl) return;
-
-    const targetId = cardEl.getAttribute('data-card-id');
-    const targetIndex = parseInt(cardEl.getAttribute('data-index'));
-    const targetColIndexStr = cardEl.getAttribute('data-col-index');
-    const targetColIndex = targetColIndexStr ? parseInt(targetColIndexStr) : undefined;
-
-    if (!targetId || targetId === dragSourceRef.current.cardId) return;
-
-    touchTargetRef.current = { targetId, targetIndex, targetColIndex };
+    const { targetId, targetColIndex, place } = resolvedTarget;
+    touchTargetRef.current = { targetId, targetColIndex };
     setTouchTargetId(targetId);
 
     const now = Date.now();
@@ -108,68 +188,40 @@ export const createDragAndDropHandlers = ({
 
     const { newConfig, source } = moveCard({
       source: dragSourceRef.current,
-      targetIndex,
+      targetId,
+      place,
     });
 
     dragSourceRef.current = source;
     pendingTouchConfigRef.current = newConfig;
     setPagesConfig(newConfig);
+    if (Number.isFinite(targetColIndex)) setCardPlacementHint?.(source.cardId, targetColIndex);
     safeVibrate(10);
   };
 
   const performTouchDrop = (x, y) => {
     if (!dragSourceRef.current) return;
+    const resolvedTarget =
+      resolveDropTarget(x, y, dragSourceRef.current.cardId) || touchTargetRef.current;
 
-    const cards = Array.from(document.querySelectorAll('[data-card-id]'));
-    let cardElement = cards.find((card) => {
-      const rect = card.getBoundingClientRect();
-      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-    });
-
-    if (!cardElement) {
-      let minDist = Infinity;
-      cards.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dist = Math.hypot(x - cx, y - cy);
-        if (dist < 220 && dist < minDist) {
-          minDist = dist;
-          cardElement = card;
-        }
-      });
-    }
-
-    if (!cardElement && touchTargetRef.current) {
-      cardElement = cards.find(
-        (card) => card.getAttribute('data-card-id') === touchTargetRef.current.targetId
-      );
-    }
-
-    if (!cardElement) {
+    if (!resolvedTarget?.targetId || resolvedTarget.targetId === dragSourceRef.current.cardId) {
       if (pendingTouchConfigRef.current) {
         saveConfig(pendingTouchConfigRef.current);
       }
       return;
     }
 
-    const targetId = cardElement.getAttribute('data-card-id');
-    const targetIndex = parseInt(cardElement.getAttribute('data-index'));
-    const targetColIndexStr = cardElement.getAttribute('data-col-index');
-    const _targetColIndex = targetColIndexStr ? parseInt(targetColIndexStr) : undefined;
-
-    if (!targetId || targetId === dragSourceRef.current.cardId) {
-      if (pendingTouchConfigRef.current) {
-        saveConfig(pendingTouchConfigRef.current);
-      }
-      return;
-    }
-
+    const { targetId, targetColIndex } = resolvedTarget;
+    const place = resolvedTarget.place || 'after';
     const { newConfig } = moveCard({
       source: dragSourceRef.current,
-      targetIndex,
+      targetId,
+      place,
     });
 
+    if (Number.isFinite(targetColIndex)) {
+      setCardPlacementHint?.(dragSourceRef.current.cardId, targetColIndex);
+    }
     saveConfig(newConfig);
     pendingTouchConfigRef.current = null;
     touchWorkingConfigRef.current = null;
@@ -213,13 +265,20 @@ export const createDragAndDropHandlers = ({
       const rawData = e.dataTransfer.getData('dragData');
       if (!rawData) return;
       const source = JSON.parse(rawData);
-
+      const resolvedTarget = resolveDropTarget(e.clientX, e.clientY, source.cardId);
+      if (!resolvedTarget?.targetId) return;
       const newConfig = { ...pagesConfig };
       const currentList = [...(newConfig[activePage] || [])];
-      const movedItem = currentList.splice(source.index, 1)[0];
-      currentList.splice(index, 0, movedItem);
-      newConfig[activePage] = currentList;
+      newConfig[activePage] = reorderPageCards(
+        currentList,
+        source.cardId,
+        resolvedTarget.targetId,
+        resolvedTarget.place
+      );
 
+      if (Number.isFinite(resolvedTarget.targetColIndex)) {
+        setCardPlacementHint?.(source.cardId, resolvedTarget.targetColIndex);
+      }
       saveConfig(newConfig);
       setDraggingId(null);
     },

@@ -1,31 +1,7 @@
 import { memo } from 'react';
-import { Minus, Plus, AirVent } from 'lucide-react';
-import { getIconComponent } from '../../icons';
+import { Minus, Plus, Thermometer } from '../../icons';
 import { useConfig, useHomeAssistantMeta } from '../../contexts';
 import { formatKindValueForDisplay, getEffectiveUnitMode } from '../../utils';
-
-const normalizeFanModeToken = (value) => {
-  if (typeof value !== 'string') return '';
-  return value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-};
-
-const isAutoFanMode = (value) => {
-  const normalized = normalizeFanModeToken(value);
-  return normalized === 'auto' || normalized === 'automatic';
-};
-
-const getFanSpeedLevel = (fanMode, fanModes) => {
-  if (!Array.isArray(fanModes) || fanModes.length === 0) return 0;
-  if (isAutoFanMode(fanMode)) return 0;
-  const speedModes = fanModes.filter((mode) => !isAutoFanMode(mode));
-  if (speedModes.length === 0) return 0;
-  const target = normalizeFanModeToken(fanMode);
-  if (!target) return 0;
-  const matchedIndex = speedModes.findIndex((mode) => normalizeFanModeToken(mode) === target);
-  if (matchedIndex === -1) return 0;
-  const scaledLevel = Math.round(((matchedIndex + 1) / speedModes.length) * 5);
-  return Math.max(1, Math.min(5, scaledLevel));
-};
 
 const GenericClimateCard = memo(function GenericClimateCard({
   cardId,
@@ -36,12 +12,9 @@ const GenericClimateCard = memo(function GenericClimateCard({
   cardStyle,
   editMode,
   customNames,
-  customIcons,
   onOpen,
   onSetTemperature,
-  isMobile,
   settings,
-  t,
 }) {
   const { unitsMode } = useConfig();
   const { haConfig } = useHomeAssistantMeta();
@@ -59,16 +32,12 @@ const GenericClimateCard = memo(function GenericClimateCard({
     fromUnit: sourceTempUnit,
     unitMode: effectiveUnitMode,
   });
-  const displayTargetTemp = formatKindValueForDisplay(targetTemp, {
-    kind: 'temperature',
-    fromUnit: sourceTempUnit,
-    unitMode: effectiveUnitMode,
-  });
-
   const name = customNames?.[cardId] || entity.attributes?.friendly_name || entityId;
-  const climateIconName = customIcons?.[cardId] || entity?.attributes?.icon;
-  const Icon = climateIconName ? getIconComponent(climateIconName) : AirVent;
-  const stepTemp = (delta) => onSetTemperature?.((targetTemp || 21) + delta);
+  const numericTargetTemp = Number(targetTemp);
+  const resolvedTargetTemp = Number.isFinite(numericTargetTemp) ? numericTargetTemp : 21;
+  const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
+  const buttonBaseClass =
+    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2f684a] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (isSmall) {
     return (
@@ -82,27 +51,27 @@ const GenericClimateCard = memo(function GenericClimateCard({
         style={cardStyle}
       >
         {controls}
-        <div className="flex items-center gap-3">
-          <Icon className="h-5 w-5 text-[var(--text-secondary)]" strokeWidth={1.5} />
+        <div className="min-w-0 flex-1">
           <div className="flex flex-col">
-            <span className="text-xs font-medium text-[var(--text-secondary)]">{name}</span>
-            <span className="text-sm font-bold text-[var(--text-primary)]">
+            <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
+            <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-primary)]">
+              <Thermometer className="h-3.5 w-3.5 text-[#2f684a]" strokeWidth={1.75} />
               {displayCurrentTemp.text}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); stepTemp(-0.5); }}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--glass-bg-hover)] active:scale-90"
+            className={`${buttonBaseClass} h-12 w-12`}
           >
-            <Minus className="h-3.5 w-3.5" />
+            <Minus className="h-4 w-4" strokeWidth={2} />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); stepTemp(0.5); }}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--glass-bg-hover)] active:scale-90"
+            className={`${buttonBaseClass} h-12 w-12`}
           >
-            <Plus className="h-3.5 w-3.5" />
+            <Plus className="h-4 w-4" strokeWidth={2} />
           </button>
         </div>
       </div>
@@ -121,30 +90,28 @@ const GenericClimateCard = memo(function GenericClimateCard({
     >
       {controls}
 
-      {/* Left: name + temp */}
-      <div className="flex items-center gap-4">
-        <Icon className="h-6 w-6 shrink-0 text-[var(--text-muted)]" strokeWidth={1.5} />
+      <div className="min-w-0 flex-1">
         <div className="flex flex-col">
-          <span className="text-sm font-bold text-[var(--text-primary)]">{name}</span>
-          <span className="text-2xl font-light leading-tight text-[var(--text-primary)]">
+          <span className="truncate text-sm font-bold text-[var(--text-primary)]">{name}</span>
+          <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
+            <Thermometer className="h-5 w-5 text-[#2f684a]" strokeWidth={1.75} />
             {displayCurrentTemp.text}
           </span>
         </div>
       </div>
 
-      {/* Right: controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-4">
         <button
           onClick={(e) => { e.stopPropagation(); stepTemp(-0.5); }}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)] active:scale-90"
+          className={`${buttonBaseClass} h-[82px] w-[82px]`}
         >
-          <Minus className="h-4 w-4" />
+          <Minus className="h-7 w-7" strokeWidth={2} />
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); stepTemp(0.5); }}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)] active:scale-90"
+          className={`${buttonBaseClass} h-[82px] w-[82px]`}
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-7 w-7" strokeWidth={2} />
         </button>
       </div>
     </div>

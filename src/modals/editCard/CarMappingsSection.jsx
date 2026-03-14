@@ -153,7 +153,7 @@ export function CarMappingsSection({
       return ['sensor', 'input_number'].includes(domain);
     }
     if (key === 'climateId') return domain === 'climate';
-    if (key === 'lockId') return domain === 'lock';
+    if (key === 'lockId') return domain === 'lock' || domain === 'binary_sensor';
     if (key === 'ignitionSwitchId') return domain === 'switch';
     if (key === 'chargeLimitNumberId') return domain === 'number';
     if (key === 'chargeLimitSelectId') return ['select', 'input_select'].includes(domain);

@@ -85,13 +85,13 @@ describe('isCardRemovable', () => {
     ).toBe(true);
   });
 
-  it('disallows generic cards without removable prefix', () => {
+  it('allows generic cards on normal dashboard pages', () => {
     expect(
       isCardRemovable('binary_sensor.door', 'home', {
         getCardSettingsKey: identity,
         cardSettings: {},
       })
-    ).toBe(false);
+    ).toBe(true);
   });
 });
 
