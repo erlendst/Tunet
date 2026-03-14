@@ -42,6 +42,7 @@ export function useEditModalProps({
     const isEditCamera = !!editId && editId.startsWith('camera_card_');
     const isEditFan = !!editId && (editId.startsWith('fan.') || editId.startsWith('fan_card_'));
     const isEditTravel = !!editId && editId.startsWith('travel_card_');
+    const isEditClimate = !!editId && editId.startsWith('climate_card_');
 
     const editSettings = isEditCar ? resolveCarSettings(editId, rawEditSettings) : rawEditSettings;
     const isEditGenericType =
@@ -115,6 +116,7 @@ export function useEditModalProps({
       isEditFan,
       isEditAlarm,
       isEditTravel,
+      isEditClimate,
       isEditToday,
       isEditClimateOverview,
       isEditScenes,

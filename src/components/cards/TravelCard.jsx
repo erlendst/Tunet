@@ -201,7 +201,7 @@ export default function TravelCard({
       key={cardId}
       {...dragProps}
       onClick={(e) => { e.stopPropagation(); if (!editMode) onOpen?.(); }}
-      className={`relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`dashboard-action-card relative flex h-full flex-col gap-4 overflow-hidden p-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -209,25 +209,28 @@ export default function TravelCard({
       {sources.map((section, sectionIndex) => {
         const TransportIcon = getTransportIcon(section.entity, customIcons?.[cardId]);
         return (
-          <div key={`${section.title || 'section'}-${sectionIndex}`}>
+          <div
+            key={`${section.title || 'section'}-${sectionIndex}`}
+            className="dashboard-card-section px-4 py-3"
+          >
             {/* Platform header */}
             <div className="mb-2 flex items-center justify-between gap-2">
               <span className="text-sm font-bold text-[var(--text-primary)]">
                 {section.title || '–'}
               </span>
-              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--text-muted)]" strokeWidth={1.5} />
+              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--accent-color)]" strokeWidth={1.5} />
             </div>
 
             {/* Departure rows */}
             <div className="flex flex-col">
               {section.rows.map((row, index) => (
                 <div key={`${row.route}-${row.displayTime}-${index}`}>
-                  {index > 0 && <div className="h-px bg-[var(--card-border)]" />}
+                  {index > 0 && <div className="dashboard-card-divider h-px" />}
                   <div className="flex items-center justify-between gap-3 py-2">
                     <span className="truncate text-sm text-[var(--text-primary)]">
                       {row.route || translate('travel.departureFallback')}
                     </span>
-                    <span className="shrink-0 text-sm font-medium text-[var(--text-secondary)]">
+                    <span className="shrink-0 text-sm font-semibold text-[var(--text-secondary)]">
                       {row.displayTime || '--'}
                     </span>
                   </div>

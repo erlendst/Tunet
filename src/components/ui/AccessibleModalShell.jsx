@@ -97,14 +97,18 @@ export default function AccessibleModalShell({
   if (!open) return null;
 
   return (
-    <div className={overlayClassName} style={overlayStyle} onClick={onClose}>
+    <div
+      className={['app-modal-overlay', overlayClassName].filter(Boolean).join(' ')}
+      style={overlayStyle}
+      onClick={onClose}
+    >
       <div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={resolvedTitleId}
         aria-describedby={describedBy}
-        className={panelClassName}
+        className={['app-modal-panel', panelClassName].filter(Boolean).join(' ')}
         style={panelStyle}
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}

@@ -418,9 +418,9 @@ export default function SensorModal({
       titleId={modalTitleId}
       overlayClassName="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-6"
       overlayStyle={{ backdropFilter: 'blur(20px)', backgroundColor: 'rgba(0,0,0,0.3)' }}
-      panelClassName="popup-anim relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border shadow-2xl backdrop-blur-xl md:h-auto md:min-h-[550px] md:rounded-[3rem] lg:grid lg:grid-cols-5"
+      panelClassName="entity-modal-panel popup-anim relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border shadow-2xl backdrop-blur-xl md:h-auto md:min-h-[550px] md:rounded-[3rem] lg:grid lg:grid-cols-5"
       panelStyle={{
-        background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--modal-bg) 100%)',
+        background: 'color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%)',
         borderColor: 'var(--glass-border)',
         color: 'var(--text-primary)',
       }}
@@ -459,7 +459,7 @@ export default function SensorModal({
             <div className="min-w-0">
               <h2
                 id={modalTitleId}
-                className="truncate text-2xl leading-none font-light tracking-tight text-[var(--text-primary)] uppercase italic"
+                className="truncate text-2xl leading-none font-semibold tracking-[0.08em] text-[var(--text-primary)] uppercase"
               >
                 {name}
               </h2>
@@ -553,7 +553,7 @@ export default function SensorModal({
                         return (
                           <div
                             key={`${event.lastChanged || idx}`}
-                            className="group flex items-center gap-4 rounded-xl border border-transparent p-3 transition-colors hover:border-white/5 hover:bg-white/5"
+                            className="group flex items-center gap-4 rounded-xl border border-transparent p-3 transition-colors hover:border-[var(--glass-border)] hover:bg-[var(--glass-bg-hover)]"
                           >
                             <div
                               className={`h-2 w-2 flex-shrink-0 rounded-full ${event.state === 'on' || event.state === 'true' || event.state === 'open' || event.state === 'unlocked' || event.state === 'playing' || event.state > 0 ? 'bg-[var(--status-success-fg)] opacity-80' : 'bg-[var(--text-secondary)] opacity-35'}`}
@@ -590,7 +590,7 @@ export default function SensorModal({
         </div>
 
         {/* RIGHT PANEL: Meta & Attributes (2 cols) */}
-        <div className="relative flex flex-col gap-10 overflow-y-auto bg-[var(--glass-bg)]/10 p-6 md:p-10 lg:col-span-2">
+        <div className="entity-modal-sidebar relative flex flex-col gap-10 overflow-y-auto p-6 md:p-10 lg:col-span-2">
           {/* Timestamps */}
           <div>
             <h4 className="mb-6 text-xs font-bold tracking-widest text-[var(--text-secondary)] uppercase opacity-40">

@@ -193,6 +193,244 @@
   background: var(--modal-surface-hover, var(--glass-bg-hover));
   border-color: var(--glass-border);
 }
+.app-modal-overlay {
+  backdrop-filter: blur(18px);
+}
+.app-modal-panel {
+  background: color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%);
+  border-color: color-mix(in srgb, var(--text-secondary) 18%, transparent);
+  color: var(--text-primary);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+}
+.app-modal-panel .popup-surface {
+  background: color-mix(in srgb, var(--card-bg) 78%, var(--modal-bg) 22%);
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.app-modal-panel .popup-surface-hover:hover {
+  background: color-mix(in srgb, var(--card-bg) 64%, var(--glass-bg-hover) 36%);
+  border-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+}
+.app-modal-panel .popup-surface-group > * + * {
+  border-top: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+}
+.app-modal-panel .popup-surface-divider {
+  background: color-mix(in srgb, var(--text-secondary) 14%, transparent);
+}
+.app-modal-panel .modal-close {
+  background: color-mix(in srgb, var(--card-bg) 84%, var(--modal-bg) 16%);
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent);
+  color: var(--text-secondary);
+  box-shadow: none;
+}
+.app-modal-panel .modal-close:hover {
+  background: color-mix(in srgb, var(--card-bg) 68%, var(--glass-bg-hover) 32%);
+  color: var(--text-primary);
+  transform: none;
+}
+.app-modal-panel input:not([type='range']):not([type='checkbox']):not([type='radio']),
+.app-modal-panel select,
+.app-modal-panel textarea {
+  background: color-mix(in srgb, var(--bg-primary) 22%, var(--card-bg) 78%) !important;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent) !important;
+  color: var(--text-primary);
+  box-shadow: none;
+}
+.app-modal-panel input::placeholder,
+.app-modal-panel textarea::placeholder {
+  color: color-mix(in srgb, var(--text-secondary) 72%, transparent);
+}
+.app-modal-panel input:focus,
+.app-modal-panel select:focus,
+.app-modal-panel textarea:focus,
+.app-modal-panel button:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent-color) 42%, transparent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 22%, transparent);
+}
+.app-modal-panel .custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.app-modal-panel .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-secondary) 28%, transparent);
+}
+.app-modal-panel .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-secondary) 42%, transparent);
+}
+.app-modal-panel button[class*='relative h-6 w-12 rounded-full'] {
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--bg-primary) 20%, var(--card-bg) 80%) !important;
+}
+.app-modal-panel button[class*='relative h-6 w-12 rounded-full'] span {
+  background: var(--text-primary) !important;
+}
+.app-modal-panel button[class*='relative h-6 w-12 rounded-full']:has(span[class*='translate-x-6']),
+.app-modal-panel button[class*='relative h-6 w-12 rounded-full']:has(span[class*='left-7']) {
+  background: color-mix(in srgb, var(--accent-color) 28%, var(--card-bg) 72%) !important;
+  border-color: color-mix(in srgb, var(--accent-color) 42%, transparent) !important;
+}
+.entity-modal-panel .popup-surface {
+  background: color-mix(in srgb, var(--card-bg) 82%, var(--modal-bg) 18%);
+}
+.entity-modal-panel h3 {
+  font-style: normal;
+}
+.entity-modal-panel h2 {
+  font-style: normal;
+}
+.entity-modal-panel [class*='rounded-full px-3 py-1'] {
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 16%, transparent);
+}
+.entity-modal-sidebar {
+  background: color-mix(in srgb, var(--card-bg) 84%, var(--modal-bg) 16%);
+  border-top: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+}
+@media (min-width: 1024px) {
+  .entity-modal-sidebar {
+    border-top: 0;
+    border-left: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+  }
+}
+.dashboard-action-card {
+  border-radius: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+  background: color-mix(in srgb, var(--card-bg) 88%, var(--bg-primary) 12%);
+  box-shadow: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+.dashboard-action-card:hover {
+  background: color-mix(in srgb, var(--card-bg) 72%, var(--glass-bg-hover) 28%);
+  border-color: color-mix(in srgb, var(--accent-color) 24%, transparent);
+}
+.dashboard-card-section {
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+  background: color-mix(in srgb, var(--card-bg) 84%, var(--bg-primary) 16%);
+}
+.dashboard-card-divider {
+  background: color-mix(in srgb, var(--text-secondary) 14%, transparent);
+}
+.dashboard-action-button {
+  box-shadow: none;
+}
+.climate-modal .popup-surface {
+  background: color-mix(in srgb, var(--card-bg) 82%, var(--modal-bg) 18%);
+}
+.climate-modal .rounded-2xl.p-4,
+.climate-modal .rounded-full.border.p-6 {
+  box-shadow: none;
+}
+.edit-card-modal {
+  background: color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%);
+  border-color: color-mix(in srgb, var(--text-secondary) 18%, transparent) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+}
+.edit-card-modal .popup-surface {
+  background: color-mix(in srgb, var(--card-bg) 78%, var(--modal-bg) 22%);
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.edit-card-modal .popup-surface-hover:hover {
+  background: color-mix(in srgb, var(--card-bg) 64%, var(--glass-bg-hover) 36%);
+  border-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+}
+.edit-card-modal .popup-surface-divider {
+  background: color-mix(in srgb, var(--text-secondary) 14%, transparent);
+}
+.edit-card-modal label,
+.edit-card-modal .text-\[var\(--text-muted\)\],
+.edit-card-modal .text-gray-500 {
+  color: color-mix(in srgb, var(--text-secondary) 82%, var(--text-primary) 18%);
+}
+.edit-card-modal input:not([type='range']):not([type='checkbox']):not([type='radio']),
+.edit-card-modal select,
+.edit-card-modal textarea {
+  background: color-mix(in srgb, var(--bg-primary) 22%, var(--card-bg) 78%) !important;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent) !important;
+  color: var(--text-primary);
+  box-shadow: none;
+}
+.edit-card-modal input::placeholder,
+.edit-card-modal textarea::placeholder {
+  color: color-mix(in srgb, var(--text-secondary) 72%, transparent);
+}
+.edit-card-modal input:focus,
+.edit-card-modal select:focus,
+.edit-card-modal textarea:focus,
+.edit-card-modal button:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent-color) 42%, transparent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 22%, transparent);
+}
+.edit-card-modal .modal-close {
+  background: color-mix(in srgb, var(--card-bg) 84%, var(--modal-bg) 16%);
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent);
+  color: var(--text-secondary);
+  box-shadow: none;
+}
+.edit-card-modal .modal-close:hover {
+  background: color-mix(in srgb, var(--card-bg) 68%, var(--glass-bg-hover) 32%);
+  color: var(--text-primary);
+  transform: none;
+}
+.edit-card-modal .custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.edit-card-modal .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-secondary) 28%, transparent);
+}
+.edit-card-modal .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-secondary) 42%, transparent);
+}
+.edit-card-modal input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--text-secondary) 18%, transparent);
+  outline: none;
+}
+.edit-card-modal input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--card-bg) 82%, white 18%);
+  background: var(--accent-color);
+  box-shadow: none;
+}
+.edit-card-modal input[type='range']::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--text-secondary) 18%, transparent);
+}
+.edit-card-modal input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in srgb, var(--card-bg) 82%, white 18%);
+  background: var(--accent-color);
+  box-shadow: none;
+}
+.edit-card-modal button[class*='relative h-6 w-12 rounded-full'] {
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--bg-primary) 20%, var(--card-bg) 80%) !important;
+}
+.edit-card-modal button[class*='relative h-6 w-12 rounded-full'] span {
+  background: var(--text-primary) !important;
+}
+.edit-card-modal button[class*='relative h-6 w-12 rounded-full']:has(span[class*='translate-x-6']),
+.edit-card-modal button[class*='relative h-6 w-12 rounded-full']:has(span[class*='left-7']) {
+  background: color-mix(in srgb, var(--accent-color) 28%, var(--card-bg) 72%) !important;
+  border-color: color-mix(in srgb, var(--accent-color) 42%, transparent) !important;
+}
 .popup-surface-divider {
   background: color-mix(in srgb, var(--glass-border) 35%, transparent);
 }

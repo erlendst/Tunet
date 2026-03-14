@@ -104,7 +104,10 @@ export default function M3Slider({
         style={{ touchAction: 'pan-x' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute h-1 w-full overflow-hidden rounded-full bg-white/10 transition-all duration-300 group-hover:h-1.5">
+        <div
+          className="absolute h-1 w-full overflow-hidden rounded-full transition-all duration-300 group-hover:h-1.5"
+          style={{ backgroundColor: 'color-mix(in srgb, var(--text-secondary) 18%, transparent)' }}
+        >
           <div
             className={`h-full ${colorClass} transition-all duration-150 ease-out`}
             style={{ width: `${percentage}%` }}
@@ -112,8 +115,12 @@ export default function M3Slider({
         </div>
         <input {...commonInputProps} />
         <div
-          className="pointer-events-none absolute z-10 h-3 w-3 rounded-full bg-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100"
-          style={{ left: `calc(${percentage}% - 6px)` }}
+          className="pointer-events-none absolute z-10 h-3 w-3 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          style={{
+            left: `calc(${percentage}% - 6px)`,
+            backgroundColor: 'var(--accent-color)',
+            boxShadow: '0 0 0 2px color-mix(in srgb, var(--card-bg) 82%, white 18%)',
+          }}
         />
       </div>
     );
@@ -126,7 +133,10 @@ export default function M3Slider({
         style={{ touchAction: 'pan-x' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute h-2 w-full overflow-hidden rounded-full bg-white/10 transition-all duration-300 group-hover:h-2.5">
+        <div
+          className="absolute h-2 w-full overflow-hidden rounded-full transition-all duration-300 group-hover:h-2.5"
+          style={{ backgroundColor: 'color-mix(in srgb, var(--text-secondary) 18%, transparent)' }}
+        >
           <div
             className={`h-full ${colorClass} transition-all duration-150 ease-out`}
             style={{ width: `${percentage}%` }}
@@ -134,8 +144,12 @@ export default function M3Slider({
         </div>
         <input {...commonInputProps} />
         <div
-          className="pointer-events-none absolute z-10 h-4 w-4 rounded-full bg-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100"
-          style={{ left: `calc(${percentage}% - 8px)` }}
+          className="pointer-events-none absolute z-10 h-4 w-4 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          style={{
+            left: `calc(${percentage}% - 8px)`,
+            backgroundColor: 'var(--accent-color)',
+            boxShadow: '0 0 0 2px color-mix(in srgb, var(--card-bg) 82%, white 18%)',
+          }}
         />
       </div>
     );
@@ -148,7 +162,13 @@ export default function M3Slider({
         style={{ touchAction: 'pan-x' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute h-full w-full overflow-hidden rounded-2xl border border-white/5 bg-white/5">
+        <div
+          className="absolute h-full w-full overflow-hidden rounded-2xl border"
+          style={{
+            backgroundColor: 'color-mix(in srgb, var(--text-secondary) 10%, transparent)',
+            borderColor: 'color-mix(in srgb, var(--text-secondary) 14%, transparent)',
+          }}
+        >
           <div
             className={`h-full transition-all duration-150 ease-out ${colorClass} opacity-90`}
             style={{ width: `${percentage}%` }}
@@ -184,7 +204,10 @@ export default function M3Slider({
           className={`absolute w-full ${height ? 'h-full rounded bg-white/10' : 'h-5 rounded-full border'} overflow-hidden`}
           style={
             !height
-              ? { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.05)' }
+              ? {
+                  backgroundColor: 'color-mix(in srgb, var(--text-secondary) 18%, transparent)',
+                  borderColor: 'color-mix(in srgb, var(--text-secondary) 14%, transparent)',
+                }
               : {}
           }
         >
@@ -192,7 +215,7 @@ export default function M3Slider({
             className={`h-full transition-all duration-150 ease-out ${colorClass}`}
             style={{
               width: `${percentage}%`,
-              boxShadow: !height ? '0_0_15px_rgba(0,0,0,0.2)' : 'none',
+              boxShadow: 'none',
             }}
           />
         </div>
@@ -209,10 +232,11 @@ export default function M3Slider({
       ) : (
         !height && (
           <div
-            className="pointer-events-none absolute h-8 w-1 rounded-full bg-white transition-transform duration-200 group-active:scale-y-110"
+            className="pointer-events-none absolute h-8 w-1 rounded-full transition-transform duration-200 group-active:scale-y-110"
             style={{
               left: `calc(${percentage}% - 2px)`,
-              boxShadow: '0_0_15px_rgba(255,255,255,0.4)',
+              backgroundColor: 'var(--text-primary)',
+              boxShadow: 'none',
             }}
           />
         )

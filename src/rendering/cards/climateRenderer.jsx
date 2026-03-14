@@ -14,15 +14,30 @@ export function renderGenericClimateCard(
     editMode,
     cardSettings,
     customNames,
-    customIcons,
     callService,
     setActiveClimateEntityModal,
-    isMobile,
     t,
   } = ctx;
   const settings = getSettings(cardSettings, settingsKey, cardId);
   const entityId = settings.climateId;
   const entity = entityId ? entities[entityId] : null;
+  const temperatureDisplayMode = settings.temperatureDisplayMode || 'target';
+  const temperatureSensorEntity =
+    temperatureDisplayMode === 'sensor' && settings.temperatureSensorId
+      ? entities[settings.temperatureSensorId]
+      : null;
+  const displayTemperatureValue =
+    temperatureDisplayMode === 'current'
+      ? entity?.attributes?.current_temperature
+      : temperatureDisplayMode === 'sensor'
+        ? temperatureSensorEntity?.state
+        : entity?.attributes?.temperature;
+  const displayTemperatureUnit =
+    temperatureDisplayMode === 'sensor'
+      ? temperatureSensorEntity?.attributes?.unit_of_measurement ||
+        temperatureSensorEntity?.attributes?.temperature_unit ||
+        null
+      : entity?.attributes?.temperature_unit || null;
 
   if (!entity || !entityId) {
     return renderMissingEntityWhenReady(ctx, {
@@ -46,14 +61,13 @@ export function renderGenericClimateCard(
       cardStyle={cardStyle}
       editMode={editMode}
       customNames={customNames}
-      customIcons={customIcons}
       onOpen={() => setActiveClimateEntityModal(entityId)}
       onSetTemperature={(temp) =>
         callService('climate', 'set_temperature', { entity_id: entityId, temperature: temp })
       }
-      isMobile={isMobile}
+      displayTemperatureValue={displayTemperatureValue}
+      displayTemperatureUnit={displayTemperatureUnit}
       settings={settings}
-      t={t}
     />
   );
 }

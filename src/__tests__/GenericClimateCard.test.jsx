@@ -45,7 +45,7 @@ describe('GenericClimateCard', () => {
     render(<GenericClimateCard {...baseProps({ fan_mode: 'auto' })} />);
 
     expect(screen.getByText('Living Room AC')).toBeInTheDocument();
-    expect(screen.getByText('24°C')).toBeInTheDocument();
+    expect(screen.getByText('22°C')).toBeInTheDocument();
   });
 
   it('renders plus and minus controls', () => {

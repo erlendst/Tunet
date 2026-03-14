@@ -117,16 +117,16 @@ export default function DashboardLayout(props) {
       <div
         role="main"
         aria-label="Dashboard"
-        className={`relative z-10 mx-auto w-full max-w-[1600px] py-4 md:py-6 ${
+        className={`relative z-10 w-full py-4 md:py-6 ${
           isMobile
-            ? 'mobile-grid px-2'
+            ? 'mobile-grid px-6'
             : gridColCount === 1
               ? 'px-10 sm:px-16 md:px-24'
               : gridColCount === 3
                 ? dynamicGridColumns
-                  ? 'px-4 md:px-12'
-                  : 'px-4 md:px-20'
-                : 'px-6 md:px-20'
+                  ? 'px-6 md:px-6'
+                  : 'px-6 md:px-6'
+                : 'px-6 md:px-6'
         } ${isCompactCards ? 'compact-cards' : ''}`}
       >
         <ConnectionBanner t={t} />

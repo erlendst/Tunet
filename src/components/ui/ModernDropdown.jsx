@@ -37,7 +37,7 @@ export default function ModernDropdown({
         <div className="flex items-center gap-3">
           <Icon className="h-4 w-4 text-[var(--text-muted)] transition-colors group-hover:text-[var(--accent-color)]" />
           <span
-            className="text-xs font-bold tracking-widest uppercase italic"
+            className="text-xs font-bold tracking-widest uppercase"
             style={{ color: 'var(--text-secondary)' }}
           >
             {String(getLabel(current) || placeholder)}
@@ -49,8 +49,8 @@ export default function ModernDropdown({
       </button>
       {isOpen && (
         <div
-          className="absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-2xl border shadow-2xl"
-          style={{ backgroundColor: 'var(--modal-bg)', borderColor: 'var(--glass-border)' }}
+          className="popup-surface absolute top-full left-0 z-50 mt-2 w-full overflow-hidden rounded-2xl border"
+          style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--glass-border)' }}
         >
           <div className="max-h-48 overflow-y-auto">
             {(options || []).map((option) => (
@@ -61,7 +61,9 @@ export default function ModernDropdown({
                   setIsOpen(false);
                 }}
                 className={`w-full px-6 py-3 text-left text-xs font-bold tracking-widest uppercase transition-all ${current === option ? 'text-[var(--accent-color)]' : 'text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
-                style={{ backgroundColor: current === option ? 'var(--accent-bg)' : 'transparent' }}
+                style={{
+                  backgroundColor: current === option ? 'var(--accent-bg)' : 'transparent',
+                }}
               >
                 {String(getLabel(option))}
               </button>

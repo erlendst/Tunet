@@ -171,7 +171,7 @@ const CarCard = ({
           e.stopPropagation();
           if (!editMode) onOpen();
         }}
-        className={`relative flex h-full items-center justify-between gap-4 overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-4 pl-5 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+        className={`dashboard-action-card relative flex h-full items-center justify-between gap-4 overflow-hidden p-4 pl-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
         style={cardStyle}
       >
         {controls}
@@ -184,7 +184,7 @@ const CarCard = ({
           />
         )}
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <Icon className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.5} />
+          <Icon className="h-5 w-5 shrink-0 text-[var(--accent-color)]" strokeWidth={1.5} />
           <div className="flex min-w-0 flex-col">
             <span className="text-xs font-medium text-[var(--text-secondary)]">{name}</span>
             <span className={`text-sm font-bold ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}>
@@ -205,7 +205,7 @@ const CarCard = ({
         e.stopPropagation();
         if (!editMode) onOpen();
       }}
-      className={`relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] px-5 pt-5 pb-4 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
+      className={`dashboard-action-card relative flex h-full flex-col overflow-hidden px-5 pt-5 pb-4 ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -249,7 +249,7 @@ const CarCard = ({
       )}
 
       {(rangeId || locationId || timeToFullId || effectiveChargingId) && (
-        <div className="grid grid-cols-3 items-center gap-3 border-t border-[var(--card-border)] pt-4 text-[var(--text-primary)]">
+        <div className="grid grid-cols-3 items-center gap-3 border-t border-[color:color-mix(in_srgb,var(--text-secondary)_14%,transparent)] pt-4 text-[var(--text-primary)]">
           {rangeId && (
             <div className="flex min-w-0 items-center justify-start gap-2 text-[var(--text-primary)]">
               <RotateCw className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />

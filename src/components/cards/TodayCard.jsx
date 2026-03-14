@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, memo } from 'react';
 import { getIconComponent } from '../../icons';
 import { getCalendarEvents } from '../../services/haClient';
 
+const DEFAULT_SENSOR_FIELDS = ['temperature', 'humidity', 'condition'];
+
 function formatDate(locale = 'nb-NO') {
   return new Date().toLocaleDateString(locale, {
     weekday: 'long',
@@ -38,6 +40,64 @@ function isToday(eventDate) {
   );
 }
 
+function getWeatherConditionLabel(condition, t) {
+  const map = {
+    'clear-night': t?.('weather.condition.clearNight') || 'Clear',
+    cloudy: t?.('weather.condition.cloudy') || 'Cloudy',
+    fog: t?.('weather.condition.fog') || 'Fog',
+    hail: t?.('weather.condition.hail') || 'Hail',
+    lightning: t?.('weather.condition.lightning') || 'Lightning',
+    'lightning-rainy': t?.('weather.condition.lightning') || 'Lightning',
+    partlycloudy: t?.('weather.condition.partlyCloudy') || 'Partly cloudy',
+    pouring: t?.('weather.condition.pouring') || 'Heavy rain',
+    rainy: t?.('weather.condition.rainy') || 'Rain',
+    snowy: t?.('weather.condition.snowy') || 'Snow',
+    'snowy-rainy': t?.('weather.condition.snowy') || 'Snow',
+    sunny: t?.('weather.condition.sunny') || 'Sunny',
+    windy: t?.('weather.condition.windy') || 'Wind',
+    'windy-variant': t?.('weather.condition.windy') || 'Wind',
+    exceptional: t?.('weather.condition.exceptional') || 'Extreme',
+  };
+
+  return map[condition] || condition || '--';
+}
+
+function getSensorDisplay(entity, field, t) {
+  if (!entity) return null;
+
+  const isWeatherEntity = entity.entity_id?.startsWith('weather.');
+  if (!isWeatherEntity) {
+    return {
+      value: entity.state,
+      unit: entity.attributes?.unit_of_measurement || '',
+    };
+  }
+
+  switch (field) {
+    case 'state':
+      return {
+        value: entity.state,
+        unit: entity.attributes?.unit_of_measurement || '',
+      };
+    case 'humidity':
+      return {
+        value: entity.attributes?.humidity ?? '--',
+        unit: entity.attributes?.humidity != null ? '%' : '',
+      };
+    case 'condition':
+      return {
+        value: getWeatherConditionLabel(entity.state, t),
+        unit: '',
+      };
+    case 'temperature':
+    default:
+      return {
+        value: entity.attributes?.temperature ?? entity.state ?? '--',
+        unit: entity.attributes?.temperature != null ? entity.attributes?.temperature_unit || '' : '',
+      };
+  }
+}
+
 const TodayCard = memo(function TodayCard({
   cardId,
   dragProps,
@@ -66,9 +126,21 @@ const TodayCard = memo(function TodayCard({
   const sensor3 = sensor3Id ? entities?.[sensor3Id] : null;
 
   const sensors = [
-    { entity: sensor1, icon: sensor1Icon },
-    { entity: sensor2, icon: sensor2Icon },
-    { entity: sensor3, icon: sensor3Icon },
+    {
+      entity: sensor1,
+      icon: sensor1Icon,
+      field: settings?.sensor1Field || DEFAULT_SENSOR_FIELDS[0],
+    },
+    {
+      entity: sensor2,
+      icon: sensor2Icon,
+      field: settings?.sensor2Field || DEFAULT_SENSOR_FIELDS[1],
+    },
+    {
+      entity: sensor3,
+      icon: sensor3Icon,
+      field: settings?.sensor3Field || DEFAULT_SENSOR_FIELDS[2],
+    },
   ].filter((s) => s.entity);
 
   // Intersection observer for lazy calendar fetch
@@ -149,15 +221,14 @@ const TodayCard = memo(function TodayCard({
       {/* Sensors row */}
       {sensors.length > 0 && (
         <div className="mb-3 flex items-center gap-4">
-          {sensors.map(({ entity, icon }, idx) => {
+          {sensors.map(({ entity, icon, field }, idx) => {
             const Icon = getIconComponent(icon);
-            const value = entity?.state;
-            const unit = entity?.attributes?.unit_of_measurement || '';
+            const display = getSensorDisplay(entity, field, t);
             return (
               <div key={idx} className="flex items-center gap-1.5 text-sm text-[var(--text-primary)]">
                 {Icon && <Icon className="h-4 w-4 text-[var(--text-secondary)]" strokeWidth={1.5} />}
                 <span className="font-medium">
-                  {value} {unit}
+                  {display?.value} {display?.unit}
                 </span>
               </div>
             );

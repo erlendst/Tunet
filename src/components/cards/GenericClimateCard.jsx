@@ -14,6 +14,8 @@ const GenericClimateCard = memo(function GenericClimateCard({
   customNames,
   onOpen,
   onSetTemperature,
+  displayTemperatureValue,
+  displayTemperatureUnit,
   settings,
 }) {
   const { unitsMode } = useConfig();
@@ -22,14 +24,14 @@ const GenericClimateCard = memo(function GenericClimateCard({
   if (!entity || !entityId) return null;
 
   const isSmall = settings?.size === 'small';
-  const currentTemp = entity.attributes?.current_temperature ?? '--';
   const targetTemp = entity.attributes?.temperature ?? '--';
   const sourceTempUnit =
     haConfig?.unit_system?.temperature || entity.attributes?.temperature_unit || '°C';
   const effectiveUnitMode = getEffectiveUnitMode(unitsMode, haConfig);
-  const displayCurrentTemp = formatKindValueForDisplay(currentTemp, {
+  const primaryTempRaw = displayTemperatureValue ?? targetTemp;
+  const displayPrimaryTemp = formatKindValueForDisplay(primaryTempRaw, {
     kind: 'temperature',
-    fromUnit: sourceTempUnit,
+    fromUnit: displayTemperatureUnit || sourceTempUnit,
     unitMode: effectiveUnitMode,
   });
   const name = customNames?.[cardId] || entity.attributes?.friendly_name || entityId;
@@ -56,7 +58,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
             <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
             <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-primary)]">
               <Thermometer className="h-3.5 w-3.5 text-[#2f684a]" strokeWidth={1.75} />
-              {displayCurrentTemp.text}
+              {displayPrimaryTemp.text}
             </span>
           </div>
         </div>
@@ -95,7 +97,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
           <span className="truncate text-sm font-bold text-[var(--text-primary)]">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
             <Thermometer className="h-5 w-5 text-[#2f684a]" strokeWidth={1.75} />
-            {displayCurrentTemp.text}
+            {displayPrimaryTemp.text}
           </span>
         </div>
       </div>

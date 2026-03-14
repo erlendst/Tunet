@@ -66,9 +66,9 @@ export default function GenericClimateModal({
       titleId={modalTitleId}
       overlayClassName="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
       overlayStyle={{ backdropFilter: 'blur(20px)', backgroundColor: 'rgba(0,0,0,0.3)' }}
-      panelClassName="popup-anim relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-6 font-sans backdrop-blur-xl md:rounded-[3rem] md:p-12"
+      panelClassName="climate-modal popup-anim relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-6 font-sans backdrop-blur-xl md:rounded-[3rem] md:p-12"
       panelStyle={{
-        background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--modal-bg) 100%)',
+        background: 'color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%)',
         borderColor: 'var(--glass-border)',
         color: 'var(--text-primary)',
       }}
@@ -105,7 +105,7 @@ export default function GenericClimateModal({
           <div>
             <h3
               id={modalTitleId}
-              className="text-2xl leading-none font-light tracking-tight text-[var(--text-primary)] uppercase italic"
+              className="text-2xl leading-none font-semibold tracking-[0.08em] text-[var(--text-primary)] uppercase"
             >
               {getDisplayName(entity, t('climate.title'))}
             </h3>
@@ -132,7 +132,7 @@ export default function GenericClimateModal({
                       : 'var(--text-secondary)',
               }}
             >
-              <p className="text-[10px] font-bold tracking-widest uppercase italic">
+              <p className="text-[10px] font-bold tracking-widest uppercase">
                 {t('climate.action.' + hvacAction)}
               </p>
             </div>
@@ -143,7 +143,7 @@ export default function GenericClimateModal({
           {showTemp && (
             <div className="popup-surface space-y-10 rounded-3xl p-6 md:p-10 lg:col-span-3">
               <div className="text-center font-sans">
-                <div className="mb-6 flex items-center justify-between px-4 italic">
+                <div className="mb-6 flex items-center justify-between px-4">
                   <p
                     className="text-xs font-bold text-[var(--text-muted)] uppercase"
                     style={{ letterSpacing: '0.5em' }}
@@ -164,15 +164,14 @@ export default function GenericClimateModal({
                 </div>
                 <div className="mb-10 flex items-center justify-center gap-4">
                   <span
-                    className="text-6xl leading-none font-light tracking-tighter text-[var(--text-primary)] italic select-none md:text-9xl"
+                    className="text-6xl leading-none font-light tracking-tighter text-[var(--text-primary)] select-none md:text-9xl"
                     style={{
-                      textShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                      color: isHeating ? '#fef2f2' : isCooling ? '#f0f9ff' : 'var(--text-primary)',
+                      color: 'var(--text-primary)',
                     }}
                   >
                     {displayTargetTemp.value}
                   </span>
-                  <span className="mt-10 text-5xl leading-none font-medium text-[var(--text-muted)] italic">
+                  <span className="mt-10 text-5xl leading-none font-medium text-[var(--text-secondary)]">
                     {displayTempUnit}
                   </span>
                 </div>
@@ -186,8 +185,8 @@ export default function GenericClimateModal({
                     }
                     className="rounded-full border p-6 shadow-lg transition-all active:scale-90"
                     style={{
-                      backgroundColor: 'var(--glass-bg)',
-                      borderColor: 'var(--glass-border)',
+                      backgroundColor: 'color-mix(in srgb, var(--card-bg) 78%, var(--modal-bg) 22%)',
+                      borderColor: 'color-mix(in srgb, var(--text-secondary) 16%, transparent)',
                     }}
                   >
                     <Minus className="h-8 w-8" style={{ strokeWidth: 3 }} />
@@ -222,8 +221,8 @@ export default function GenericClimateModal({
                     }
                     className="rounded-full border p-6 shadow-lg transition-all active:scale-90"
                     style={{
-                      backgroundColor: 'var(--glass-bg)',
-                      borderColor: 'var(--glass-border)',
+                      backgroundColor: 'color-mix(in srgb, var(--card-bg) 78%, var(--modal-bg) 22%)',
+                      borderColor: 'color-mix(in srgb, var(--text-secondary) 16%, transparent)',
                     }}
                   >
                     <Plus className="h-8 w-8" style={{ strokeWidth: 3 }} />

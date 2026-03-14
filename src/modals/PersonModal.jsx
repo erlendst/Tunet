@@ -260,7 +260,7 @@ export default function PersonModal({
 
       const icon = L.divIcon({
         className: 'custom-person-marker',
-        html: `<div style="background-color: #3b82f6; width: 14px; height: 14px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px rgba(59,130,246,0.6);"></div>`,
+        html: `<div style="background-color: #3b82f6; width: 14px; height: 14px; border-radius: 28px; box-shadow: 0 0 15px rgba(59,130,246,0.6);"></div>`,
         iconSize: [14, 14],
         iconAnchor: [7, 7],
       });
@@ -311,165 +311,167 @@ export default function PersonModal({
             @media (min-width: 1024px) { .dynamic-map { height: min(58vh, 520px); min-height: 420px; } }
             .leaflet-container { font-family: inherit; }
           `}</style>
-        <div className="absolute top-6 right-6 z-20 flex gap-3 md:top-10 md:right-10">
-          <button onClick={onClose} className="modal-close" aria-label={t('common.close')}>
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Header Section */}
-        <div className="mb-6 flex items-center gap-4 font-sans">
-          <div className="group relative h-16 w-16 overflow-hidden rounded-full border border-[var(--glass-border)] shadow-lg">
-            {picture && !pictureFailed ? (
-              <img
-                src={picture}
-                alt={name}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                onError={() => setPictureFailed(true)}
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)]">
-                <span className="text-xl font-bold">{name?.charAt(0)}</span>
-              </div>
-            )}
+          <div className="absolute top-6 right-6 z-20 flex gap-3 md:top-10 md:right-10">
+            <button onClick={onClose} className="modal-close" aria-label={t('common.close')}>
+              <X className="h-4 w-4" />
+            </button>
           </div>
-          <div>
-            <h3
-              id={modalTitleId}
-              className="text-3xl leading-none font-light tracking-tight text-[var(--text-primary)] uppercase italic"
-            >
-              {name}
-            </h3>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <div
-                className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 transition-all duration-500 ${
-                  currentState === 'home'
-                    ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'
-                    : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'
-                }`}
+
+          {/* Header Section */}
+          <div className="mb-6 flex items-center gap-4 font-sans">
+            <div className="group relative h-16 w-16 overflow-hidden rounded-full border border-[var(--glass-border)] shadow-lg">
+              {picture && !pictureFailed ? (
+                <img
+                  src={picture}
+                  alt={name}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={() => setPictureFailed(true)}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)]">
+                  <span className="text-xl font-bold">{name?.charAt(0)}</span>
+                </div>
+              )}
+            </div>
+            <div>
+              <h3
+                id={modalTitleId}
+                className="text-3xl leading-none font-light tracking-tight text-[var(--text-primary)] uppercase italic"
               >
-                <MapPin className="h-3 w-3" />
-                <span className="text-[10px] font-bold tracking-widest uppercase italic">
-                  {currentState === 'home'
-                    ? t('status.home')
-                    : currentState === 'not_home'
-                      ? t('status.notHome')
-                      : currentState}
-                </span>
-              </div>
-              {phoneBatteryInfo && (
+                {name}
+              </h3>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
                 <div
-                  className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 ${
-                    phoneBatteryInfo.level < 20
-                      ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'
-                      : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'
+                  className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 transition-all duration-500 ${
+                    currentState === 'home'
+                      ? 'bg-[var(--status-success-bg)] text-[var(--status-success-fg)]'
+                      : 'bg-[var(--glass-bg)] text-[var(--text-secondary)]'
                   }`}
                 >
-                  <Battery className="h-3 w-3" />
-                  <span className="text-[10px] font-bold tracking-widest uppercase">
-                    {Math.round(phoneBatteryInfo.level)}%
+                  <MapPin className="h-3 w-3" />
+                  <span className="text-[10px] font-bold tracking-widest uppercase italic">
+                    {currentState === 'home'
+                      ? t('status.home')
+                      : currentState === 'not_home'
+                        ? t('status.notHome')
+                        : currentState}
                   </span>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid h-full grid-cols-1 items-start gap-6 font-sans lg:grid-cols-5">
-          {/* Left Column - Map (Span 3) */}
-          <div className={`${hasSensors ? 'lg:col-span-3' : 'lg:col-span-5'} h-full min-h-[300px]`}>
-            {currentLat && currentLon ? (
-              <div className="group relative z-0 h-[clamp(20rem,35vw,30rem)] w-full overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-inner">
-                <div
-                  ref={mapRef}
-                  className="z-0 h-full w-full opacity-80 transition-opacity duration-500 group-hover:opacity-100"
-                />
-                <div className="pointer-events-none absolute top-4 left-4 z-[1000] flex items-center gap-2 rounded-xl bg-black/60 px-4 py-2 shadow-lg backdrop-blur-md">
-                  <MapPin className="h-3 w-3 text-[var(--accent-color)]" />
-                  <span className="text-xs font-bold tracking-widest text-white uppercase">
-                    {t('map.lastSeenHere')}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div className="flex h-[clamp(20rem,35vw,30rem)] flex-col items-center justify-center rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)]/50 p-6 text-center">
-                <MapPin className="mb-4 h-16 w-16 opacity-20" />
-                <span className="text-xs font-bold tracking-widest uppercase opacity-50">
-                  {t('map.locationUnknown')}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Right Column - Stats (Span 2) */}
-          <div className="space-y-4 lg:col-span-2">
-            {/* Primary Battery Status */}
-            {phoneBatteryInfo && (
-              <div className="popup-surface flex flex-col items-center gap-2 rounded-2xl border border-[var(--glass-border)]/50 p-6 transition-all">
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
-                    {phoneBatteryInfo.label}
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <span
-                    className={`text-5xl font-light italic ${
+                {phoneBatteryInfo && (
+                  <div
+                    className={`inline-flex items-center gap-2 rounded-full border border-[var(--glass-border)] px-3 py-1 ${
                       phoneBatteryInfo.level < 20
-                        ? 'text-[var(--status-error-fg)]'
-                        : 'text-[var(--text-primary)]'
+                        ? 'bg-[var(--status-error-bg)] text-[var(--status-error-fg)]'
+                        : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'
                     }`}
                   >
-                    {Math.round(phoneBatteryInfo.level)}
-                  </span>
-                  <span className="text-xl font-medium text-[var(--text-muted)]">%</span>
-                </div>
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-700/30">
-                  <div
-                    className={`h-full rounded-full ${
-                      phoneBatteryInfo.level < 20
-                        ? 'bg-[var(--status-error-fg)]'
-                        : 'bg-[var(--status-success-fg)]'
-                    }`}
-                    style={{ width: `${Math.min(100, Math.max(0, phoneBatteryInfo.level))}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Secondary Stats Grid */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {watchBatteryInfo && (
-                <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4">
-                  <div className="mb-1 flex items-center gap-2 opacity-70">
-                    <span className="text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
-                      {watchBatteryInfo.label}
+                    <Battery className="h-3 w-3" />
+                    <span className="text-[10px] font-bold tracking-widest uppercase">
+                      {Math.round(phoneBatteryInfo.level)}%
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-light text-[var(--text-primary)]">
-                      {Math.round(watchBatteryInfo.level)}
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid h-full grid-cols-1 items-start gap-6 font-sans lg:grid-cols-5">
+            {/* Left Column - Map (Span 3) */}
+            <div
+              className={`${hasSensors ? 'lg:col-span-3' : 'lg:col-span-5'} h-full min-h-[300px]`}
+            >
+              {currentLat && currentLon ? (
+                <div className="group relative z-0 h-[clamp(20rem,35vw,30rem)] w-full overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] shadow-inner">
+                  <div
+                    ref={mapRef}
+                    className="z-0 h-full w-full opacity-80 transition-opacity duration-500 group-hover:opacity-100"
+                  />
+                  <div className="pointer-events-none absolute top-4 left-4 z-[1000] flex items-center gap-2 rounded-xl bg-black/60 px-4 py-2 shadow-lg backdrop-blur-md">
+                    <MapPin className="h-3 w-3 text-[var(--accent-color)]" />
+                    <span className="text-xs font-bold tracking-widest text-white uppercase">
+                      {t('map.lastSeenHere')}
                     </span>
-                    <span className="text-xs font-bold text-[var(--text-muted)]">%</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-[clamp(20rem,35vw,30rem)] flex-col items-center justify-center rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)]/50 p-6 text-center">
+                  <MapPin className="mb-4 h-16 w-16 opacity-20" />
+                  <span className="text-xs font-bold tracking-widest uppercase opacity-50">
+                    {t('map.locationUnknown')}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Right Column - Stats (Span 2) */}
+            <div className="space-y-4 lg:col-span-2">
+              {/* Primary Battery Status */}
+              {phoneBatteryInfo && (
+                <div className="popup-surface flex flex-col items-center gap-2 rounded-2xl border border-[var(--glass-border)]/50 p-6 transition-all">
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="text-[10px] font-bold tracking-[0.2em] text-[var(--text-muted)] uppercase">
+                      {phoneBatteryInfo.label}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span
+                      className={`text-5xl font-light italic ${
+                        phoneBatteryInfo.level < 20
+                          ? 'text-[var(--status-error-fg)]'
+                          : 'text-[var(--text-primary)]'
+                      }`}
+                    >
+                      {Math.round(phoneBatteryInfo.level)}
+                    </span>
+                    <span className="text-xl font-medium text-[var(--text-muted)]">%</span>
+                  </div>
+                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-700/30">
+                    <div
+                      className={`h-full rounded-full ${
+                        phoneBatteryInfo.level < 20
+                          ? 'bg-[var(--status-error-fg)]'
+                          : 'bg-[var(--status-success-fg)]'
+                      }`}
+                      style={{ width: `${Math.min(100, Math.max(0, phoneBatteryInfo.level))}%` }}
+                    />
                   </div>
                 </div>
               )}
 
-              {personExtraSensors.map((sensor) => (
-                <div
-                  key={sensor.id}
-                  className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4 text-center"
-                >
-                  <span className="mb-1 w-full truncate text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
-                    {sensor.label}
-                  </span>
-                  <span className="text-xl font-light text-[var(--text-primary)]">
-                    {sensor.value}
-                  </span>
-                </div>
-              ))}
+              {/* Secondary Stats Grid */}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {watchBatteryInfo && (
+                  <div className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4">
+                    <div className="mb-1 flex items-center gap-2 opacity-70">
+                      <span className="text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
+                        {watchBatteryInfo.label}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-light text-[var(--text-primary)]">
+                        {Math.round(watchBatteryInfo.level)}
+                      </span>
+                      <span className="text-xs font-bold text-[var(--text-muted)]">%</span>
+                    </div>
+                  </div>
+                )}
+
+                {personExtraSensors.map((sensor) => (
+                  <div
+                    key={sensor.id}
+                    className="popup-surface flex flex-col items-center justify-center gap-1 rounded-2xl border border-[var(--glass-border)]/50 p-4 text-center"
+                  >
+                    <span className="mb-1 w-full truncate text-[9px] font-bold tracking-[0.15em] text-[var(--text-muted)] uppercase">
+                      {sensor.label}
+                    </span>
+                    <span className="text-xl font-light text-[var(--text-primary)]">
+                      {sensor.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         </>
       )}
     </AccessibleModalShell>

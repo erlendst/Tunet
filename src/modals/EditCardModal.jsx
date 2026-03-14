@@ -734,6 +734,7 @@ export default function EditCardModal({
   isEditCamera,
   isEditRoom,
   isEditTravel,
+  isEditClimate,
   isEditAndroidTV,
   isEditFan,
   isEditVacuum,
@@ -852,6 +853,7 @@ export default function EditCardModal({
   const fuelLevelOptions = carMatch.options?.fuelLevelId || [];
 
   const climateOptions = sortByName(byDomain('climate'));
+  const climateSensorOptions = sortByName([...byDomain('sensor'), ...byDomain('input_number')]);
   const calendarOptions = sortByName(byDomain('calendar'));
   const todoOptions = sortByName(byDomain('todo'));
   const scriptOptions = sortByName(byDomain('script'));
@@ -1030,9 +1032,9 @@ export default function EditCardModal({
         backdropFilter: 'blur(20px)',
         backgroundColor: 'rgba(0,0,0,0.3)',
       }}
-      panelClassName={`w-full border ${isEditRoom ? 'max-w-2xl' : 'max-w-lg'} popup-anim relative mt-3 flex max-h-[92vh] flex-col rounded-2xl p-4 font-sans shadow-2xl backdrop-blur-xl sm:mt-0 sm:max-h-[85vh] sm:rounded-3xl sm:p-6 md:rounded-[2.5rem] md:p-8`}
+      panelClassName={`edit-card-modal w-full border ${isEditRoom ? 'max-w-2xl' : 'max-w-lg'} popup-anim relative mt-3 flex max-h-[92vh] flex-col rounded-2xl p-4 font-sans shadow-2xl backdrop-blur-xl sm:mt-0 sm:max-h-[85vh] sm:rounded-3xl sm:p-6 md:rounded-[2.5rem] md:p-8`}
       panelStyle={{
-        background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--modal-bg) 100%)',
+        background: 'color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%)',
         borderColor: 'var(--glass-border)',
         color: 'var(--text-primary)',
       }}
@@ -1064,7 +1066,7 @@ export default function EditCardModal({
         </button>
         <h3
           id={resolvedTitleId}
-          className="mb-4 shrink-0 text-center text-2xl font-light tracking-widest text-[var(--text-primary)] uppercase italic"
+          className="mb-4 shrink-0 text-center text-2xl font-semibold tracking-[0.22em] text-[var(--text-primary)] uppercase"
         >
           {t('modal.editCard.title')}
         </h3>
@@ -2447,17 +2449,23 @@ export default function EditCardModal({
 
           {isEditToday && editSettingsKey && (() => {
             const sensorOptions = sortByName([...byDomain('sensor'), ...byDomain('weather')]);
+            const sensorFieldOptions = [
+              { value: 'temperature', label: 'Temperatur' },
+              { value: 'humidity', label: 'Luftfuktighet' },
+              { value: 'condition', label: 'Værtilstand' },
+              { value: 'state', label: 'Vanlig state' },
+            ];
             const sensors = [
-              { key: 'sensor1', iconKey: 'sensor1Icon' },
-              { key: 'sensor2', iconKey: 'sensor2Icon' },
-              { key: 'sensor3', iconKey: 'sensor3Icon' },
+              { key: 'sensor1', iconKey: 'sensor1Icon', fieldKey: 'sensor1Field', defaultField: 'temperature' },
+              { key: 'sensor2', iconKey: 'sensor2Icon', fieldKey: 'sensor2Field', defaultField: 'humidity' },
+              { key: 'sensor3', iconKey: 'sensor3Icon', fieldKey: 'sensor3Field', defaultField: 'condition' },
             ];
             return (
               <div className="space-y-4">
                 <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
                   Sensorer (I dag-kort)
                 </label>
-                {sensors.map(({ key, iconKey }, idx) => (
+                {sensors.map(({ key, iconKey, fieldKey, defaultField }, idx) => (
                   <div key={key} className="popup-surface space-y-2 rounded-2xl p-4">
                     <span className="text-xs font-bold text-[var(--text-secondary)]">Sensor {idx + 1}</span>
                     <SearchableSelect
@@ -2469,6 +2477,20 @@ export default function EditCardModal({
                       entities={entities}
                       t={t}
                     />
+                    <label className="ml-1 text-[10px] font-bold uppercase text-[var(--text-muted)]">
+                      Felt
+                    </label>
+                    <select
+                      value={editSettings[fieldKey] || defaultField}
+                      onChange={(e) => saveCardSetting(editSettingsKey, fieldKey, e.target.value)}
+                      className="w-full rounded-xl border-0 bg-[var(--glass-bg)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                    >
+                      {sensorFieldOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
                     <input
                       type="text"
                       className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
@@ -2506,6 +2528,63 @@ export default function EditCardModal({
               </div>
             );
           })()}
+
+          {isEditClimate && editSettingsKey && (
+            <div className="space-y-3">
+              <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                Temperaturvisning
+              </label>
+              <p className="ml-1 text-[10px] text-[var(--text-muted)]">
+                Velg om kortet skal vise satt temperatur, målt temperatur eller en egen sensor.
+              </p>
+
+              <SearchableSelect
+                label="Klimaenhet"
+                value={editSettings?.climateId || null}
+                options={climateOptions}
+                onChange={(id) => saveCardSetting(editSettingsKey, 'climateId', id)}
+                placeholder="Velg klimaenhet"
+                entities={entities}
+                t={t}
+              />
+
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {[
+                  { key: 'target', label: 'Satt temperatur' },
+                  { key: 'current', label: 'Målt temperatur' },
+                  { key: 'sensor', label: 'Egen sensor' },
+                ].map((option) => {
+                  const selected = (editSettings?.temperatureDisplayMode || 'target') === option.key;
+                  return (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => saveCardSetting(editSettingsKey, 'temperatureDisplayMode', option.key)}
+                      className={`rounded-2xl border px-4 py-3 text-left text-sm transition-colors ${
+                        selected
+                          ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]'
+                          : 'border-transparent bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {(editSettings?.temperatureDisplayMode || 'target') === 'sensor' && (
+                <SearchableSelect
+                  label="Temperatursensor"
+                  value={editSettings?.temperatureSensorId || null}
+                  options={climateSensorOptions}
+                  onChange={(id) => saveCardSetting(editSettingsKey, 'temperatureSensorId', id)}
+                  placeholder="Velg temperatursensor"
+                  entities={entities}
+                  t={t}
+                />
+              )}
+            </div>
+          )}
 
           {isEditClimateOverview && editSettingsKey && (() => {
             const sensorOptions = sortByName(byDomain('sensor'));

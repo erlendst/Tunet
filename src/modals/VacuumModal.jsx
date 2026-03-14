@@ -492,9 +492,9 @@ export default function VacuumModal({
       titleId={modalTitleId}
       overlayClassName="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
       overlayStyle={{ backdropFilter: 'blur(20px)', backgroundColor: 'rgba(0,0,0,0.3)' }}
-      panelClassName="popup-anim relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-6 font-sans backdrop-blur-xl md:rounded-[3rem] md:p-12"
+      panelClassName="entity-modal-panel popup-anim relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border p-6 font-sans backdrop-blur-xl md:rounded-[3rem] md:p-12"
       panelStyle={{
-        background: 'linear-gradient(135deg, var(--card-bg) 0%, var(--modal-bg) 100%)',
+        background: 'color-mix(in srgb, var(--modal-bg) 92%, var(--card-bg) 8%)',
         borderColor: 'var(--glass-border)',
         color: 'var(--text-primary)',
       }}
@@ -520,7 +520,7 @@ export default function VacuumModal({
           <div>
             <h3
               id={modalTitleId}
-              className="text-2xl leading-none font-light tracking-tight uppercase italic"
+              className="text-2xl leading-none font-semibold tracking-[0.08em] uppercase"
               style={{ color: 'var(--text-primary)' }}
             >
               {getDisplayName(entity, vacuumId)}
@@ -529,7 +529,7 @@ export default function VacuumModal({
               className="mt-2 inline-block rounded-full px-3 py-1 transition-all duration-500"
               style={{ backgroundColor: statusBg, color: statusColor }}
             >
-              <p className="text-[10px] font-bold tracking-widest uppercase italic">
+              <p className="text-[10px] font-bold tracking-widest uppercase">
                 {t('status.statusLabel')}: {stateLabel}
               </p>
             </div>
@@ -723,7 +723,7 @@ export default function VacuumModal({
           </div>
 
           {/* Right Column - Modes/Settings & Lifetime Stats (Span 2) */}
-          <div className="flex flex-col justify-start space-y-6 py-2 font-sans italic lg:col-span-2">
+          <div className="flex flex-col justify-start space-y-6 py-2 font-sans lg:col-span-2">
             {canSetFanSpeed && (
               <ModernDropdown
                 label={t('vacuum.suction')}

@@ -79,7 +79,7 @@ const VacuumCard = ({
   const statusText = getVacuumStateLabel(state, battery, t);
   const secondaryText = battery !== null ? `${battery}%` : statusText;
   const buttonBaseClass =
-    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2f684a] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'flex items-center justify-center rounded-[24px] border border-[color:color-mix(in_srgb,var(--text-secondary)_16%,transparent)] bg-[color:color-mix(in_srgb,var(--card-bg)_84%,var(--bg-primary)_16%)] text-[var(--text-primary)] transition-all hover:bg-[color:color-mix(in_srgb,var(--card-bg)_70%,var(--glass-bg-hover)_30%)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   const handlePlayPause = (e) => {
     e.stopPropagation();
@@ -97,7 +97,7 @@ const VacuumCard = ({
       <div
         {...dragProps}
         onClick={(e) => { e.stopPropagation(); if (!editMode && onOpen) onOpen(); }}
-        className={`relative flex h-full items-center justify-between gap-3 overflow-hidden rounded-3xl border border-[var(--card-border)] px-4 py-3 transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+        className={`dashboard-action-card relative flex h-full items-center justify-between gap-3 overflow-hidden px-4 py-3 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
         style={{
           ...cardStyle,
           backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
@@ -109,7 +109,7 @@ const VacuumCard = ({
           <div className="flex min-w-0 flex-col">
             <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
             <span className="mt-1 inline-flex items-center gap-1.5 truncate text-sm font-medium text-[var(--text-primary)]">
-              <Battery className="h-3.5 w-3.5 shrink-0 text-[#2f684a]" strokeWidth={1.75} />
+              <Battery className="h-3.5 w-3.5 shrink-0 text-[var(--accent-color)]" strokeWidth={1.75} />
               {secondaryText}
             </span>
             {battery !== null && !isUnavailable && statusText !== secondaryText ? (
@@ -118,10 +118,10 @@ const VacuumCard = ({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button onClick={handleHome} className={`${buttonBaseClass} h-12 w-12`} disabled={isUnavailable}>
+          <button onClick={handleHome} className={`${buttonBaseClass} dashboard-action-button h-12 w-12`} disabled={isUnavailable}>
             <Home className="h-4 w-4" strokeWidth={2} />
           </button>
-          <button onClick={handlePlayPause} className={`${buttonBaseClass} h-12 w-12`} disabled={isUnavailable}>
+          <button onClick={handlePlayPause} className={`${buttonBaseClass} dashboard-action-button h-12 w-12`} disabled={isUnavailable}>
             {isCleaning ? <Pause className="h-4 w-4 fill-current" /> : <Play className="ml-0.5 h-4 w-4 fill-current" />}
           </button>
         </div>
@@ -133,7 +133,7 @@ const VacuumCard = ({
     <div
       {...dragProps}
       onClick={(e) => { e.stopPropagation(); if (!editMode && onOpen) onOpen(); }}
-      className={`relative flex h-full items-center justify-between overflow-hidden rounded-3xl border border-[var(--card-border)] px-6 py-5 transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+      className={`dashboard-action-card relative flex h-full items-center justify-between overflow-hidden px-6 py-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{
         ...cardStyle,
         backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
@@ -146,7 +146,7 @@ const VacuumCard = ({
         <div className="flex min-w-0 flex-col">
           <span className="truncate text-sm font-bold text-[var(--text-primary)]">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 truncate text-2xl font-light leading-tight text-[var(--text-primary)]">
-            <Battery className="h-5 w-5 shrink-0 text-[#2f684a]" strokeWidth={1.75} />
+            <Battery className="h-5 w-5 shrink-0 text-[var(--accent-color)]" strokeWidth={1.75} />
             {secondaryText}
           </span>
           {battery !== null && !isUnavailable && statusText !== secondaryText ? (
@@ -156,10 +156,10 @@ const VacuumCard = ({
       </div>
 
       <div className="flex shrink-0 items-center gap-4">
-        <button onClick={handleHome} className={`${buttonBaseClass} h-[82px] w-[82px]`} disabled={isUnavailable}>
+        <button onClick={handleHome} className={`${buttonBaseClass} dashboard-action-button h-[82px] w-[82px]`} disabled={isUnavailable}>
           <Home className="h-7 w-7" strokeWidth={2} />
         </button>
-        <button onClick={handlePlayPause} className={`${buttonBaseClass} h-[82px] w-[82px]`} disabled={isUnavailable}>
+        <button onClick={handlePlayPause} className={`${buttonBaseClass} dashboard-action-button h-[82px] w-[82px]`} disabled={isUnavailable}>
           {isCleaning ? <Pause className="h-7 w-7 fill-current" /> : <Play className="ml-1 h-7 w-7 fill-current" />}
         </button>
       </div>
