@@ -181,7 +181,7 @@ const LightCard = ({
       <div className="flex items-start justify-between">
         <button
           onClick={handleToggleLight}
-          className={`transition-all duration-500 ${isOn ? 'bg-amber-500/20 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'} ${isDenseMobile ? 'rounded-xl p-2.5' : 'rounded-2xl p-3'}`}
+          className={`flex items-center justify-center transition-all duration-500 ${isOn ? 'bg-amber-500/20 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'} ${isDenseMobile ? 'h-10 w-10 rounded-xl' : 'h-12 w-12 rounded-2xl'}`}
           disabled={isUnavailable}
           aria-label={`${name || t('common.light')}: ${isOn ? t('common.off') : t('common.on')}`}
         >

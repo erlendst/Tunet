@@ -2,6 +2,40 @@ import { memo } from 'react';
 import { Thermometer, Droplets } from 'lucide-react';
 import { getIconComponent } from '../../icons';
 
+function getNumericAttributeValue(entity, keys) {
+  for (const key of keys) {
+    const value = entity?.attributes?.[key];
+    if (value == null || value === '') continue;
+    return value;
+  }
+  return null;
+}
+
+function getClimateOverviewTemperature(entity) {
+  if (!entity) return { value: null, unit: '°C' };
+  const domain = entity.entity_id?.split('.')?.[0];
+  if (domain === 'climate') {
+    return {
+      value: getNumericAttributeValue(entity, ['environment_temperature', 'current_temperature']),
+      unit:
+        entity.attributes?.temperature_unit || entity.attributes?.unit_of_measurement || '°C',
+    };
+  }
+  return {
+    value: entity.state,
+    unit: entity.attributes?.unit_of_measurement || '°C',
+  };
+}
+
+function getClimateOverviewHumidity(entity) {
+  if (!entity) return null;
+  const domain = entity.entity_id?.split('.')?.[0];
+  if (domain === 'climate') {
+    return getNumericAttributeValue(entity, ['current_humidity', 'humidity']);
+  }
+  return entity.state;
+}
+
 const ClimateOverviewCard = memo(function ClimateOverviewCard({
   cardId,
   dragProps,
@@ -23,44 +57,46 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
     >
       {controls}
 
-      <h2 className="mb-3 text-base font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
 
-      <div className="flex flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         {rooms.length === 0 && editMode && (
           <span className="text-xs text-[var(--text-muted)]">Legg til rom i innstillinger</span>
         )}
         {rooms.map((room, idx) => {
           const Icon = room.icon ? getIconComponent(room.icon) : null;
+          const TempIcon = getIconComponent(room.tempIcon || 'thermometer') || Thermometer;
+          const HumidityIcon = getIconComponent(room.humidityIcon || 'droplets') || Droplets;
           const tempEntity = room.tempId ? entities?.[room.tempId] : null;
           const humidityEntity = room.humidityId ? entities?.[room.humidityId] : null;
-          const tempValue = tempEntity?.state;
-          const humidityValue = humidityEntity?.state;
+          const { value: tempValue, unit: tempUnit } = getClimateOverviewTemperature(tempEntity);
+          const humidityValue = getClimateOverviewHumidity(humidityEntity);
 
           return (
-            <div key={idx}>
+            <div key={idx} className="flex flex-1 flex-col justify-center">
               {idx > 0 && <div className="h-px bg-[var(--card-border)]" />}
-              <div className="flex items-center justify-between py-2.5">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-1 items-center justify-between py-2.5">
+                <div className="flex items-center gap-3">
                   {Icon ? (
-                    <Icon className="h-4 w-4 text-[var(--text-muted)]" strokeWidth={1.5} />
+                    <Icon className="h-5.5 w-5.5 text-[var(--text-muted)]" />
                   ) : (
-                    <div className="h-4 w-4" />
+                    <div className="h-5.5 w-5.5" />
                   )}
-                  <span className="text-sm text-[var(--text-primary)]">{room.name || '–'}</span>
+                  <span className="text-lg text-[var(--text-primary)]">{room.name || '–'}</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   {tempValue != null && (
-                    <div className="flex items-center gap-1 text-sm text-[var(--text-secondary)]">
-                      <Thermometer className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <div className="flex items-center gap-1.5 text-lg text-[var(--text-secondary)]">
+                      <TempIcon className="h-5 w-5" />
                       <span>
                         {tempValue}
-                        {tempEntity?.attributes?.unit_of_measurement || '°C'}
+                        {tempUnit}
                       </span>
                     </div>
                   )}
                   {humidityValue != null && (
-                    <div className="flex items-center gap-1 text-sm text-[var(--text-secondary)]">
-                      <Droplets className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <div className="flex items-center gap-1.5 text-lg text-[var(--text-secondary)]">
+                      <HumidityIcon className="h-5 w-5" />
                       <span>{humidityValue}%</span>
                     </div>
                   )}

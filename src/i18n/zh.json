@@ -222,6 +222,7 @@
   "car.chargingPower": "充电功率",
   "car.chargeRate": "充电速率",
   "car.timeToFull": "充满时间",
+  "car.notCharging": "未充电",
   "car.chargeEndTime": "充电结束时间",
   "car.chargeControl": "充电控制",
   "car.chargeLimitNumber": "充电上限（数值）",

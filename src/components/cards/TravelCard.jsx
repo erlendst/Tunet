@@ -207,30 +207,30 @@ export default function TravelCard({
       {controls}
 
       {sources.map((section, sectionIndex) => {
-        const TransportIcon = getTransportIcon(section.entity, customIcons?.[cardId]);
+        const sectionCustomIcon = sectionIndex === 0
+          ? settings?.travelIconPrimary
+          : settings?.travelIconSecondary;
+        const TransportIcon = getTransportIcon(section.entity, sectionCustomIcon || customIcons?.[cardId]);
         return (
-          <div
-            key={`${section.title || 'section'}-${sectionIndex}`}
-            className="dashboard-card-section px-4 py-3"
-          >
+          <div key={`${section.title || 'section'}-${sectionIndex}`}>
             {/* Platform header */}
-            <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-2 py-2.5">
               <span className="text-sm font-bold text-[var(--text-primary)]">
                 {section.title || '–'}
               </span>
-              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--accent-color)]" strokeWidth={1.5} />
+              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--accent-color)]" />
             </div>
 
             {/* Departure rows */}
             <div className="flex flex-col">
               {section.rows.map((row, index) => (
                 <div key={`${row.route}-${row.displayTime}-${index}`}>
-                  {index > 0 && <div className="dashboard-card-divider h-px" />}
-                  <div className="flex items-center justify-between gap-3 py-2">
+                  {index > 0 && <div className="h-px bg-[var(--card-border)]" />}
+                  <div className="flex items-center justify-between gap-3 py-2.5">
                     <span className="truncate text-sm text-[var(--text-primary)]">
                       {row.route || translate('travel.departureFallback')}
                     </span>
-                    <span className="shrink-0 text-sm font-semibold text-[var(--text-secondary)]">
+                    <span className="shrink-0 text-sm text-[var(--text-secondary)]">
                       {row.displayTime || '--'}
                     </span>
                   </div>

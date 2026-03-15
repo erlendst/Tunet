@@ -51,77 +51,79 @@ export default function PageNavigation({
     if (setEditMode) setEditMode(!editMode);
   };
 
-  const roundBtn = 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]';
+  const roundBtn =
+    'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]';
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="mt-4 flex items-center gap-3">
       {/* Page icon buttons — scrollable */}
       <div className="scrollbar-hide flex min-w-0 items-center gap-3 overflow-x-auto">
-      {pages.map((page) => {
-        const settings = pageSettings[page.id] || {};
-        const isHidden = settings.hidden;
-        const hideSinglePagePill = settings.hideSinglePagePill === true;
-        const Icon = settings.icon ? getIconComponent(settings.icon) || page.icon : page.icon;
-        const isDragOver = dragOverId === page.id;
+        {pages.map((page) => {
+          const settings = pageSettings[page.id] || {};
+          const isHidden = settings.hidden;
+          const hideSinglePagePill = settings.hideSinglePagePill === true;
+          const Icon = settings.icon ? getIconComponent(settings.icon) || page.icon : page.icon;
+          const isDragOver = dragOverId === page.id;
 
-        if (!editMode && isHidden) return null;
-        if (!editMode && isSinglePage && hideSinglePagePill) return null;
+          if (!editMode && isHidden) return null;
+          if (!editMode && isSinglePage && hideSinglePagePill) return null;
 
-        return (
+          return (
+            <button
+              key={page.id}
+              draggable={editMode}
+              onClick={() => (editMode ? setEditingPage(page.id) : setActivePage(page.id))}
+              onDragStart={(event) => {
+                if (!editMode) return;
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', page.id);
+              }}
+              onDragOver={(event) => {
+                if (!editMode) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+                setDragOverId(page.id);
+              }}
+              onDragLeave={() => {
+                if (!editMode) return;
+                setDragOverId(null);
+              }}
+              onDrop={(event) => {
+                if (!editMode) return;
+                event.preventDefault();
+                const sourceId = event.dataTransfer.getData('text/plain');
+                setDragOverId(null);
+                movePage(sourceId, page.id);
+              }}
+              onDragEnd={() => setDragOverId(null)}
+              className={`relative flex h-12 w-12 items-center justify-center rounded-full border transition-all ${
+                activePage === page.id
+                  ? 'border-transparent bg-[var(--accent-color)] text-[var(--accent-foreground)]'
+                  : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'
+              } ${editMode && isHidden ? 'scale-95 opacity-50' : ''} ${editMode ? 'cursor-move' : ''} ${isDragOver ? 'ring-2 ring-[var(--accent-color)]' : ''}`}
+              title={settings.label || page.label}
+            >
+              <Icon className={`h-5 w-5 ${editMode && isHidden ? 'animate-pulse' : ''}`} />
+              {editMode && (
+                <Edit2 className="absolute -top-0.5 -right-0.5 h-3 w-3 text-[var(--accent-color)]" />
+              )}
+            </button>
+          );
+        })}
+
+        {/* Add page button (edit mode only) */}
+        {editMode && (
           <button
-            key={page.id}
-            draggable={editMode}
-            onClick={() => (editMode ? setEditingPage(page.id) : setActivePage(page.id))}
-            onDragStart={(event) => {
-              if (!editMode) return;
-              event.dataTransfer.effectAllowed = 'move';
-              event.dataTransfer.setData('text/plain', page.id);
-            }}
-            onDragOver={(event) => {
-              if (!editMode) return;
-              event.preventDefault();
-              event.dataTransfer.dropEffect = 'move';
-              setDragOverId(page.id);
-            }}
-            onDragLeave={() => {
-              if (!editMode) return;
-              setDragOverId(null);
-            }}
-            onDrop={(event) => {
-              if (!editMode) return;
-              event.preventDefault();
-              const sourceId = event.dataTransfer.getData('text/plain');
-              setDragOverId(null);
-              movePage(sourceId, page.id);
-            }}
-            onDragEnd={() => setDragOverId(null)}
-            className={`relative flex h-12 w-12 items-center justify-center rounded-full border transition-all ${
-              activePage === page.id
-                ? 'border-transparent bg-[var(--accent-color)] text-[var(--accent-foreground)]'
-                : 'border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'
-            } ${editMode && isHidden ? 'scale-95 opacity-50' : ''} ${editMode ? 'cursor-move' : ''} ${isDragOver ? 'ring-2 ring-[var(--accent-color)]' : ''}`}
-            title={settings.label || page.label}
+            type="button"
+            onClick={() => setShowAddPageModal(true)}
+            className={roundBtn}
+            title={t('nav.addPage')}
           >
-            <Icon className={`h-5 w-5 ${editMode && isHidden ? 'animate-pulse' : ''}`} />
-            {editMode && (
-              <Edit2 className="absolute -right-0.5 -top-0.5 h-3 w-3 text-[var(--accent-color)]" />
-            )}
+            <Plus className="h-5 w-5" />
           </button>
-        );
-      })}
-
-      {/* Add page button (edit mode only) */}
-      {editMode && (
-        <button
-          type="button"
-          onClick={() => setShowAddPageModal(true)}
-          className={roundBtn}
-          title={t('nav.addPage')}
-        >
-          <Plus className="h-5 w-5" />
-        </button>
-      )}
-      </div>{/* end scrollable page icons */}
+        )}
+      </div>
+      {/* end scrollable page icons */}
 
       {/* Controls — outside overflow so dropdown isn't clipped */}
       <div className="flex shrink-0 items-center gap-3">
@@ -162,7 +164,10 @@ export default function PageNavigation({
             <SettingsDropdown
               upward
               buttonClassName={`flex h-12 w-12 items-center justify-center rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]`}
-              onOpenSettings={() => { setShowConfigModal(true); if (setConfigTab) setConfigTab('connection'); }}
+              onOpenSettings={() => {
+                setShowConfigModal(true);
+                if (setConfigTab) setConfigTab('connection');
+              }}
               onOpenTheme={() => setShowThemeSidebar && setShowThemeSidebar(true)}
               onOpenLayout={() => setShowLayoutSidebar && setShowLayoutSidebar(true)}
               onOpenHeader={() => setShowHeaderEditModal && setShowHeaderEditModal(true)}
@@ -176,7 +181,7 @@ export default function PageNavigation({
               </div>
             )}
             {connected === false && (
-              <div className="pointer-events-none absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-[var(--card-bg)] bg-red-500" />
+              <div className="pointer-events-none absolute -right-1 -bottom-1 h-3 w-3 rounded-full border-2 border-[var(--card-bg)] bg-red-500" />
             )}
           </div>
         )}

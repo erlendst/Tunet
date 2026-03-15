@@ -1,8 +1,26 @@
 import { useState, useEffect, useRef, memo } from 'react';
-import { getIconComponent } from '../../icons';
-import { getCalendarEvents } from '../../services/haClient';
+import { AlertCircle, Cloud, CloudRain, CloudSun, Moon, Snowflake, Sun, Wind } from '../../icons';
+import { getCalendarEvents, getForecast } from '../../services/haClient';
 
-const DEFAULT_SENSOR_FIELDS = ['temperature', 'humidity', 'condition'];
+const HOUR_FORECAST_LIMIT = 6;
+
+const WEATHER_CONDITION_ICONS = {
+  'clear-night': Moon,
+  cloudy: Cloud,
+  fog: Cloud,
+  hail: CloudRain,
+  lightning: CloudRain,
+  'lightning-rainy': CloudRain,
+  partlycloudy: CloudSun,
+  pouring: CloudRain,
+  rainy: CloudRain,
+  snowy: Snowflake,
+  'snowy-rainy': CloudRain,
+  sunny: Sun,
+  windy: Wind,
+  'windy-variant': Wind,
+  exceptional: AlertCircle,
+};
 
 function formatDate(locale = 'nb-NO') {
   return new Date().toLocaleDateString(locale, {
@@ -40,62 +58,65 @@ function isToday(eventDate) {
   );
 }
 
-function getWeatherConditionLabel(condition, t) {
-  const map = {
-    'clear-night': t?.('weather.condition.clearNight') || 'Clear',
-    cloudy: t?.('weather.condition.cloudy') || 'Cloudy',
-    fog: t?.('weather.condition.fog') || 'Fog',
-    hail: t?.('weather.condition.hail') || 'Hail',
-    lightning: t?.('weather.condition.lightning') || 'Lightning',
-    'lightning-rainy': t?.('weather.condition.lightning') || 'Lightning',
-    partlycloudy: t?.('weather.condition.partlyCloudy') || 'Partly cloudy',
-    pouring: t?.('weather.condition.pouring') || 'Heavy rain',
-    rainy: t?.('weather.condition.rainy') || 'Rain',
-    snowy: t?.('weather.condition.snowy') || 'Snow',
-    'snowy-rainy': t?.('weather.condition.snowy') || 'Snow',
-    sunny: t?.('weather.condition.sunny') || 'Sunny',
-    windy: t?.('weather.condition.windy') || 'Wind',
-    'windy-variant': t?.('weather.condition.windy') || 'Wind',
-    exceptional: t?.('weather.condition.exceptional') || 'Extreme',
-  };
-
-  return map[condition] || condition || '--';
+function formatWeatherValue(value, maxFractionDigits = 1) {
+  if (value == null || value === '' || Number.isNaN(Number(value))) return '--';
+  return new Intl.NumberFormat('nb-NO', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: maxFractionDigits,
+  }).format(Number(value));
 }
 
-function getSensorDisplay(entity, field, t) {
-  if (!entity) return null;
+function getForecastDate(entry) {
+  const raw = entry?.datetime || entry?.time || entry?.date || entry?.forecast_time;
+  if (!raw) return null;
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
 
-  const isWeatherEntity = entity.entity_id?.startsWith('weather.');
-  if (!isWeatherEntity) {
-    return {
-      value: entity.state,
-      unit: entity.attributes?.unit_of_measurement || '',
-    };
-  }
+function formatForecastHour(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '--';
+  return date.toLocaleTimeString('nb-NO', {
+    hour: '2-digit',
+    minute: undefined,
+  });
+}
 
-  switch (field) {
-    case 'state':
-      return {
-        value: entity.state,
-        unit: entity.attributes?.unit_of_measurement || '',
-      };
-    case 'humidity':
-      return {
-        value: entity.attributes?.humidity ?? '--',
-        unit: entity.attributes?.humidity != null ? '%' : '',
-      };
-    case 'condition':
-      return {
-        value: getWeatherConditionLabel(entity.state, t),
-        unit: '',
-      };
-    case 'temperature':
-    default:
-      return {
-        value: entity.attributes?.temperature ?? entity.state ?? '--',
-        unit: entity.attributes?.temperature != null ? entity.attributes?.temperature_unit || '' : '',
-      };
-  }
+function getCurrentHourItem(weatherEntity) {
+  if (!weatherEntity) return null;
+  return {
+    hour: formatForecastHour(new Date()),
+    condition: weatherEntity.state,
+    temperature: weatherEntity.attributes?.temperature,
+    precipitation: weatherEntity.attributes?.precipitation ?? 0,
+  };
+}
+
+function getHourlyForecastItems(weatherEntity, forecast = []) {
+  const source = Array.isArray(forecast) && forecast.length > 0
+    ? forecast
+    : Array.isArray(weatherEntity?.attributes?.forecast)
+      ? weatherEntity.attributes.forecast
+      : [];
+
+  const now = new Date();
+
+  return source
+    .map((entry) => {
+      const forecastDate = getForecastDate(entry);
+      return { entry, forecastDate };
+    })
+    .filter(({ entry, forecastDate }) => {
+      if (!entry) return false;
+      if (!forecastDate) return true;
+      return forecastDate.getTime() > now.getTime();
+    })
+    .slice(0, HOUR_FORECAST_LIMIT - 1)
+    .map(({ entry, forecastDate }) => ({
+      hour: formatForecastHour(forecastDate),
+      condition: entry?.condition || entry?.state || weatherEntity?.state,
+      temperature: entry?.temperature,
+      precipitation: entry?.precipitation ?? entry?.precipitation_amount ?? 0,
+    }));
 }
 
 const TodayCard = memo(function TodayCard({
@@ -107,41 +128,29 @@ const TodayCard = memo(function TodayCard({
   settings,
   conn,
   editMode,
-  t,
 }) {
   const [events, setEvents] = useState([]);
+  const [forecastsById, setForecastsById] = useState({});
   const cardRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const sensor1Id = settings?.sensor1Id;
-  const sensor1Icon = settings?.sensor1Icon || 'thermometer';
-  const sensor2Id = settings?.sensor2Id;
-  const sensor2Icon = settings?.sensor2Icon || 'cloud-rain';
-  const sensor3Id = settings?.sensor3Id;
-  const sensor3Icon = settings?.sensor3Icon || 'wind';
+  const weatherEntityId = settings?.weatherEntityId || null;
   const calendarIds = Array.isArray(settings?.calendarIds) ? settings.calendarIds : [];
 
-  const sensor1 = sensor1Id ? entities?.[sensor1Id] : null;
-  const sensor2 = sensor2Id ? entities?.[sensor2Id] : null;
-  const sensor3 = sensor3Id ? entities?.[sensor3Id] : null;
+  const weatherEntity = weatherEntityId ? entities?.[weatherEntityId] : null;
 
-  const sensors = [
-    {
-      entity: sensor1,
-      icon: sensor1Icon,
-      field: settings?.sensor1Field || DEFAULT_SENSOR_FIELDS[0],
-    },
-    {
-      entity: sensor2,
-      icon: sensor2Icon,
-      field: settings?.sensor2Field || DEFAULT_SENSOR_FIELDS[1],
-    },
-    {
-      entity: sensor3,
-      icon: sensor3Icon,
-      field: settings?.sensor3Field || DEFAULT_SENSOR_FIELDS[2],
-    },
-  ].filter((s) => s.entity);
+  const weatherSensorIds = Array.from(
+    new Set(
+      [weatherEntity?.entity_id]
+        .filter((entityId) => typeof entityId === 'string' && entityId.startsWith('weather.'))
+    )
+  );
+  const hourlyWeather = weatherEntity
+    ? [
+      getCurrentHourItem(weatherEntity),
+      ...getHourlyForecastItems(weatherEntity, forecastsById[weatherEntity.entity_id]),
+    ].filter(Boolean).slice(0, HOUR_FORECAST_LIMIT)
+    : [];
 
   // Intersection observer for lazy calendar fetch
   useEffect(() => {
@@ -201,66 +210,96 @@ const TodayCard = memo(function TodayCard({
     return () => clearInterval(interval);
   }, [conn, calendarIds.join('|'), isVisible]);
 
+  useEffect(() => {
+    if (!conn || !isVisible || weatherSensorIds.length === 0) {
+      if (weatherSensorIds.length === 0) setForecastsById({});
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchForecasts = async () => {
+      const nextForecasts = {};
+
+      await Promise.all(
+        weatherSensorIds.map(async (entityId) => {
+          try {
+            let data = await getForecast(conn, { entityId, type: 'hourly' });
+            if (!Array.isArray(data) || data.length === 0) {
+              data = await getForecast(conn, { entityId, type: 'daily' });
+            }
+            if (!cancelled && Array.isArray(data) && data.length > 0) {
+              nextForecasts[entityId] = data;
+            }
+          } catch {
+            // Ignore forecast fetch failures and rely on entity attributes as fallback.
+          }
+        })
+      );
+
+      if (!cancelled) setForecastsById(nextForecasts);
+    };
+
+    void fetchForecasts();
+    const interval = setInterval(fetchForecasts, 30 * 60 * 1000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [conn, isVisible, weatherSensorIds.join('|')]);
+
   return (
     <div
       ref={cardRef}
       {...dragProps}
       style={cardStyle}
-      className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm"
+      className={`today-card relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] shadow-sm ${editMode ? 'cursor-move' : ''}`}
     >
       {controls}
 
-      {/* Header */}
-      <div className="mb-3 flex items-baseline justify-between gap-2">
-        <span className="text-base font-bold text-[var(--text-primary)]">I dag</span>
-        <span className="text-right text-xs capitalize text-[var(--text-muted)]">
+      <div className="today-card__header">
+        <span className="today-card__title">I dag</span>
+        <span className="today-card__date">
           {formatDate()}
         </span>
       </div>
 
-      {/* Sensors row */}
-      {sensors.length > 0 && (
-        <div className="mb-3 flex items-center gap-4">
-          {sensors.map(({ entity, icon, field }, idx) => {
-            const Icon = getIconComponent(icon);
-            const display = getSensorDisplay(entity, field, t);
+      {hourlyWeather.length > 0 && (
+        <div className="today-card__weather" aria-label="Vær neste 6 timer">
+          {hourlyWeather.map((item, idx) => {
+            const Icon = WEATHER_CONDITION_ICONS[item.condition] || Cloud;
             return (
-              <div key={idx} className="flex items-center gap-1.5 text-sm text-[var(--text-primary)]">
-                {Icon && <Icon className="h-4 w-4 text-[var(--text-secondary)]" strokeWidth={1.5} />}
-                <span className="font-medium">
-                  {display?.value} {display?.unit}
+              <div key={`${item.condition || 'weather'}-${idx}`} className="today-card__weather-hour">
+                <Icon className="today-card__weather-icon" />
+                <span className="today-card__weather-time">{item.hour}</span>
+                <span className="today-card__weather-temp">
+                  {formatWeatherValue(item.temperature)} {weatherEntity?.attributes?.temperature_unit || '°C'}
+                </span>
+                <span className="today-card__weather-precipitation">
+                  {formatWeatherValue(item.precipitation)} {weatherEntity?.attributes?.precipitation_unit || 'mm'}
                 </span>
               </div>
             );
           })}
         </div>
       )}
-
-      {/* Divider */}
-      {(sensors.length > 0 || events.length > 0) && (
-        <div className="mb-3 h-px bg-[var(--card-border)]" />
-      )}
-
-      {/* Calendar events */}
-      <div className="flex flex-col gap-2 overflow-hidden">
-        {events.length === 0 && !editMode && (
-          <span className="text-xs text-[var(--text-muted)]">Ingen hendelser i dag</span>
-        )}
+      <div className="today-card__events">
         {editMode && events.length === 0 && calendarIds.length === 0 && (
-          <span className="text-xs text-[var(--text-muted)]">Velg kalender i innstillinger</span>
+          <span className="today-card__empty">Velg kalender i innstillinger</span>
         )}
         {events.map((evt, idx) => {
           const timeStr = formatEventTime(evt.start, evt.end);
           return (
             <div
               key={idx}
-              className="flex items-center justify-between rounded-xl border border-[var(--card-border)] bg-[var(--glass-bg)] px-3 py-2"
+              className="today-card__event"
             >
-              <span className="truncate text-sm font-medium text-[var(--text-primary)]">
+              <span className="today-card__event-title">
                 {evt.summary || evt.title || '–'}
               </span>
               {timeStr && (
-                <span className="ml-3 shrink-0 text-xs text-[var(--text-secondary)]">{timeStr}</span>
+                <span className="today-card__event-time">{timeStr}</span>
               )}
             </div>
           );

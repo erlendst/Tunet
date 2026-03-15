@@ -222,6 +222,7 @@
   "car.chargingPower": "Laddeffekt",
   "car.chargeRate": "Laddhastighet",
   "car.timeToFull": "Tid till full",
+  "car.notCharging": "Laddar inte",
   "car.chargeEndTime": "Laddslut",
   "car.chargeControl": "Laddkontroll",
   "car.chargeLimitNumber": "Laddgräns (nummer)",

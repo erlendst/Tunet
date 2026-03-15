@@ -44,7 +44,7 @@ const RoomLightsCard = memo(function RoomLightsCard({
     >
       {controls}
 
-      <h2 className="mb-3 text-base font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
 
       <div
         className="grid gap-2"
@@ -65,10 +65,10 @@ const RoomLightsCard = memo(function RoomLightsCard({
               key={idx}
               type="button"
               onClick={() => activateRoom(room.sceneId)}
-              className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 transition-all duration-200 ${
+              className={`aspect-[1.22/1] flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 transition-all duration-200 ${
                 isOn
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
-                  : 'border border-[var(--card-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'
+                  : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'
               }`}
             >
               {Icon && (

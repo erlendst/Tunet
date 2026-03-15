@@ -39,7 +39,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
   const resolvedTargetTemp = Number.isFinite(numericTargetTemp) ? numericTargetTemp : 21;
   const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
   const buttonBaseClass =
-    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2f684a] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2A5A3B] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (isSmall) {
     return (
@@ -57,7 +57,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
           <div className="flex flex-col">
             <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
             <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-primary)]">
-              <Thermometer className="h-3.5 w-3.5 text-[#2f684a]" strokeWidth={1.75} />
+              <Thermometer className="h-3.5 w-3.5 text-[#2A5A3B]" strokeWidth={1.75} />
               {displayPrimaryTemp.text}
             </span>
           </div>
@@ -94,9 +94,9 @@ const GenericClimateCard = memo(function GenericClimateCard({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-col">
-          <span className="truncate text-sm font-bold text-[var(--text-primary)]">{name}</span>
+          <span className="truncate text-xl font-bold text-[var(--text-primary)]">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
-            <Thermometer className="h-5 w-5 text-[#2f684a]" strokeWidth={1.75} />
+            <Thermometer className="h-5 w-5 text-[#2A5A3B]" strokeWidth={1.75} />
             {displayPrimaryTemp.text}
           </span>
         </div>

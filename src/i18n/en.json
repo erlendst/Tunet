@@ -225,6 +225,7 @@
   "car.chargingPower": "Charging power",
   "car.chargeRate": "Charge rate",
   "car.timeToFull": "Time to full",
+  "car.notCharging": "Not charging",
   "car.chargeEndTime": "Charge end time",
   "car.chargeControl": "Charge control",
   "car.chargeLimitNumber": "Charge limit number",

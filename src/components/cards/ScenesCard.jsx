@@ -39,7 +39,7 @@ const ScenesCard = memo(function ScenesCard({
     >
       {controls}
 
-      <h2 className="mb-3 text-base font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
 
       <div className="flex flex-wrap gap-2">
         {sceneIds.length === 0 && editMode && (
@@ -55,10 +55,10 @@ const ScenesCard = memo(function ScenesCard({
               key={sceneId}
               type="button"
               onClick={() => activateScene(sceneId)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ${
+              className={`text-md rounded-2xl px-6 py-4 font-medium transition-all duration-300 ${
                 isActive
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
-                  : 'border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'
+                  : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'
               }`}
             >
               {label}

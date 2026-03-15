@@ -36,7 +36,9 @@ const isLockedState = (entity) => {
   const state = entity?.state;
   if (typeof state !== 'string') return false;
   const normalized = state.trim().toLowerCase();
-  const deviceClass = String(entity?.attributes?.device_class || '').trim().toLowerCase();
+  const deviceClass = String(entity?.attributes?.device_class || '')
+    .trim()
+    .toLowerCase();
 
   if (['locked', 'lock', 'true'].includes(normalized)) return true;
   if (deviceClass === 'lock') {
@@ -100,9 +102,12 @@ const CarCard = ({
   const {
     batteryId,
     rangeId,
+    rangeIcon,
     locationId,
+    locationIcon,
     chargingId,
     chargingStateId,
+    chargingIcon,
     pluggedId,
     climateId,
     imageUrl,
@@ -149,13 +154,44 @@ const CarCard = ({
       ? `${formatUnitValue(displayRangeValue, { fallback: '--' })} ${rangeUnit}`
       : '--';
   const locationDisplay =
-    locationLabel && locationLabel !== '--' ? String(locationLabel) : '--';
+    locationLabel && locationLabel !== '--'
+      ? String(locationLabel)
+      : t('common.unknown') || 'Ukjent';
+  const bottomSensors = [
+    rangeId
+      ? {
+          key: 'range',
+          iconName: rangeIcon || 'rotate-cw',
+          fallbackIcon: RotateCw,
+          value: rangeLabel,
+          toneClass: 'car-card__metric-value',
+        }
+      : null,
+    timeToFullId || effectiveChargingId
+      ? {
+          key: 'charging',
+          iconName: chargingIcon || 'zap',
+          fallbackIcon: Zap,
+          value: chargingTimeLabel,
+          toneClass: isCharging
+            ? 'car-card__metric-value car-card__metric-value--charging'
+            : 'car-card__metric-value',
+        }
+      : null,
+    locationId
+      ? {
+          key: 'location',
+          iconName: locationIcon || 'map-pin',
+          fallbackIcon: MapPin,
+          value: locationDisplay,
+          toneClass: 'car-card__metric-value',
+        }
+      : null,
+  ].filter(Boolean);
 
-  const resolvedImageUrl = vehicleImageUrl || (imageUrl
-    ? getEntityImageUrl
-      ? getEntityImageUrl(imageUrl)
-      : imageUrl
-    : null);
+  const resolvedImageUrl =
+    vehicleImageUrl ||
+    (imageUrl ? (getEntityImageUrl ? getEntityImageUrl(imageUrl) : imageUrl) : null);
 
   const name = customNames[cardId] || t('car.defaultName');
   const Icon = customIcons[cardId] ? getIconComponent(customIcons[cardId]) || Car : Car;
@@ -171,7 +207,7 @@ const CarCard = ({
           e.stopPropagation();
           if (!editMode) onOpen();
         }}
-        className={`dashboard-action-card relative flex h-full items-center justify-between gap-4 overflow-hidden p-4 pl-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+        className={`dashboard-action-card relative flex h-full items-center justify-between gap-4 overflow-hidden p-8 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
         style={cardStyle}
       >
         {controls}
@@ -180,14 +216,16 @@ const CarCard = ({
             src={resolvedImageUrl}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-2 right-2 h-[55%] max-w-[40%] object-contain object-right-bottom drop-shadow-md select-none"
+            className="pointer-events-none absolute right-2 bottom-2 h-[55%] max-w-[40%] object-contain object-right-bottom drop-shadow-md select-none"
           />
         )}
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <Icon className="h-5 w-5 shrink-0 text-[var(--accent-color)]" strokeWidth={1.5} />
           <div className="flex min-w-0 flex-col">
             <span className="text-xs font-medium text-[var(--text-secondary)]">{name}</span>
-            <span className={`text-sm font-bold ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}>
+            <span
+              className={`text-sm font-normal ${isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'}`}
+            >
               {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
             </span>
           </div>
@@ -205,18 +243,18 @@ const CarCard = ({
         e.stopPropagation();
         if (!editMode) onOpen();
       }}
-      className={`dashboard-action-card relative flex h-full flex-col overflow-hidden px-5 pt-5 pb-4 ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
+      className={`dashboard-action-card relative flex h-full flex-col justify-between overflow-hidden p-9 ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
 
-      <div className="mb-2 flex items-start justify-between gap-4">
+      <div className="mb-0 flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col">
-          <span className="text-[1.75rem] leading-none font-semibold tracking-tight text-[var(--text-primary)]">
+          <span className="font-regular mb-3 text-[1.5rem] leading-none tracking-tight text-[var(--text-primary)]">
             {name}
           </span>
           <span
-            className={`mt-3 text-[3rem] leading-none font-light tracking-tight ${
+            className={`text-[2.8rem] leading-none font-light tracking-tight ${
               isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'
             }`}
           >
@@ -225,53 +263,42 @@ const CarCard = ({
         </div>
 
         {lockId && (
-          <div className="flex shrink-0 items-center gap-2 pt-1 text-[var(--text-primary)]">
-            <span className="text-xl font-light leading-none">{lockLabel}</span>
+          <div className="flex shrink-0 items-center gap-2 text-[var(--text-primary)]">
+            <span className="text-xl leading-none font-light">{lockLabel}</span>
             {isLocked ? (
-              <Lock className="h-5 w-5" strokeWidth={1.6} />
+              <Lock className="h-5 w-5" strokeWidth={1.5} />
             ) : (
-              <Unlock className="h-5 w-5" strokeWidth={1.6} />
+              <Unlock className="h-5 w-5" strokeWidth={1.5} />
             )}
           </div>
         )}
       </div>
 
       {resolvedImageUrl && (
-        <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden px-2 py-3">
+        <div className="flex items-center justify-center overflow-hidden">
           <img
             src={resolvedImageUrl}
             alt=""
             aria-hidden="true"
-            className="pointer-events-none h-full max-h-[240px] w-[88%] object-contain drop-shadow-md select-none"
-            onError={(e) => { e.target.style.display = 'none'; }}
+            className="pointer-events-none max-h-[240px] w-[92%] object-contain select-none"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
           />
         </div>
       )}
 
-      {(rangeId || locationId || timeToFullId || effectiveChargingId) && (
-        <div className="grid grid-cols-3 items-center gap-3 border-t border-[color:color-mix(in_srgb,var(--text-secondary)_14%,transparent)] pt-4 text-[var(--text-primary)]">
-          {rangeId && (
-            <div className="flex min-w-0 items-center justify-start gap-2 text-[var(--text-primary)]">
-              <RotateCw className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
-              <span className="truncate text-[1.75rem] leading-none font-light">{rangeLabel}</span>
-            </div>
-          )}
-          {(timeToFullId || effectiveChargingId) && (
-            <div
-              className={`flex min-w-0 items-center justify-center gap-2 ${
-                isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'
-              }`}
-            >
-              <Zap className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
-              <span className="truncate text-[1.75rem] leading-none font-light">{chargingTimeLabel}</span>
-            </div>
-          )}
-          {locationId && (
-            <div className="flex min-w-0 items-center justify-end gap-2 text-[var(--text-primary)]">
-              <MapPin className="h-5 w-5 shrink-0 text-[var(--text-secondary)]" strokeWidth={1.7} />
-              <span className="truncate text-[1.75rem] leading-none font-light">{locationDisplay}</span>
-            </div>
-          )}
+      {bottomSensors.length > 0 && (
+        <div className="car-card__metrics">
+          {bottomSensors.map(({ key, iconName, fallbackIcon: FallbackIcon, value, toneClass }) => {
+            const MetricIcon = getIconComponent(iconName) || FallbackIcon;
+            return (
+              <div key={key} className="car-card__metric">
+                <MetricIcon className="car-card__metric-icon" />
+                <span className={toneClass}>{value}</span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

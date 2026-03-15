@@ -590,6 +590,7 @@
   "car.chargingPower": "Ladeeffekt",
   "car.chargeRate": "Laderate",
   "car.timeToFull": "Tid til full",
+  "car.notCharging": "Lader ikke",
   "car.chargeEndTime": "Ladeslutt",
   "car.chargeControl": "Ladekontroll",
   "car.chargeLimitNumber": "Ladegrense (tall)",

@@ -220,6 +220,7 @@
   "car.chargingPower": "Ladeleistung",
   "car.chargeRate": "Laderate",
   "car.timeToFull": "Zeit bis voll",
+  "car.notCharging": "Lädt nicht",
   "car.chargeEndTime": "Ladeende",
   "car.chargeControl": "Ladesteuerung",
   "car.chargeLimitNumber": "Ladelimit (Zahl)",

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plus, RefreshCw, X } from 'lucide-react';
+import IconPicker from '../../components/ui/IconPicker';
 
 export function SearchableSelect({ label, value, options, onChange, placeholder, entities, t }) {
   const [open, setOpen] = React.useState(false);
@@ -123,6 +124,13 @@ export function CarMappingsSection({
   chargeLimitSelectOptions,
   updateButtonOptions,
 }) {
+  const iconSettingBySensorKey = {
+    rangeId: 'rangeIcon',
+    locationId: 'locationIcon',
+    chargingId: 'chargingIcon',
+    chargingStateId: 'chargingIcon',
+    timeToFullId: 'chargingIcon',
+  };
   const [showAddSensor, setShowAddSensor] = React.useState(false);
   const [sensorType, setSensorType] = React.useState('');
   const [sensorEntity, setSensorEntity] = React.useState('');
@@ -307,31 +315,45 @@ export function CarMappingsSection({
           {mappedSensors.map((st) => {
             const entityId = editSettings[st.key];
             const entityName = entities[entityId]?.attributes?.friendly_name || entityId;
+            const iconSettingKey = iconSettingBySensorKey[st.key] || null;
             return (
               <div
                 key={st.key}
-                className="popup-surface flex items-center justify-between rounded-xl px-3.5 py-2.5 sm:px-4"
+                className="popup-surface rounded-xl px-3.5 py-2.5 sm:px-4"
               >
-                <div className="mr-4 min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xs font-bold tracking-wide text-[var(--text-muted)]">
-                      {st.label}:
-                    </span>
-                    <span className="truncate text-sm font-medium text-[var(--text-primary)]">
-                      {entityName}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs font-bold tracking-wide text-[var(--text-muted)]">
+                        {st.label}:
+                      </span>
+                      <span className="truncate text-sm font-medium text-[var(--text-primary)]">
+                        {entityName}
+                      </span>
+                    </div>
+                    <span className="mt-0.5 block truncate font-mono text-[10px] text-[var(--text-muted)]">
+                      {entityId}
                     </span>
                   </div>
-                  <span className="mt-0.5 block truncate font-mono text-[10px] text-[var(--text-muted)]">
-                    {entityId}
-                  </span>
+                  <button
+                    onClick={() => handleRemoveSensor(st.key)}
+                    className="flex-shrink-0 rounded-lg bg-[var(--status-error-bg)] p-2 text-[var(--status-error-fg)] transition-colors"
+                    title={t('tooltip.removeCard')}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleRemoveSensor(st.key)}
-                  className="flex-shrink-0 rounded-lg bg-[var(--status-error-bg)] p-2 text-[var(--status-error-fg)] transition-colors"
-                  title={t('tooltip.removeCard')}
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                {iconSettingKey && (
+                  <div className="mt-3">
+                    <IconPicker
+                      value={editSettings[iconSettingKey] || null}
+                      onSelect={(iconName) => saveCardSetting(editSettingsKey, iconSettingKey, iconName)}
+                      onClear={() => saveCardSetting(editSettingsKey, iconSettingKey, null)}
+                      t={t}
+                      maxHeightClass="max-h-56"
+                    />
+                  </div>
+                )}
               </div>
             );
           })}

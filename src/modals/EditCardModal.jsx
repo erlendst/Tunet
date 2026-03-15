@@ -2280,6 +2280,13 @@ export default function EditCardModal({
                           onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitlePrimary', e.target.value.trim() || null)}
                           placeholder={t('travel.primaryTitlePlaceholder') || 'Optional custom name'}
                         />
+                        <IconPicker
+                          value={editSettings.travelIconPrimary || null}
+                          onSelect={(iconName) => saveCardSetting(editSettingsKey, 'travelIconPrimary', iconName)}
+                          onClear={() => saveCardSetting(editSettingsKey, 'travelIconPrimary', null)}
+                          t={t}
+                          maxHeightClass="max-h-56"
+                        />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
@@ -2291,6 +2298,13 @@ export default function EditCardModal({
                           defaultValue={editSettings.travelTitleSecondary || ''}
                           onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitleSecondary', e.target.value.trim() || null)}
                           placeholder={t('travel.secondaryTitlePlaceholder') || 'Optional custom name'}
+                        />
+                        <IconPicker
+                          value={editSettings.travelIconSecondary || null}
+                          onSelect={(iconName) => saveCardSetting(editSettingsKey, 'travelIconSecondary', iconName)}
+                          onClear={() => saveCardSetting(editSettingsKey, 'travelIconSecondary', null)}
+                          t={t}
+                          maxHeightClass="max-h-56"
                         />
                       </div>
                     </div>
@@ -2448,58 +2462,24 @@ export default function EditCardModal({
           })()}
 
           {isEditToday && editSettingsKey && (() => {
-            const sensorOptions = sortByName([...byDomain('sensor'), ...byDomain('weather')]);
-            const sensorFieldOptions = [
-              { value: 'temperature', label: 'Temperatur' },
-              { value: 'humidity', label: 'Luftfuktighet' },
-              { value: 'condition', label: 'Værtilstand' },
-              { value: 'state', label: 'Vanlig state' },
-            ];
-            const sensors = [
-              { key: 'sensor1', iconKey: 'sensor1Icon', fieldKey: 'sensor1Field', defaultField: 'temperature' },
-              { key: 'sensor2', iconKey: 'sensor2Icon', fieldKey: 'sensor2Field', defaultField: 'humidity' },
-              { key: 'sensor3', iconKey: 'sensor3Icon', fieldKey: 'sensor3Field', defaultField: 'condition' },
-            ];
+            const weatherOptions = sortByName(byDomain('weather'));
             return (
               <div className="space-y-4">
                 <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
-                  Sensorer (I dag-kort)
+                  Vær (I dag-kort)
                 </label>
-                {sensors.map(({ key, iconKey, fieldKey, defaultField }, idx) => (
-                  <div key={key} className="popup-surface space-y-2 rounded-2xl p-4">
-                    <span className="text-xs font-bold text-[var(--text-secondary)]">Sensor {idx + 1}</span>
-                    <SearchableSelect
-                      label="Entity"
-                      value={editSettings[key + 'Id'] || null}
-                      options={sensorOptions}
-                      onChange={(id) => saveCardSetting(editSettingsKey, key + 'Id', id)}
-                      placeholder="Velg sensor"
-                      entities={entities}
-                      t={t}
-                    />
-                    <label className="ml-1 text-[10px] font-bold uppercase text-[var(--text-muted)]">
-                      Felt
-                    </label>
-                    <select
-                      value={editSettings[fieldKey] || defaultField}
-                      onChange={(e) => saveCardSetting(editSettingsKey, fieldKey, e.target.value)}
-                      className="w-full rounded-xl border-0 bg-[var(--glass-bg)] px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
-                    >
-                      {sensorFieldOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
-                      defaultValue={editSettings[iconKey] || ''}
-                      onBlur={(e) => saveCardSetting(editSettingsKey, iconKey, e.target.value.trim() || null)}
-                      placeholder="Ikon (f.eks. thermometer, cloud-rain, wind)"
-                    />
-                  </div>
-                ))}
+                <div className="popup-surface space-y-2 rounded-2xl p-4">
+                  <span className="text-xs font-bold text-[var(--text-secondary)]">Timevarsel</span>
+                  <SearchableSelect
+                    label="Weather entity"
+                    value={editSettings.weatherEntityId || null}
+                    options={weatherOptions}
+                    onChange={(id) => saveCardSetting(editSettingsKey, 'weatherEntityId', id)}
+                    placeholder="Velg vær-entity"
+                    entities={entities}
+                    t={t}
+                  />
+                </div>
                 <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
                   Kalender
                 </label>
@@ -2587,7 +2567,10 @@ export default function EditCardModal({
           )}
 
           {isEditClimateOverview && editSettingsKey && (() => {
-            const sensorOptions = sortByName(byDomain('sensor'));
+            const climateOverviewEntityOptions = sortByName([
+              ...byDomain('sensor'),
+              ...byDomain('climate'),
+            ]);
             const rooms = Array.isArray(editSettings.rooms) ? editSettings.rooms : [];
             const updateRoom = (index, field, value) => {
               const next = [...rooms];
@@ -2626,36 +2609,57 @@ export default function EditCardModal({
                         onBlur={(e) => updateRoom(idx, 'name', e.target.value.trim())}
                         placeholder="Romnavn"
                       />
-                      <input
-                        type="text"
-                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
-                        defaultValue={room.icon || ''}
-                        onBlur={(e) => updateRoom(idx, 'icon', e.target.value.trim())}
-                        placeholder="Ikon (f.eks. sofa, bed-double)"
+                      <IconPicker
+                        value={room.icon || null}
+                        onSelect={(iconName) => updateRoom(idx, 'icon', iconName)}
+                        onClear={() => updateRoom(idx, 'icon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
                       />
                       <SearchableSelect
-                        label="Temperatursensor"
+                        label="Temperaturentitet"
                         value={room.tempId || null}
-                        options={sensorOptions}
+                        options={climateOverviewEntityOptions}
                         onChange={(id) => updateRoom(idx, 'tempId', id)}
-                        placeholder="Velg temperatursensor"
+                        placeholder="Velg temperaturentitet"
                         entities={entities}
                         t={t}
                       />
+                      <IconPicker
+                        value={room.tempIcon || null}
+                        onSelect={(iconName) => updateRoom(idx, 'tempIcon', iconName)}
+                        onClear={() => updateRoom(idx, 'tempIcon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
+                      />
                       <SearchableSelect
-                        label="Luftfuktighetssensor"
+                        label="Luftfuktighetsentitet"
                         value={room.humidityId || null}
-                        options={sensorOptions}
+                        options={climateOverviewEntityOptions}
                         onChange={(id) => updateRoom(idx, 'humidityId', id)}
-                        placeholder="Velg luftfuktighetssensor"
+                        placeholder="Velg luftfuktighetsentitet"
                         entities={entities}
                         t={t}
+                      />
+                      <IconPicker
+                        value={room.humidityIcon || null}
+                        onSelect={(iconName) => updateRoom(idx, 'humidityIcon', iconName)}
+                        onClear={() => updateRoom(idx, 'humidityIcon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
                       />
                     </div>
                   ))}
                   <button
                     type="button"
-                    onClick={() => saveCardSetting(editSettingsKey, 'rooms', [...rooms, { name: '', icon: '', tempId: null, humidityId: null }])}
+                    onClick={() => saveCardSetting(editSettingsKey, 'rooms', [...rooms, {
+                      name: '',
+                      icon: '',
+                      tempId: null,
+                      tempIcon: null,
+                      humidityId: null,
+                      humidityIcon: null,
+                    }])}
                     className="w-full rounded-xl border border-dashed border-[var(--glass-border)] py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]"
                   >
                     + Legg til rom
@@ -2746,12 +2750,12 @@ export default function EditCardModal({
                         onBlur={(e) => updateRoom(idx, 'name', e.target.value.trim())}
                         placeholder="Romnavn"
                       />
-                      <input
-                        type="text"
-                        className="w-full rounded-xl px-3 py-2 popup-surface text-sm text-[var(--text-primary)] outline-none"
-                        defaultValue={room.icon || ''}
-                        onBlur={(e) => updateRoom(idx, 'icon', e.target.value.trim())}
-                        placeholder="Ikon (f.eks. sofa, lamp)"
+                      <IconPicker
+                        value={room.icon || null}
+                        onSelect={(iconName) => updateRoom(idx, 'icon', iconName)}
+                        onClear={() => updateRoom(idx, 'icon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
                       />
                       <SearchableSelect
                         label="Lysenhet (for av/på-status)"
