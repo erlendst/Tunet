@@ -96,7 +96,7 @@ const FanCard = memo(function FanCard({
   const direction = entity.attributes?.direction || null;
   const presetMode = entity.attributes?.preset_mode || null;
 
-  const name = customNames[fanId] || getA(fanId, 'friendly_name', fanId);
+  const name = customNames[fanId] || settings?.name || getA(fanId, 'friendly_name', fanId) || 'Overskrift';
   const fanIconName = customIcons[fanId] || entity.attributes?.icon;
   const Icon = fanIconName ? getIconComponent(fanIconName) || FanIconGlyph : FanIconGlyph;
 
@@ -137,7 +137,7 @@ const FanCard = memo(function FanCard({
         event.stopPropagation();
         if (!editMode) onOpen();
       }}
-      className={`glass-texture touch-feedback ${isSmall ? (isMobile ? 'gap-2 p-3 pl-4' : 'gap-4 p-4 pl-5') : isDenseMobile ? 'p-5' : isMobile ? 'p-5' : 'p-7'} rounded-3xl ${isSmall ? 'flex items-center justify-between' : 'flex flex-col justify-between'} group relative h-full overflow-hidden border font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+      className={`glass-texture touch-feedback ${isSmall ? (isMobile ? 'gap-2 p-3 pl-4' : 'gap-4 p-4 pl-5') : isDenseMobile ? 'p-5' : isMobile ? 'p-5' : 'dashboard-card-padding'} rounded-3xl ${isSmall ? 'flex items-center justify-between' : 'flex flex-col justify-between'} group relative h-full overflow-hidden border font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{
         ...cardStyle,
         backgroundColor: 'var(--card-bg)',
@@ -248,12 +248,18 @@ const FanCard = memo(function FanCard({
 
           <div className={`${isDenseMobile ? 'mt-1 text-xs' : 'mt-2 text-xs'}`}>
             <div className={`flex items-center gap-2 ${isDenseMobile ? 'mb-2' : 'mb-3'}`}>
-              <p
-                className={`${isDenseMobile ? 'text-[10px]' : 'text-xs'} leading-none font-bold text-[var(--text-secondary)] uppercase opacity-60`}
-                style={{ letterSpacing: '0.05em' }}
-              >
-                {name}
-              </p>
+              {isDenseMobile ? (
+                <p
+                  className="text-[10px] leading-none font-bold text-[var(--text-secondary)] uppercase opacity-60"
+                  style={{ letterSpacing: '0.05em' }}
+                >
+                  {name}
+                </p>
+              ) : (
+                <p className="dashboard-card-title dashboard-card-title--truncate">
+                  {name}
+                </p>
+              )}
             </div>
 
             {isDenseMobile && (hasDirectionControl || hasOscillationControl) && (

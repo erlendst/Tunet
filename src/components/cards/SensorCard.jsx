@@ -619,7 +619,7 @@ const SensorCard = memo(function SensorCard({
       onClick={(e) => {
         if (!editMode) onOpen?.(e);
       }}
-      className={`touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border p-7 font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer' : 'cursor-move'}`}
+      className={`touch-feedback group dashboard-card-padding relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -651,7 +651,7 @@ const SensorCard = memo(function SensorCard({
           )}
 
           {showName && (
-            <p className="mt-2 w-full truncate text-xs font-bold tracking-widest text-[var(--text-secondary)] uppercase opacity-60">
+            <p className="dashboard-card-title dashboard-card-title--truncate mt-2 w-full">
               {String(name)}
             </p>
           )}
@@ -750,4 +750,3 @@ const SensorCard = memo(function SensorCard({
 });
 
 export default SensorCard;
-

@@ -62,7 +62,8 @@ export const MediaPlayerCard = memo(({
   const mpState = entity?.state;
   const isPlaying = mpState === 'playing';
   const isActive = isMediaActive(entity);
-  const name = customNames[mpId] || getA(mpId, 'friendly_name', 'Media Player');
+  const name =
+    customNames[cardId] || customNames[mpId] || settings?.name || getA(mpId, 'friendly_name', 'Media Player') || 'Overskrift';
   const title = getA(mpId, 'media_title') || (isActive ? t('status.active') : t('media.noneMedia'));
   const subtitle =
     getA(mpId, 'media_artist') ||
@@ -99,7 +100,7 @@ export const MediaPlayerCard = memo(({
           e.stopPropagation();
           if (!editMode) onOpen(mpId, null, null);
         }}
-        className={`glass-texture touch-feedback group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-4 sm:p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+        className={`glass-texture touch-feedback group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
         style={{ ...cardStyle, color: 'var(--text-primary)' }}
       >
         {controls}
@@ -148,7 +149,7 @@ export const MediaPlayerCard = memo(({
         e.stopPropagation();
         if (!editMode) onOpen(mpId, null, null);
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-4 sm:p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={{
         ...cardStyle,
         color:
@@ -200,9 +201,18 @@ export const MediaPlayerCard = memo(({
         )}
         <div className={`flex flex-col overflow-hidden ${isCoverMode ? 'w-full pt-1' : 'pt-1'}`}>
           <div className="mb-1 flex items-center gap-2">
-            <p className={`truncate ${isDenseMobile ? 'text-[10px]' : 'text-xs'} font-bold tracking-widest uppercase ${isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'}`}>
-              {name}
-            </p>
+            {isDenseMobile ? (
+              <p className={`truncate text-[10px] font-bold tracking-widest uppercase ${isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'}`}>
+                {name}
+              </p>
+            ) : (
+              <p
+                className="dashboard-card-title dashboard-card-title--truncate"
+                style={isCoverMode ? { color: 'white' } : undefined}
+              >
+                {name}
+              </p>
+            )}
           </div>
           <h3
             className={`mb-0.5 ${isCoverMode ? (isDenseMobile ? 'text-lg' : 'text-2xl') : isDenseMobile ? 'truncate text-base' : 'truncate text-lg'} leading-tight font-bold ${isCoverMode ? 'text-white' : ''}`}
@@ -319,7 +329,7 @@ export const MediaGroupCard = memo(({
   const playingBackgroundMotion = groupSettings.playingBackgroundMotion || 'off';
   const useSubtlePlayingMotion = isPlaying && playingBackgroundMotion === 'subtle';
 
-  const name = customNames[cardId] || getA(mpId, 'friendly_name', 'Musikk');
+  const name = customNames[cardId] || groupSettings?.name || getA(mpId, 'friendly_name', 'Musikk') || 'Overskrift';
   const title = getA(mpId, 'media_title') || (isActive ? t('status.active') : t('media.noneMusic'));
   const subtitle =
     getA(mpId, 'media_artist') ||
@@ -357,7 +367,7 @@ export const MediaGroupCard = memo(({
           e.stopPropagation();
           if (!editMode) onOpen(mpId, settingsKey, null);
         }}
-        className={`glass-texture touch-feedback group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-4 sm:p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+        className={`glass-texture touch-feedback group relative flex h-full flex-col items-center justify-center overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
         style={{ ...cardStyle, color: 'var(--text-primary)' }}
       >
         {controls}
@@ -401,7 +411,7 @@ export const MediaGroupCard = memo(({
         e.stopPropagation();
         if (!editMode) onOpen(mpId, settingsKey, null);
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-4 sm:p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={{
         ...cardStyle,
         color:
@@ -490,9 +500,18 @@ export const MediaGroupCard = memo(({
         )}
         <div className={`flex flex-col overflow-hidden ${isCoverMode ? 'w-full pt-1' : 'pt-1'}`}>
           <div className="mb-1 flex items-center gap-2">
-            <p className={`truncate ${isDenseMobile ? 'text-[10px]' : 'text-xs'} font-bold tracking-widest uppercase ${isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'}`}>
-              {name}
-            </p>
+            {isDenseMobile ? (
+              <p className={`truncate text-[10px] font-bold tracking-widest uppercase ${isCoverMode ? 'text-white/80' : 'text-[var(--text-secondary)]'}`}>
+                {name}
+              </p>
+            ) : (
+              <p
+                className="dashboard-card-title dashboard-card-title--truncate"
+                style={isCoverMode ? { color: 'white' } : undefined}
+              >
+                {name}
+              </p>
+            )}
           </div>
           <h3
             className={`mb-0.5 ${isCoverMode ? (isDenseMobile ? 'text-lg' : 'text-2xl') : isDenseMobile ? 'truncate text-base' : 'truncate text-lg'} leading-tight font-bold ${isCoverMode ? 'text-white' : ''}`}

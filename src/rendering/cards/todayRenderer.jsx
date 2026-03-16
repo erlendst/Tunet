@@ -2,7 +2,7 @@ import TodayCard from '../../components/cards/TodayCard';
 import { getSettings } from '../helpers';
 
 export function renderTodayCard(cardId, dragProps, getControls, cardStyle, settingsKey, ctx) {
-  const { entities, editMode, cardSettings, conn, t } = ctx;
+  const { entities, editMode, cardSettings, customNames, conn, t } = ctx;
   const settings = getSettings(cardSettings, settingsKey, cardId);
 
   return (
@@ -14,6 +14,7 @@ export function renderTodayCard(cardId, dragProps, getControls, cardStyle, setti
       cardStyle={cardStyle}
       entities={entities}
       settings={settings}
+      customName={customNames?.[cardId] || null}
       conn={conn}
       editMode={editMode}
       t={t}

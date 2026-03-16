@@ -34,7 +34,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
     fromUnit: displayTemperatureUnit || sourceTempUnit,
     unitMode: effectiveUnitMode,
   });
-  const name = customNames?.[cardId] || entity.attributes?.friendly_name || entityId;
+  const name = customNames?.[cardId] || settings?.name || entity.attributes?.friendly_name || 'Overskrift';
   const numericTargetTemp = Number(targetTemp);
   const resolvedTargetTemp = Number.isFinite(numericTargetTemp) ? numericTargetTemp : 21;
   const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
@@ -87,14 +87,14 @@ const GenericClimateCard = memo(function GenericClimateCard({
         e.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`relative flex h-full items-center justify-between overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] px-6 py-5 shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`dashboard-card-padding relative flex h-full items-center justify-between overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] shadow-sm transition-all ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-col">
-          <span className="truncate text-xl font-bold text-[var(--text-primary)]">{name}</span>
+          <span className="dashboard-card-title dashboard-card-title--truncate">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
             <Thermometer className="h-5 w-5 text-[#2A5A3B]" strokeWidth={1.75} />
             {displayPrimaryTemp.text}

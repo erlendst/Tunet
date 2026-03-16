@@ -227,12 +227,12 @@ const TodoCard = memo(function TodoCard({
       {getControls && getControls(cardId)}
 
       {/* Header */}
-      <div className="group z-10 flex items-center justify-between p-5 pb-2">
+      <div className="dashboard-card-pad-x dashboard-card-pad-top group z-10 flex items-center justify-between pb-2">
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-[var(--status-success-bg)] p-2 text-[var(--status-success-fg)] transition-transform duration-300 group-hover:scale-110">
             <IconComp className="h-5 w-5" />
           </div>
-          <h3 className="text-lg font-medium tracking-tight text-[var(--text-primary)]">
+          <h3 className="dashboard-card-title">
             {displayName}
           </h3>
         </div>
@@ -249,7 +249,7 @@ const TodoCard = memo(function TodoCard({
 
       {/* Progress bar */}
       {totalCount > 0 && (
-        <div className="px-5 pb-2">
+        <div className="dashboard-card-pad-x pb-2">
           <div className="h-1 overflow-hidden rounded-full bg-[var(--glass-bg)]">
             <div
               className="h-full rounded-full bg-[var(--status-success-fg)]/60 transition-all duration-500"
@@ -260,7 +260,7 @@ const TodoCard = memo(function TodoCard({
       )}
 
       {/* Content */}
-      <div className="hide-scrollbar flex-1 space-y-1 overflow-y-auto p-5 pt-1 [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
+      <div className="dashboard-card-pad-x dashboard-card-pad-bottom hide-scrollbar flex-1 space-y-1 overflow-y-auto pt-1 [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
         {!todoEntityId ? (
           <div className="flex h-full flex-col items-center justify-center text-[var(--text-secondary)] opacity-60">
             <IconComp className="mb-2 h-8 w-8" />
@@ -357,7 +357,7 @@ const TodoCard = memo(function TodoCard({
       </div>
 
       {/* Quick Add */}
-      <div className="px-5 pt-2 pb-5">
+      <div className="dashboard-card-pad-x dashboard-card-pad-bottom pt-2">
         <div className="group relative">
           <input
             type="text"

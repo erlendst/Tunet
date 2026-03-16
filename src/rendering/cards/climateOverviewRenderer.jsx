@@ -9,7 +9,7 @@ export function renderClimateOverviewCard(
   settingsKey,
   ctx
 ) {
-  const { entities, editMode, cardSettings, t } = ctx;
+  const { entities, editMode, cardSettings, customNames, t } = ctx;
   const settings = getSettings(cardSettings, settingsKey, cardId);
 
   return (
@@ -21,6 +21,7 @@ export function renderClimateOverviewCard(
       cardStyle={cardStyle}
       entities={entities}
       settings={settings}
+      customName={customNames?.[cardId] || null}
       editMode={editMode}
       t={t}
     />

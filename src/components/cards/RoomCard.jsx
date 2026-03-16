@@ -43,7 +43,7 @@ const RoomCard = memo(function RoomCard({
   const { haConfig } = useHomeAssistantMeta();
   const effectiveUnitMode = getEffectiveUnitMode(unitsMode, haConfig);
 
-  const areaName = customNames?.[cardId] || settings?.areaName || t('room.defaultName');
+  const areaName = customNames?.[cardId] || settings?.name || settings?.areaName || t('room.defaultName') || 'Overskrift';
   const roomIconName = customIcons?.[cardId] || settings?.icon || settings?.areaIcon;
   const RoomIcon = roomIconName ? getIconComponent(roomIconName, Home) || Home : Home;
   const isMdiRoomIcon = typeof roomIconName === 'string' && roomIconName.startsWith('mdi:');
@@ -406,7 +406,7 @@ const RoomCard = memo(function RoomCard({
         e.stopPropagation();
         if (!editMode) onOpen?.();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col overflow-hidden rounded-[2.5rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] font-sans transition-all duration-500 select-none ${isMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} `}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col overflow-hidden rounded-[2.5rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] font-sans transition-all duration-500 select-none ${isMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} `}
       style={cardStyle}
     >
       {controls}
@@ -438,7 +438,7 @@ const RoomCard = memo(function RoomCard({
             </button>
 
             <div className="mt-2 flex w-full min-w-0 flex-col items-start text-left">
-              <div className={`${isMobile ? 'text-[11px]' : 'text-xs'} w-full truncate font-bold tracking-widest text-[var(--text-secondary)] uppercase opacity-60`}>
+              <div className="dashboard-card-title dashboard-card-title--truncate w-full">
                 {areaName}
               </div>
             </div>

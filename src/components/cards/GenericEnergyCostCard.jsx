@@ -44,7 +44,7 @@ const GenericEnergyCostCard = memo(function GenericEnergyCostCard({
   const todayEntity = todayEntityId ? entities[todayEntityId] : null;
   const monthEntity = monthEntityId ? entities[monthEntityId] : null;
 
-  const name = customNames[cardId] || t('energyCost.title');
+  const name = customNames[cardId] || settings?.name || t('energyCost.title') || 'Overskrift';
   const Icon = customIcons[cardId] ? getIconComponent(customIcons[cardId]) || Coins : Coins;
   const translate = t || ((key) => key);
   const todayLabel = settings?.todayLabel || translate('energyCost.today');
@@ -97,7 +97,7 @@ const GenericEnergyCostCard = memo(function GenericEnergyCostCard({
         e.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -124,6 +124,7 @@ const GenericEnergyCostCard = memo(function GenericEnergyCostCard({
       </div>
       <div className={`relative z-10 ${isDenseMobile ? 'mt-3 flex items-end justify-between gap-3' : 'mt-2 grid grid-cols-2 gap-y-1'}`}>
         <div className={isDenseMobile ? 'min-w-0 flex-1' : 'col-start-1 row-start-1 pb-1'}>
+          {!isDenseMobile && <p className="dashboard-card-title dashboard-card-title--truncate mb-3">{name}</p>}
           <p
             className={`${isDenseMobile ? 'text-[10px]' : 'text-[11px]'} font-bold tracking-widest uppercase opacity-60`}
             style={{ color: 'var(--text-secondary)' }}

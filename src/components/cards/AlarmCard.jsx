@@ -176,7 +176,7 @@ const AlarmCard = memo(function AlarmCard({
   const stateVisual = getStateVisual(state);
   const StateIcon = stateVisual.Icon || Lock;
 
-  const name = customNames?.[cardId] || entity.attributes?.friendly_name || entityId;
+  const name = customNames?.[cardId] || settings?.name || entity.attributes?.friendly_name || 'Overskrift';
 
   const quickActions = [];
   if (!inTransition && !isUnavailable) {
@@ -275,7 +275,7 @@ const AlarmCard = memo(function AlarmCard({
         event.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'gap-3 p-4' : 'gap-4 p-5'} ${
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'gap-3 p-4' : 'gap-4 dashboard-card-padding'} ${
         !editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'
       }`}
       style={cardStyle}
@@ -311,14 +311,12 @@ const AlarmCard = memo(function AlarmCard({
       </div>
 
       <div className={isDenseMobile ? 'space-y-1.5' : 'space-y-2'}>
+        <p className="dashboard-card-title dashboard-card-title--truncate">{name}</p>
         <div className="flex items-baseline gap-1 leading-none">
           <span className={`truncate leading-none font-thin text-[var(--text-primary)] ${isDenseMobile ? 'text-[1.55rem]' : 'text-3xl'}`}>
             {getStateLabel(state, translate)}
           </span>
         </div>
-        <p className={`truncate leading-none font-bold tracking-[0.2em] text-[var(--text-secondary)] uppercase opacity-60 ${isDenseMobile ? 'text-[9px]' : 'text-[10px]'}`}>
-          {name}
-        </p>
         {entity.attributes?.changed_by && (
           <p className={`truncate text-[var(--text-secondary)] ${isDenseMobile ? 'text-[10px]' : 'text-[11px]'}`}>
             {translate('alarm.changedBy')}: {entity.attributes.changed_by}

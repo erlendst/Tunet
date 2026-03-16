@@ -38,7 +38,7 @@ export function renderSensorCard(cardId, dragProps, getControls, cardStyle, sett
   }
 
   const settings = getSettings(cardSettings, settingsKey, cardId);
-  const name = customNames[cardId] || getA(cardId, 'friendly_name', cardId);
+  const name = customNames[cardId] || settings?.name || getA(cardId, 'friendly_name', cardId) || 'Overskrift';
   const domain = cardId.split('.')[0];
   const defaultIcons = {
     sensor: Activity,

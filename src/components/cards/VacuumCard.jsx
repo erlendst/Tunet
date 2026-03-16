@@ -79,7 +79,8 @@ const VacuumCard = ({
   const battery = Number.isFinite(batteryNumber) ? Math.round(batteryNumber) : null;
   const vacuumIconName = customIcons?.[vacuumId] || entity.attributes?.icon;
   const VacuumIcon = vacuumIconName ? getIconComponent(vacuumIconName) || Bot : Bot;
-  const name = customNames[vacuumId] || entity.attributes?.friendly_name || t('vacuum.name');
+  const name =
+    customNames[vacuumId] || settings?.name || entity.attributes?.friendly_name || t('vacuum.name') || 'Overskrift';
   const statusText = getVacuumStateLabel(state, battery, t);
   const secondaryText = battery !== null ? `${battery}%` : statusText;
   const buttonBaseClass =
@@ -139,7 +140,7 @@ const VacuumCard = ({
     <div
       {...dragProps}
       onClick={(e) => { e.stopPropagation(); if (!editMode && onOpen) onOpen(); }}
-      className={`dashboard-action-card relative flex h-full items-center justify-between overflow-hidden px-6 py-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+      className={`dashboard-action-card dashboard-card-padding relative flex h-full items-center justify-between overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{
         ...cardStyle,
         backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
@@ -150,7 +151,7 @@ const VacuumCard = ({
 
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 flex-col">
-          <span className="truncate text-xl font-bold text-[var(--text-primary)]">{name}</span>
+          <span className="dashboard-card-title dashboard-card-title--truncate">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 truncate text-2xl font-light leading-tight text-[var(--text-primary)]">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center text-[var(--accent-color)]">
               <VacuumIcon className="h-[1.08rem] w-[1.08rem]" strokeWidth={1.75} />

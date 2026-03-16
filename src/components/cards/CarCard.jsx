@@ -193,7 +193,7 @@ const CarCard = ({
     vehicleImageUrl ||
     (imageUrl ? (getEntityImageUrl ? getEntityImageUrl(imageUrl) : imageUrl) : null);
 
-  const name = customNames[cardId] || t('car.defaultName');
+  const name = customNames[cardId] || settings?.name || t('car.defaultName') || 'Overskrift';
   const Icon = customIcons[cardId] ? getIconComponent(customIcons[cardId]) || Car : Car;
   const sizeSetting = cardSettings[settingsKey]?.size || cardSettings[cardId]?.size;
   const isSmall = sizeSetting === 'small';
@@ -243,14 +243,14 @@ const CarCard = ({
         e.stopPropagation();
         if (!editMode) onOpen();
       }}
-      className={`dashboard-action-card relative flex h-full flex-col justify-between overflow-hidden p-9 ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
+      className={`dashboard-action-card dashboard-card-padding relative flex h-full flex-col justify-between overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.99]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
 
       <div className="mb-0 flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col">
-          <span className="font-regular mb-3 text-[1.5rem] leading-none tracking-tight text-[var(--text-primary)]">
+          <span className="dashboard-card-title dashboard-card-title--truncate mb-3">
             {name}
           </span>
           <span

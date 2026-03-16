@@ -44,6 +44,8 @@ const LightCard = ({
     : (entity?.attributes?.supported_features & 1) === 1;
 
   const sizeSetting = cardSettings[settingsKey]?.size || cardSettings[cardId]?.size;
+  const settings = cardSettings[settingsKey] || cardSettings[cardId] || {};
+  const title = name || settings?.name || 'Overskrift';
   const isSmall = sizeSetting === 'small';
   const isDenseMobile = isMobile && !isSmall;
 
@@ -103,7 +105,7 @@ const LightCard = ({
           onClick={handleToggleLight}
           className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl transition-all duration-500 ${isOn ? 'bg-amber-500/20 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-muted)] hover:bg-[var(--glass-bg-hover)]'}`}
           disabled={isUnavailable}
-          aria-label={`${name || t('common.light')}: ${isOn ? t('common.off') : t('common.on')}`}
+          aria-label={`${title}: ${isOn ? t('common.off') : t('common.on')}`}
         >
           <LightIcon
             className={`h-6 w-6 stroke-[1.5px] ${isOn ? 'fill-amber-400/20' : ''} transition-transform duration-300 group-hover:scale-110`}
@@ -113,7 +115,7 @@ const LightCard = ({
         <div className="flex h-full min-w-0 flex-1 flex-col justify-center gap-3 pt-1">
           <div className="flex items-baseline justify-between pr-1">
             <p className="truncate text-xs leading-none font-bold tracking-widest text-[var(--text-secondary)] uppercase opacity-60">
-              {String(name || t('common.light'))}
+              {title}
             </p>
             <span
               className={`text-lg leading-none font-medium tracking-wide transition-colors ${
@@ -174,7 +176,7 @@ const LightCard = ({
       }}
       role={editMode ? undefined : 'button'}
       tabIndex={editMode ? -1 : 0}
-      className={`touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+      className={`touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={cardStyle}
     >
       {controls}
@@ -183,7 +185,7 @@ const LightCard = ({
           onClick={handleToggleLight}
           className={`flex items-center justify-center transition-all duration-500 ${isOn ? 'bg-amber-500/20 text-amber-400' : 'bg-[var(--glass-bg)] text-[var(--text-muted)]'} ${isDenseMobile ? 'h-10 w-10 rounded-xl' : 'h-12 w-12 rounded-2xl'}`}
           disabled={isUnavailable}
-          aria-label={`${name || t('common.light')}: ${isOn ? t('common.off') : t('common.on')}`}
+          aria-label={`${title}: ${isOn ? t('common.off') : t('common.on')}`}
         >
           <LightIcon
             className={`${isDenseMobile ? 'h-4 w-4' : 'h-5 w-5'} stroke-[1.5px] ${isOn ? 'fill-amber-400/20' : ''} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6`}
@@ -207,8 +209,8 @@ const LightCard = ({
       </div>
       <div className={`${isDenseMobile ? 'mt-1' : 'mt-2'} font-sans`}>
         {!isDenseMobile && (
-          <p className="mb-0.5 text-[10px] leading-none font-bold tracking-[0.2em] text-[var(--text-secondary)] uppercase opacity-60">
-            {String(name || t('common.light'))}
+          <p className="dashboard-card-title dashboard-card-title--truncate mb-0.5">
+            {title}
           </p>
         )}
         <div className={`flex items-baseline gap-1 leading-none ${isDenseMobile ? 'mt-0.5' : 'mt-1'}`}>
@@ -238,7 +240,7 @@ const LightCard = ({
         </div>
         {isDenseMobile && (
           <p className="mt-3 mb-1 text-[10px] leading-none font-bold tracking-[0.2em] text-[var(--text-secondary)] uppercase opacity-60">
-            {String(name || t('common.light'))}
+            {title}
           </p>
         )}
         {/* Helper to keep layout consistent. For non-dimmable, we keep the empty space where slider would be. */}

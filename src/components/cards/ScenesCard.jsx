@@ -13,11 +13,12 @@ const ScenesCard = memo(function ScenesCard({
   cardStyle,
   entities,
   settings,
+  customName,
   editMode,
   callService,
   t,
 }) {
-  const name = settings?.name || 'Stemninger';
+  const name = customName || settings?.name || 'Overskrift';
   const sceneIds = Array.isArray(settings?.scenes) ? settings.scenes : [];
   const [recentlyActivated, setRecentlyActivated] = useState(null);
 
@@ -35,11 +36,11 @@ const ScenesCard = memo(function ScenesCard({
     <div
       {...dragProps}
       style={cardStyle}
-      className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm"
+      className="dashboard-card-padding relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] shadow-sm"
     >
       {controls}
 
-      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="dashboard-card-title mb-3">{name}</h2>
 
       <div className="flex flex-wrap gap-2">
         {sceneIds.length === 0 && editMode && (

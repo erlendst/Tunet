@@ -59,7 +59,7 @@ const CameraCard = memo(function CameraCard({
     entity.state === 'unavailable' ||
     entity.state === 'unknown' ||
     entity.state === 'off';
-  const name = customNames?.[cardId] || attrs.friendly_name || entityId;
+  const name = customNames?.[cardId] || settings?.name || attrs.friendly_name || 'Overskrift';
   const iconName = customIcons?.[cardId] || attrs.icon;
   const Icon = iconName ? getIconComponent(iconName) || Camera : Camera;
   const isSmall = size === 'small';

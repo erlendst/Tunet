@@ -23,12 +23,11 @@ const WEATHER_CONDITION_ICONS = {
 };
 
 function formatDate(locale = 'nb-NO') {
-  return new Date().toLocaleDateString(locale, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  const date = new Date();
+  const weekdayRaw = date.toLocaleDateString(locale, { weekday: 'long' });
+  const weekday = weekdayRaw ? weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1) : '';
+  const month = date.toLocaleDateString(locale, { month: 'long' }).toLowerCase();
+  return `${weekday} ${date.getDate()}. ${month} ${date.getFullYear()}`;
 }
 
 function formatEventTime(eventStart, eventEnd) {
@@ -126,6 +125,7 @@ const TodayCard = memo(function TodayCard({
   cardStyle,
   entities,
   settings,
+  customName,
   conn,
   editMode,
 }) {
@@ -136,6 +136,7 @@ const TodayCard = memo(function TodayCard({
 
   const weatherEntityId = settings?.weatherEntityId || null;
   const calendarIds = Array.isArray(settings?.calendarIds) ? settings.calendarIds : [];
+  const title = customName || settings?.name || 'Overskrift';
 
   const weatherEntity = weatherEntityId ? entities?.[weatherEntityId] : null;
 
@@ -259,7 +260,7 @@ const TodayCard = memo(function TodayCard({
       {controls}
 
       <div className="today-card__header">
-        <span className="today-card__title">I dag</span>
+        <span className="today-card__title">{title}</span>
         <span className="today-card__date">
           {formatDate()}
         </span>

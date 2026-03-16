@@ -362,7 +362,7 @@ const CoverCard = ({
   const supportedFeatures = activeEntity.attributes?.supported_features ?? 0;
   const supportsPosition = (supportedFeatures & 4) !== 0;
 
-  const name = customNames[cardId] || activeEntity.attributes?.friendly_name || activeEntityId;
+  const name = customNames[cardId] || settings?.name || activeEntity.attributes?.friendly_name || 'Overskrift';
   const coverIconName = customIcons[cardId] || activeEntity?.attributes?.icon;
   const Icon = coverIconName ? getIconComponent(coverIconName) || ArrowUpDown : ArrowUpDown;
 
@@ -464,7 +464,7 @@ const CoverCard = ({
       key={cardId}
       {...dragProps}
       data-haptic={editMode ? undefined : 'card'}
-      className={`glass-texture touch-feedback group relative flex h-full items-stretch justify-between overflow-hidden rounded-[2.5rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] font-sans transition-all duration-500 select-none ${isDenseMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''} `}
+      className={`glass-texture touch-feedback group relative flex h-full items-stretch justify-between overflow-hidden rounded-[2.5rem] border border-[var(--glass-border)] bg-[var(--glass-bg)] font-sans transition-all duration-500 select-none ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''} `}
       style={cardStyle}
       onClick={(e) => {
         e.stopPropagation();
@@ -505,9 +505,15 @@ const CoverCard = ({
             )}
           </div>
 
-          <div className={`${isDenseMobile ? 'text-[10px]' : 'text-xs'} truncate font-bold tracking-wider text-[var(--text-secondary)] uppercase opacity-80`}>
-            {name}
-          </div>
+          {isDenseMobile ? (
+            <div className="truncate text-[10px] font-bold tracking-wider text-[var(--text-secondary)] uppercase opacity-80">
+              {name}
+            </div>
+          ) : (
+            <div className="dashboard-card-title dashboard-card-title--truncate">
+              {name}
+            </div>
+          )}
 
           {isMoving && (
             <div className={`${isDenseMobile ? 'mt-0.5 text-[9px]' : 'mt-1 text-[10px]'} animate-pulse font-bold tracking-widest text-[var(--text-primary)] uppercase`}>

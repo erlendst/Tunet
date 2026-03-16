@@ -86,7 +86,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
   }
 
   const picture = getEntityImageUrl(displayEntity?.attributes?.entity_picture);
-  const deviceName = customNames[cardId] || entity?.attributes?.friendly_name || 'Android TV';
+  const deviceName = customNames[cardId] || settings?.name || entity?.attributes?.friendly_name || 'Overskrift';
   const isSmall = size === 'small';
   const isDenseMobile = isMobile && !isSmall;
 
@@ -175,7 +175,7 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
         e.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{ ...cardStyle, color: picture || appLogo ? 'white' : 'var(--text-primary)' }}
     >
       {controls}
@@ -199,11 +199,20 @@ const GenericAndroidTVCard = memo(function GenericAndroidTVCard({
 
       <div className={`relative z-10 flex items-end justify-between ${isDenseMobile ? 'gap-3' : 'gap-4'}`}>
         <div className="min-w-0">
-          <p
-            className={`${picture || appLogo ? 'text-white/70' : 'text-[var(--text-secondary)]'} ${isDenseMobile ? 'mb-0.5 text-[10px]' : 'mb-1 text-xs'} font-bold tracking-widest uppercase opacity-60`}
-          >
-            {deviceName}
-          </p>
+          {isDenseMobile ? (
+            <p
+              className={`${picture || appLogo ? 'text-white/70' : 'text-[var(--text-secondary)]'} mb-0.5 text-[10px] font-bold tracking-widest uppercase opacity-60`}
+            >
+              {deviceName}
+            </p>
+          ) : (
+            <p
+              className="dashboard-card-title dashboard-card-title--truncate mb-3"
+              style={picture || appLogo ? { color: 'white' } : undefined}
+            >
+              {deviceName}
+            </p>
+          )}
           <h3 className={`${isDenseMobile ? 'mb-0.5 text-[1.45rem]' : 'mb-1 text-3xl'} line-clamp-2 leading-none font-thin`}>
             {appName || (isOn ? t('media.homeScreen') : t('status.off'))}
           </h3>

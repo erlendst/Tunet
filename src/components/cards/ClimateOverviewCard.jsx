@@ -43,21 +43,22 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
   cardStyle,
   entities,
   settings,
+  customName,
   editMode,
   t,
 }) {
-  const name = settings?.name || 'Hjemme';
+  const name = customName || settings?.name || 'Overskrift';
   const rooms = Array.isArray(settings?.rooms) ? settings.rooms : [];
 
   return (
     <div
       {...dragProps}
       style={cardStyle}
-      className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm"
+      className="dashboard-card-padding relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] shadow-sm"
     >
       {controls}
 
-      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="dashboard-card-title mb-3">{name}</h2>
 
       <div className="flex min-h-0 flex-1 flex-col">
         {rooms.length === 0 && editMode && (

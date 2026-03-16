@@ -405,11 +405,11 @@ const CalendarCard = memo(function CalendarCard({
         {getControls && getControls(cardId)}
 
         {/* Header */}
-        <div className="flex shrink-0 items-center gap-3 px-5 pt-4 pb-1">
+        <div className="dashboard-card-pad-x dashboard-card-pad-top flex shrink-0 items-center gap-3 pb-1">
           <div className="rounded-xl bg-[var(--accent-bg)] p-2 text-[var(--accent-color)]">
             <IconComp className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
           </div>
-          <h3 className="text-base font-medium tracking-tight text-[var(--text-primary)]">
+          <h3 className="dashboard-card-title">
             {displayName}
           </h3>
         </div>
@@ -575,19 +575,19 @@ const CalendarCard = memo(function CalendarCard({
       {getControls && getControls(cardId)}
 
       {/* Header */}
-      <div className="z-10 flex items-center justify-between p-5 pb-2">
+      <div className="dashboard-card-pad-x dashboard-card-pad-top z-10 flex items-center justify-between pb-2">
         <div className="flex items-center gap-3">
           <div className={`rounded-xl bg-[var(--accent-bg)] p-2 text-[var(--accent-color)]`}>
             <IconComp className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
           </div>
-          <h3 className="text-lg font-medium tracking-tight text-[var(--text-primary)]">
+          <h3 className="dashboard-card-title">
             {displayName}
           </h3>
         </div>
       </div>
 
       {/* Content */}
-      <div className="hide-scrollbar flex-1 space-y-4 overflow-y-auto p-5 pt-0 [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
+      <div className="dashboard-card-pad-x dashboard-card-pad-bottom hide-scrollbar flex-1 space-y-4 overflow-y-auto pt-0 [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
         {selectedCalendars.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-[var(--text-secondary)] opacity-60">
             <IconComp className="mb-2 h-8 w-8" />

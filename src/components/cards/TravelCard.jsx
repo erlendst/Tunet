@@ -201,7 +201,7 @@ export default function TravelCard({
       key={cardId}
       {...dragProps}
       onClick={(e) => { e.stopPropagation(); if (!editMode) onOpen?.(); }}
-      className={`dashboard-action-card relative flex h-full flex-col gap-4 overflow-hidden p-5 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`dashboard-action-card dashboard-card-padding relative flex h-full flex-col gap-4 overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}

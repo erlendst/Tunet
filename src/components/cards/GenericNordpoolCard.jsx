@@ -24,7 +24,7 @@ const GenericNordpoolCard = memo(function GenericNordpoolCard({
 
   if (!entity) return null;
 
-  const name = customNames?.[cardId] || entity.attributes?.friendly_name || cardId;
+  const name = customNames?.[cardId] || settings?.name || entity.attributes?.friendly_name || 'Overskrift';
   const decimals = settings.decimals ?? 2;
   const Icon = customIcons?.[cardId] ? getIconComponent(customIcons[cardId]) || Zap : Zap;
   const isDenseMobile = isMobile && settings.size !== 'small';
@@ -173,7 +173,7 @@ const GenericNordpoolCard = memo(function GenericNordpoolCard({
         e.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-colors duration-500 ${isDenseMobile ? 'p-5' : 'p-7'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-colors duration-500 ${isDenseMobile ? 'p-5' : 'dashboard-card-padding'} ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -207,12 +207,16 @@ const GenericNordpoolCard = memo(function GenericNordpoolCard({
           )}
         </div>
         <div className={isDenseMobile ? 'mt-3' : 'mt-2'}>
-          <p
-            className={`${isDenseMobile ? 'mb-1 text-[10px]' : 'mb-0.5 text-xs'} leading-none font-bold text-[var(--text-secondary)] uppercase opacity-60`}
-            style={{ letterSpacing: '0.05em' }}
-          >
-            {name}
-          </p>
+          {isDenseMobile ? (
+            <p
+              className="mb-1 text-[10px] leading-none font-bold text-[var(--text-secondary)] uppercase opacity-60"
+              style={{ letterSpacing: '0.05em' }}
+            >
+              {name}
+            </p>
+          ) : (
+            <p className="dashboard-card-title dashboard-card-title--truncate mb-3">{name}</p>
+          )}
           {isDenseMobile ? (
             <span className={`text-[10px] font-bold tracking-widest uppercase ${levelColor}`}>
               {levelText}

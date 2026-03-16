@@ -260,7 +260,7 @@
 }
 
 .today-card {
-  padding: clamp(1.4rem, 2.8vw, 2.25rem);
+  padding: clamp(1.35rem, 2.4vw, 1.85rem);
   gap: clamp(1rem, 2vw, 1.4rem);
   background: linear-gradient(
     180deg,
@@ -281,20 +281,19 @@
 }
 
 .today-card__title {
-  font-size: clamp(1.8rem, 4vw, 2.2rem);
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
 }
 
 .today-card__date {
   text-align: right;
-  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
-  font-weight: 500;
-  line-height: 1.2;
-  text-transform: capitalize;
-  color: color-mix(in srgb, var(--text-muted) 82%, var(--text-primary) 18%);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--text-primary);
 }
 
 .today-card__metrics {
@@ -327,12 +326,6 @@
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text-primary);
-}
-
-.today-card__divider {
-  height: 1px;
-  width: 100%;
-  background: color-mix(in srgb, var(--card-border) 82%, var(--text-secondary) 18%);
 }
 
 .today-card__weather {
@@ -533,6 +526,42 @@
     border-top: 0;
     border-left: 1px solid color-mix(in srgb, var(--text-secondary) 14%, transparent);
   }
+}
+.dashboard-card-padding,
+.dashboard-card-pad-x,
+.dashboard-card-pad-y,
+.dashboard-card-pad-top,
+.dashboard-card-pad-bottom {
+  --dashboard-card-padding: clamp(1.35rem, 2.4vw, 1.85rem);
+}
+.dashboard-card-padding {
+  padding: var(--dashboard-card-padding);
+}
+.dashboard-card-pad-x {
+  padding-inline: var(--dashboard-card-padding);
+}
+.dashboard-card-pad-y {
+  padding-block: var(--dashboard-card-padding);
+}
+.dashboard-card-pad-top {
+  padding-top: var(--dashboard-card-padding);
+}
+.dashboard-card-pad-bottom {
+  padding-bottom: var(--dashboard-card-padding);
+}
+.dashboard-card-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+.dashboard-card-title--truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .dashboard-action-card {
   border-radius: 1.5rem;

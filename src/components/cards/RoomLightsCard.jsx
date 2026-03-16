@@ -8,11 +8,12 @@ const RoomLightsCard = memo(function RoomLightsCard({
   cardStyle,
   entities,
   settings,
+  customName,
   editMode,
   callService,
   t,
 }) {
-  const name = settings?.name || 'Lys';
+  const name = customName || settings?.name || 'Overskrift';
   const rooms = Array.isArray(settings?.rooms) ? settings.rooms : [];
   const cardRef = useRef(null);
   const [cols, setCols] = useState(3);
@@ -40,11 +41,11 @@ const RoomLightsCard = memo(function RoomLightsCard({
       ref={cardRef}
       {...dragProps}
       style={cardStyle}
-      className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-sm"
+      className="dashboard-card-padding relative flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] shadow-sm"
     >
       {controls}
 
-      <h2 className="mb-3 text-xl font-bold text-[var(--text-primary)]">{name}</h2>
+      <h2 className="dashboard-card-title mb-3">{name}</h2>
 
       <div
         className="grid gap-2"

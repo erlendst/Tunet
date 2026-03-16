@@ -197,7 +197,7 @@ const WeatherTempCard = memo(function WeatherTempCard({
         e.stopPropagation();
         if (!editMode && onOpen) onOpen();
       }}
-      className={`glass-texture touch-feedback group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border p-7 font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'}`}
+      className={`glass-texture touch-feedback group dashboard-card-padding relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border font-sans transition-all duration-500 ${!editMode ? 'cursor-pointer active:scale-98' : 'cursor-move'}`}
       style={cardStyle}
     >
       {getControls(cardId)}
@@ -223,7 +223,7 @@ const WeatherTempCard = memo(function WeatherTempCard({
           </div>
         </div>
       </div>
-      <div className="relative z-0 -mx-7 mt-auto -mb-7 h-32 overflow-hidden rounded-b-3xl opacity-80">
+      <div className="relative z-0 mt-auto -mx-[clamp(1.75rem,3vw,2.25rem)] -mb-[clamp(1.75rem,3vw,2.25rem)] h-32 overflow-hidden rounded-b-3xl opacity-80">
         <WeatherGraph
           history={historyForDisplay}
           currentTemp={displayTempValue}
