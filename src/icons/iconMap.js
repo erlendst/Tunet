@@ -893,6 +893,14 @@ const addMdiPath = (iconName, path) => {
   cachedAllIconKeys = null;
 };
 
+const fetchMdiSlugPath = async (slug) => {
+  const res = await fetch(`./api/icons/mdi/${encodeURIComponent(slug)}`);
+  if (!res.ok) return null;
+  const body = await res.json().catch(() => null);
+  const path = body?.path;
+  return typeof path === 'string' && path.length > 0 ? path : null;
+};
+
 const fetchMdiPath = async (iconName) => {
   if (!iconName || !iconName.startsWith('mdi:')) return null;
   if (mdiPathByName.has(iconName)) return mdiPathByName.get(iconName);
@@ -901,28 +909,25 @@ const fetchMdiPath = async (iconName) => {
   if (existing) return existing;
 
   const iconSlug = iconName.slice(4).trim().toLowerCase();
-  const promise = fetch(`./api/icons/mdi/${encodeURIComponent(iconSlug)}`)
-    .then(async (res) => {
-      if (!res.ok) {
-        mdiMissingNames.add(iconName);
-        return null;
-      }
-      const body = await res.json().catch(() => null);
-      const path = body?.path;
-      if (typeof path === 'string' && path.length > 0) {
+  const promise = (async () => {
+    try {
+      // Prefer outline variant; fall back to filled if not available
+      const outlineSlug = iconSlug.endsWith('-outline') ? null : `${iconSlug}-outline`;
+      const path = (outlineSlug ? await fetchMdiSlugPath(outlineSlug) : null)
+        ?? await fetchMdiSlugPath(iconSlug);
+      if (path) {
         addMdiPath(iconName, path);
         return path;
       }
       mdiMissingNames.add(iconName);
       return null;
-    })
-    .catch(() => {
+    } catch {
       mdiMissingNames.add(iconName);
       return null;
-    })
-    .finally(() => {
+    } finally {
       mdiPendingByName.delete(iconName);
-    });
+    }
+  })();
 
   mdiPendingByName.set(iconName, promise);
   return promise;

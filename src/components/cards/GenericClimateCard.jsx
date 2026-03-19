@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Minus, Plus, Thermometer } from '../../icons';
+import { Minus, Plus, Thermometer, getIconComponent } from '../../icons';
 import { useConfig, useHomeAssistantMeta } from '../../contexts';
 import { formatKindValueForDisplay, getEffectiveUnitMode } from '../../utils';
 
@@ -17,6 +17,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
   displayTemperatureValue,
   displayTemperatureUnit,
   settings,
+  iconName,
 }) {
   const { unitsMode } = useConfig();
   const { haConfig } = useHomeAssistantMeta();
@@ -38,8 +39,9 @@ const GenericClimateCard = memo(function GenericClimateCard({
   const numericTargetTemp = Number(targetTemp);
   const resolvedTargetTemp = Number.isFinite(numericTargetTemp) ? numericTargetTemp : 21;
   const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
+  const ClimateIcon = (iconName && getIconComponent(iconName)) || Thermometer;
   const buttonBaseClass =
-    'flex items-center justify-center rounded-[24px] bg-[#e8ece6] text-[#2A5A3B] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'card-btn flex items-center justify-center bg-[#e8ece6] text-[#2A5A3B] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (isSmall) {
     return (
@@ -57,7 +59,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
           <div className="flex flex-col">
             <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
             <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-primary)]">
-              <Thermometer className="h-3.5 w-3.5 text-[#2A5A3B]" strokeWidth={1.75} />
+              <ClimateIcon className="h-3.5 w-3.5 text-[#2A5A3B]" />
               {displayPrimaryTemp.text}
             </span>
           </div>
@@ -96,7 +98,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
         <div className="flex flex-col">
           <span className="dashboard-card-title dashboard-card-title--truncate">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
-            <Thermometer className="h-5 w-5 text-[#2A5A3B]" strokeWidth={1.75} />
+            <ClimateIcon className="h-5 w-5 text-[#2A5A3B]" />
             {displayPrimaryTemp.text}
           </span>
         </div>

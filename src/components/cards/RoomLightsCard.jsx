@@ -48,7 +48,7 @@ const RoomLightsCard = memo(function RoomLightsCard({
       <h2 className="dashboard-card-title mb-3">{name}</h2>
 
       <div
-        className="grid gap-2"
+        className="grid gap-3"
         style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
       >
         {rooms.length === 0 && editMode && (
@@ -66,7 +66,7 @@ const RoomLightsCard = memo(function RoomLightsCard({
               key={idx}
               type="button"
               onClick={() => activateRoom(room.sceneId)}
-              className={`aspect-[1.22/1] flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 transition-all duration-200 ${
+              className={`card-btn aspect-[1.28/1] flex flex-col items-center justify-center gap-1.5 p-3 transition-all duration-200 ${
                 isOn
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
                   : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'

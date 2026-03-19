@@ -260,7 +260,7 @@
 }
 
 .today-card {
-  padding: clamp(1.35rem, 2.4vw, 1.85rem);
+  padding: clamp(0.75rem, 1.4vw, 1.1rem);
   gap: clamp(1rem, 2vw, 1.4rem);
   background: linear-gradient(
     180deg,
@@ -281,7 +281,7 @@
 }
 
 .today-card__title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -330,7 +330,7 @@
 
 .today-card__weather {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: clamp(0.5rem, 1vw, 1rem);
   align-items: start;
 }
@@ -383,8 +383,22 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.6rem;
   min-height: 0;
+}
+
+.today-card__day-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.today-card__day-heading {
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  font-weight: 600;
+  color: var(--accent-color);
+  padding: 0.5rem 0.3rem 0.1rem;
+  letter-spacing: 0.01em;
 }
 
 .car-card__metrics {
@@ -408,11 +422,12 @@
   height: 1.55rem;
   flex: 0 0 auto;
   color: color-mix(in srgb, var(--text-secondary) 78%, var(--text-primary) 22%);
+  stroke-width: 1.5;
 }
 
 .car-card__metric-value {
   min-width: 0;
-  font-size: clamp(1rem, 2.6vw, 1.2rem);
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -427,19 +442,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  min-height: 4.5rem;
-  border: 1px solid color-mix(in srgb, var(--card-border) 88%, white 12%);
-  border-radius: 1.2rem;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--card-bg) 97%, white 3%) 0%,
-    color-mix(in srgb, var(--card-bg) 92%, var(--glass-bg) 8%) 100%
-  );
-  padding: 0.95rem 1.35rem;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.32) inset,
-    0 3px 10px rgba(24, 44, 25, 0.04);
+  gap: 0.6rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.3rem;
 }
 
 .today-card__event-title {
@@ -447,18 +452,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
 .today-card__event-time {
   flex: 0 0 auto;
-  font-size: clamp(1rem, 2.3vw, 1.25rem);
-  font-weight: 500;
-  line-height: 1.2;
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+  font-weight: 400;
+  line-height: 1.3;
   color: color-mix(in srgb, var(--text-secondary) 88%, var(--text-primary) 12%);
 }
 
@@ -466,6 +471,13 @@
   margin: auto 0;
   font-size: 0.95rem;
   color: var(--text-muted);
+}
+
+.today-card__no-events {
+  font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+  color: #657261;
+  padding: 0.15rem 0.3rem;
+  font-style: normal;
 }
 
 @media (max-width: 640px) {
@@ -478,11 +490,6 @@
     text-align: left;
   }
 
-  .today-card__event {
-    min-height: 4rem;
-    padding: 0.9rem 1rem;
-  }
-
   .today-card__weather {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: 1rem;
@@ -490,7 +497,7 @@
 
   .today-card__event-title,
   .today-card__event-time {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 }
 .app-modal-panel button[class*='relative h-6 w-12 rounded-full'] {
@@ -532,7 +539,7 @@
 .dashboard-card-pad-y,
 .dashboard-card-pad-top,
 .dashboard-card-pad-bottom {
-  --dashboard-card-padding: clamp(1.35rem, 2.4vw, 1.85rem);
+  --dashboard-card-padding: clamp(0.75rem, 1.4vw, 1.1rem);
 }
 .dashboard-card-padding {
   padding: var(--dashboard-card-padding);
@@ -549,8 +556,12 @@
 .dashboard-card-pad-bottom {
   padding-bottom: var(--dashboard-card-padding);
 }
+.card-btn {
+  border-radius: var(--button-border-radius);
+}
+
 .dashboard-card-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.03em;

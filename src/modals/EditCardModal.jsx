@@ -2238,14 +2238,18 @@ export default function EditCardModal({
             <div className="space-y-3">
               {(() => {
                 const sensorOptions = sortByName(byDomain('sensor'));
-                const travelIds = Array.isArray(editSettings.travelIds) ? editSettings.travelIds.filter(Boolean).slice(0, 2) : [];
+                const travelIds = Array.isArray(editSettings.travelIds) ? editSettings.travelIds.filter(Boolean).slice(0, 4) : [];
                 const primaryTravelId = travelIds[0] || editSettings.travelId || null;
                 const secondaryTravelId = travelIds[1] || editSettings.travelIdSecondary || null;
-                const saveTravelIds = (primary, secondary) => {
-                  const next = Array.from(new Set([primary, secondary].filter(Boolean))).slice(0, 2);
+                const tertiaryTravelId = travelIds[2] || editSettings.travelIdTertiary || null;
+                const quaternaryTravelId = travelIds[3] || editSettings.travelIdQuaternary || null;
+                const saveTravelIds = (primary, secondary, tertiary, quaternary) => {
+                  const next = Array.from(new Set([primary, secondary, tertiary, quaternary].filter(Boolean))).slice(0, 4);
                   saveCardSetting(editSettingsKey, 'travelIds', next);
                   saveCardSetting(editSettingsKey, 'travelId', next[0] || null);
                   saveCardSetting(editSettingsKey, 'travelIdSecondary', next[1] || null);
+                  saveCardSetting(editSettingsKey, 'travelIdTertiary', next[2] || null);
+                  saveCardSetting(editSettingsKey, 'travelIdQuaternary', next[3] || null);
                 };
 
                 return (
@@ -2254,7 +2258,7 @@ export default function EditCardModal({
                       label={t('travel.primaryStop') || 'Primary stop'}
                       value={primaryTravelId}
                       options={sensorOptions}
-                      onChange={(id) => saveTravelIds(id, secondaryTravelId)}
+                      onChange={(id) => saveTravelIds(id, secondaryTravelId, tertiaryTravelId, quaternaryTravelId)}
                       placeholder={t('travel.selectPrimaryStop') || 'Select primary stop'}
                       entities={entities}
                       t={t}
@@ -2263,12 +2267,30 @@ export default function EditCardModal({
                       label={t('travel.secondaryStop') || 'Secondary stop (optional)'}
                       value={secondaryTravelId}
                       options={sensorOptions.filter((id) => id !== primaryTravelId)}
-                      onChange={(id) => saveTravelIds(primaryTravelId, id)}
+                      onChange={(id) => saveTravelIds(primaryTravelId, id, tertiaryTravelId, quaternaryTravelId)}
                       placeholder={t('travel.selectSecondaryStop') || 'Select secondary stop'}
                       entities={entities}
                       t={t}
                     />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <SearchableSelect
+                      label={t('travel.tertiaryStop') || 'Tertiary stop (optional)'}
+                      value={tertiaryTravelId}
+                      options={sensorOptions.filter((id) => id !== primaryTravelId && id !== secondaryTravelId)}
+                      onChange={(id) => saveTravelIds(primaryTravelId, secondaryTravelId, id, quaternaryTravelId)}
+                      placeholder={t('travel.selectTertiaryStop') || 'Select tertiary stop'}
+                      entities={entities}
+                      t={t}
+                    />
+                    <SearchableSelect
+                      label={t('travel.quaternaryStop') || 'Fourth stop (optional)'}
+                      value={quaternaryTravelId}
+                      options={sensorOptions.filter((id) => id !== primaryTravelId && id !== secondaryTravelId && id !== tertiaryTravelId)}
+                      onChange={(id) => saveTravelIds(primaryTravelId, secondaryTravelId, tertiaryTravelId, id)}
+                      placeholder={t('travel.selectQuaternaryStop') || 'Select fourth stop'}
+                      entities={entities}
+                      t={t}
+                    />
+                    <div className="grid grid-cols-1 gap-3">
                       <div className="space-y-2">
                         <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
                           {t('travel.primaryTitle') || 'Primary stop title'}
@@ -2303,6 +2325,44 @@ export default function EditCardModal({
                           value={editSettings.travelIconSecondary || null}
                           onSelect={(iconName) => saveCardSetting(editSettingsKey, 'travelIconSecondary', iconName)}
                           onClear={() => saveCardSetting(editSettingsKey, 'travelIconSecondary', null)}
+                          t={t}
+                          maxHeightClass="max-h-56"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
+                          {t('travel.tertiaryTitle') || 'Tertiary stop title'}
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 rounded-xl popup-surface text-sm text-[var(--text-primary)] outline-none focus:border-blue-500/50"
+                          defaultValue={editSettings.travelTitleTertiary || ''}
+                          onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitleTertiary', e.target.value.trim() || null)}
+                          placeholder={t('travel.tertiaryTitlePlaceholder') || 'Optional custom name'}
+                        />
+                        <IconPicker
+                          value={editSettings.travelIconTertiary || null}
+                          onSelect={(iconName) => saveCardSetting(editSettingsKey, 'travelIconTertiary', iconName)}
+                          onClear={() => saveCardSetting(editSettingsKey, 'travelIconTertiary', null)}
+                          t={t}
+                          maxHeightClass="max-h-56"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] uppercase font-bold tracking-widest text-gray-500 ml-1">
+                          {t('travel.quaternaryTitle') || 'Fourth stop title'}
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 rounded-xl popup-surface text-sm text-[var(--text-primary)] outline-none focus:border-blue-500/50"
+                          defaultValue={editSettings.travelTitleQuaternary || ''}
+                          onBlur={(e) => saveCardSetting(editSettingsKey, 'travelTitleQuaternary', e.target.value.trim() || null)}
+                          placeholder={t('travel.quaternaryTitlePlaceholder') || 'Optional custom name'}
+                        />
+                        <IconPicker
+                          value={editSettings.travelIconQuaternary || null}
+                          onSelect={(iconName) => saveCardSetting(editSettingsKey, 'travelIconQuaternary', iconName)}
+                          onClear={() => saveCardSetting(editSettingsKey, 'travelIconQuaternary', null)}
                           t={t}
                           maxHeightClass="max-h-56"
                         />

@@ -56,7 +56,7 @@ const ScenesCard = memo(function ScenesCard({
               key={sceneId}
               type="button"
               onClick={() => activateScene(sceneId)}
-              className={`text-md rounded-2xl px-6 py-4 font-medium transition-all duration-300 ${
+              className={`card-btn text-md px-6 py-4 font-medium transition-all duration-300 ${
                 isActive
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
                   : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'

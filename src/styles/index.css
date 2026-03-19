@@ -7,7 +7,8 @@
 
 /* Card border radius — controlled from settings */
 :root {
-  --card-border-radius: 16px;
+  --card-border-radius: 24px;
+  --button-border-radius: 10px;
   --color-blue-200: color-mix(in srgb, var(--glass-bg-hover) 65%, var(--text-secondary) 35%);
   --color-blue-300: color-mix(in srgb, var(--glass-border) 45%, var(--text-secondary) 55%);
   --color-blue-400: color-mix(in srgb, var(--text-secondary) 78%, var(--text-primary) 22%);

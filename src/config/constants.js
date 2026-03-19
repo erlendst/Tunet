@@ -18,5 +18,5 @@ export const HISTORY_REFRESH_INTERVAL = 300000; // 5 minutes - how often to refr
 export const MOBILE_BREAKPOINT = 480; // px - screen width threshold for mobile layout
 
 // Dashboard grid sizing
-export const MOBILE_GRID_ROW_PX = 82; // px - base dashboard row height on mobile
-export const DESKTOP_GRID_ROW_PX = 68; // px - compact desktop row height to fit four stacked cards
+export const MOBILE_GRID_ROW_PX = 68; // px - base dashboard row height on mobile
+export const DESKTOP_GRID_ROW_PX = 56; // px - compact desktop row height to fit four stacked cards

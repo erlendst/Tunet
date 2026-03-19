@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, memo } from 'react';
 import { AlertCircle, Cloud, CloudRain, CloudSun, Moon, Snowflake, Sun, Wind } from '../../icons';
 import { getCalendarEvents, getForecast } from '../../services/haClient';
 
-const HOUR_FORECAST_LIMIT = 6;
+const HOUR_FORECAST_LIMIT = 5;
 
 const WEATHER_CONDITION_ICONS = {
   'clear-night': Moon,
@@ -45,16 +45,31 @@ function formatEventTime(eventStart, eventEnd) {
   return `${start} – ${end}`;
 }
 
-function isToday(eventDate) {
+function getEventDateKey(eventDate) {
   const value = eventDate?.dateTime || eventDate?.date || eventDate;
   const d = new Date(value);
-  if (isNaN(d.getTime())) return false;
-  const today = new Date();
-  return (
-    d.getFullYear() === today.getFullYear() &&
-    d.getMonth() === today.getMonth() &&
-    d.getDate() === today.getDate()
-  );
+  if (isNaN(d.getTime())) return '';
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function getEventDate(eventDate) {
+  const value = eventDate?.dateTime || eventDate?.date || eventDate;
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function groupEventsByDay(events) {
+  const groups = [];
+  const keyToIndex = new Map();
+  for (const evt of events) {
+    const key = getEventDateKey(evt.start);
+    if (!keyToIndex.has(key)) {
+      keyToIndex.set(key, groups.length);
+      groups.push({ key, date: getEventDate(evt.start), events: [] });
+    }
+    groups[keyToIndex.get(key)].events.push(evt);
+  }
+  return groups;
 }
 
 function formatWeatherValue(value, maxFractionDigits = 1) {
@@ -180,6 +195,7 @@ const TodayCard = memo(function TodayCard({
         const start = new Date();
         start.setHours(0, 0, 0, 0);
         const end = new Date();
+        end.setDate(end.getDate() + 4);
         end.setHours(23, 59, 59, 999);
 
         const result = await getCalendarEvents(conn, {
@@ -194,7 +210,7 @@ const TodayCard = memo(function TodayCard({
         Object.values(result).forEach((cal) => {
           if (cal && Array.isArray(cal.events)) allEvents = [...allEvents, ...cal.events];
         });
-        allEvents = allEvents.filter((e) => e && e.start && isToday(e.start));
+        allEvents = allEvents.filter((e) => e && e.start);
         allEvents.sort((a, b) => {
           const ta = new Date(a.start?.dateTime || a.start?.date || a.start).getTime();
           const tb = new Date(b.start?.dateTime || b.start?.date || b.start).getTime();
@@ -289,22 +305,41 @@ const TodayCard = memo(function TodayCard({
         {editMode && events.length === 0 && calendarIds.length === 0 && (
           <span className="today-card__empty">Velg kalender i innstillinger</span>
         )}
-        {events.map((evt, idx) => {
-          const timeStr = formatEventTime(evt.start, evt.end);
+        {(() => {
+          const eventGroups = groupEventsByDay(events);
+          return Array.from({ length: 4 }, (_, i) => {
+          const day = new Date();
+          day.setDate(day.getDate() + i);
+          day.setHours(0, 0, 0, 0);
+          const key = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+          const group = eventGroups.find((g) => g.key === key);
+          const dayHeading = i === 0
+            ? 'I dag'
+            : day.toLocaleDateString('nb-NO', { weekday: 'long' }).replace(/^\w/, (c) => c.toUpperCase());
           return (
-            <div
-              key={idx}
-              className="today-card__event"
-            >
-              <span className="today-card__event-title">
-                {evt.summary || evt.title || '–'}
-              </span>
-              {timeStr && (
-                <span className="today-card__event-time">{timeStr}</span>
+            <div key={key} className="today-card__day-group">
+              <span className="today-card__day-heading">{dayHeading}</span>
+              {group && group.events.length > 0 ? (
+                group.events.map((evt, idx) => {
+                  const timeStr = formatEventTime(evt.start, evt.end);
+                  return (
+                    <div key={idx} className="today-card__event">
+                      <span className="today-card__event-title">
+                        {evt.summary || evt.title || '–'}
+                      </span>
+                      {timeStr && (
+                        <span className="today-card__event-time">{timeStr}</span>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <span className="today-card__no-events">Ingenting i kalenderen denne dagen</span>
               )}
             </div>
           );
-        })}
+        });
+        })()}
       </div>
     </div>
   );

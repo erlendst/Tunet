@@ -1,4 +1,3 @@
-import { Bus } from '../../icons';
 import { getIconComponent } from '../../icons';
 
 const normalizeKey = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -157,14 +156,14 @@ const getCustomStopTitle = (settings, index) => {
   if (!settings) return null;
   if (index === 0) return settings.travelTitlePrimary || null;
   if (index === 1) return settings.travelTitleSecondary || null;
+  if (index === 2) return settings.travelTitleTertiary || null;
+  if (index === 3) return settings.travelTitleQuaternary || null;
   return null;
 };
 
-// Infer transport icon from entity ID/name. Placeholder — user can customize icon.
-const getTransportIcon = (entity, customIconName) => {
-  if (customIconName) return getIconComponent(customIconName) || Bus;
-  // Placeholder: always returns Bus. In future, detect tram/metro from entity ID.
-  return Bus;
+const getTransportIcon = (customIconName) => {
+  if (customIconName) return getIconComponent(customIconName) || null;
+  return null;
 };
 
 export default function TravelCard({
@@ -186,7 +185,7 @@ export default function TravelCard({
 
   const sources = (Array.isArray(sensorEntities) ? sensorEntities : [entity])
     .filter(Boolean)
-    .slice(0, 2)
+    .slice(0, 4)
     .map((source, index) => ({
       title: getCustomStopTitle(settings, index) || getStopTitle(source),
       rows: buildDepartureRows(source, translate).slice(0, rowsToShow),
@@ -201,7 +200,7 @@ export default function TravelCard({
       key={cardId}
       {...dragProps}
       onClick={(e) => { e.stopPropagation(); if (!editMode) onOpen?.(); }}
-      className={`dashboard-action-card dashboard-card-padding relative flex h-full flex-col gap-4 overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
+      className={`dashboard-action-card dashboard-card-padding relative flex h-full flex-col gap-3 overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'}`}
       style={cardStyle}
     >
       {controls}
@@ -209,16 +208,20 @@ export default function TravelCard({
       {sources.map((section, sectionIndex) => {
         const sectionCustomIcon = sectionIndex === 0
           ? settings?.travelIconPrimary
-          : settings?.travelIconSecondary;
-        const TransportIcon = getTransportIcon(section.entity, sectionCustomIcon || customIcons?.[cardId]);
+          : sectionIndex === 1
+            ? settings?.travelIconSecondary
+            : sectionIndex === 2
+              ? settings?.travelIconTertiary
+              : settings?.travelIconQuaternary;
+        const TransportIcon = getTransportIcon(sectionCustomIcon || customIcons?.[cardId]);
         return (
           <div key={`${section.title || 'section'}-${sectionIndex}`}>
             {/* Platform header */}
-            <div className="flex items-center justify-between gap-2 py-2.5">
+            <div className="flex items-center justify-between gap-2 py-1">
               <span className="text-sm font-bold text-[var(--text-primary)]">
                 {section.title || '–'}
               </span>
-              <TransportIcon className="h-4 w-4 shrink-0 text-[var(--accent-color)]" />
+              {TransportIcon && <TransportIcon className="h-4 w-4 shrink-0 text-[var(--accent-color)]" />}
             </div>
 
             {/* Departure rows */}
@@ -226,7 +229,7 @@ export default function TravelCard({
               {section.rows.map((row, index) => (
                 <div key={`${row.route}-${row.displayTime}-${index}`}>
                   {index > 0 && <div className="h-px bg-[var(--card-border)]" />}
-                  <div className="flex items-center justify-between gap-3 py-2.5">
+                  <div className="flex items-center justify-between gap-3 py-2">
                     <span className="truncate text-sm text-[var(--text-primary)]">
                       {row.route || translate('travel.departureFallback')}
                     </span>

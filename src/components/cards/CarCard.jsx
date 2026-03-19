@@ -248,11 +248,9 @@ const CarCard = ({
     >
       {controls}
 
-      <div className="mb-0 flex items-start justify-between gap-4">
-        <div className="flex min-w-0 flex-col">
-          <span className="dashboard-card-title dashboard-card-title--truncate mb-3">
-            {name}
-          </span>
+      <div className="grid grid-cols-[1fr_1.8fr] items-center gap-4">
+        <div className="flex flex-col gap-2">
+          <span className="dashboard-card-title dashboard-card-title--truncate">{name}</span>
           <span
             className={`text-[2.8rem] leading-none font-light tracking-tight ${
               isCharging ? 'text-[var(--status-success-fg)]' : 'text-[var(--text-primary)]'
@@ -260,35 +258,29 @@ const CarCard = ({
           >
             {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
           </span>
+          {lockId && (
+            <span className="car-card__metric-value">{lockLabel}</span>
+          )}
         </div>
 
-        {lockId && (
-          <div className="flex shrink-0 items-center gap-2 text-[var(--text-primary)]">
-            <span className="text-xl leading-none font-light">{lockLabel}</span>
-            {isLocked ? (
-              <Lock className="h-5 w-5" strokeWidth={1.5} />
-            ) : (
-              <Unlock className="h-5 w-5" strokeWidth={1.5} />
-            )}
+        {resolvedImageUrl && (
+          <div className="flex items-center justify-end overflow-hidden">
+            <img
+              src={resolvedImageUrl}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none max-h-[240px] w-full object-contain select-none"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
           </div>
         )}
       </div>
 
-      {resolvedImageUrl && (
-        <div className="flex items-center justify-center overflow-hidden">
-          <img
-            src={resolvedImageUrl}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none max-h-[240px] w-[92%] object-contain select-none"
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
-        </div>
-      )}
-
       {bottomSensors.length > 0 && (
+        <div>
+          <div className="h-px bg-[var(--card-border)] mb-3" />
         <div className="car-card__metrics">
           {bottomSensors.map(({ key, iconName, fallbackIcon: FallbackIcon, value, toneClass }) => {
             const MetricIcon = getIconComponent(iconName) || FallbackIcon;
@@ -299,6 +291,7 @@ const CarCard = ({
               </div>
             );
           })}
+        </div>
         </div>
       )}
     </div>

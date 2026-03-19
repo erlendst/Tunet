@@ -8,8 +8,8 @@ export function renderTravelCard(cardId, dragProps, getControls, cardStyle, sett
   const settings = getSettings(cardSettings, settingsKey, cardId);
   const configuredIds = Array.isArray(settings.travelIds)
     ? settings.travelIds
-    : [settings.travelId, settings.travelIdSecondary].filter(Boolean);
-  const sensorIds = Array.from(new Set(configuredIds.filter(Boolean))).slice(0, 2);
+    : [settings.travelId, settings.travelIdSecondary, settings.travelIdTertiary, settings.travelIdQuaternary].filter(Boolean);
+  const sensorIds = Array.from(new Set(configuredIds.filter(Boolean))).slice(0, 4);
   const sensorEntities = sensorIds.map((id) => entities[id]).filter(Boolean);
   const primaryEntityId = sensorIds[0] || null;
 

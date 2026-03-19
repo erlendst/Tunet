@@ -78,16 +78,11 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
               {idx > 0 && <div className="h-px bg-[var(--card-border)]" />}
               <div className="flex flex-1 items-center justify-between py-2.5">
                 <div className="flex items-center gap-3">
-                  {Icon ? (
-                    <Icon className="h-5.5 w-5.5 text-[var(--text-muted)]" />
-                  ) : (
-                    <div className="h-5.5 w-5.5" />
-                  )}
-                  <span className="text-lg text-[var(--text-primary)]">{room.name || '–'}</span>
+                  <span className="text-base text-[var(--text-primary)]">{room.name || '–'}</span>
                 </div>
                 <div className="flex items-center gap-5">
                   {tempValue != null && (
-                    <div className="flex items-center gap-1.5 text-lg text-[var(--text-secondary)]">
+                    <div className="flex items-center gap-1.5 text-base text-[var(--text-secondary)]">
                       <TempIcon className="h-5 w-5" />
                       <span>
                         {tempValue}
@@ -96,7 +91,7 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
                     </div>
                   )}
                   {humidityValue != null && (
-                    <div className="flex items-center gap-1.5 text-lg text-[var(--text-secondary)]">
+                    <div className="flex items-center gap-1.5 text-base text-[var(--text-secondary)]">
                       <HumidityIcon className="h-5 w-5" />
                       <span>{humidityValue}%</span>
                     </div>

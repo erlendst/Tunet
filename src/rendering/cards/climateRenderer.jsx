@@ -14,6 +14,7 @@ export function renderGenericClimateCard(
     editMode,
     cardSettings,
     customNames,
+    customIcons,
     callService,
     setActiveClimateEntityModal,
     t,
@@ -68,6 +69,7 @@ export function renderGenericClimateCard(
       displayTemperatureValue={displayTemperatureValue}
       displayTemperatureUnit={displayTemperatureUnit}
       settings={settings}
+      iconName={customIcons?.[cardId] || null}
     />
   );
 }
