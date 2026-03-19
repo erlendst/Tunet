@@ -135,6 +135,31 @@ const CarCard = ({
         unitMode: effectiveUnitMode,
       });
   const locationLabel = locationId ? getS(locationId) : null;
+  const locationEntity = locationId ? entities[locationId] : null;
+  const isHome = locationEntity?.state === 'home';
+  const lat = locationEntity?.attributes?.latitude ?? null;
+  const lon = locationEntity?.attributes?.longitude ?? null;
+
+  const [resolvedAddress, setResolvedAddress] = useState(null);
+
+  useEffect(() => {
+    if (isHome || !lat || !lon) {
+      setResolvedAddress(null);
+      return;
+    }
+    let cancelled = false;
+    fetch(
+      `https://ws.geonorge.no/adresser/v1/punktsok?lat=${lat}&lon=${lon}&radius=200&koordsys=4326&utkoordsys=4326&treffPerSide=1&side=0&asciiKompatibel=true`
+    )
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (cancelled) return;
+        const address = data?.adresser?.[0]?.adressetekst;
+        setResolvedAddress(address || null);
+      })
+      .catch(() => { if (!cancelled) setResolvedAddress(null); });
+    return () => { cancelled = true; };
+  }, [isHome, lat, lon]);
 
   const chargingState = getSafeState(entities, effectiveChargingId);
   const pluggedState = getSafeState(entities, pluggedId);
@@ -153,10 +178,9 @@ const CarCard = ({
     displayRangeValue !== null
       ? `${formatUnitValue(displayRangeValue, { fallback: '--' })} ${rangeUnit}`
       : '--';
-  const locationDisplay =
-    locationLabel && locationLabel !== '--'
-      ? String(locationLabel)
-      : t('common.unknown') || 'Ukjent';
+  const locationDisplay = isHome
+    ? (locationLabel || t('common.home') || 'Hjemme')
+    : resolvedAddress || (locationLabel && locationLabel !== '--' ? String(locationLabel) : t('common.unknown') || 'Ukjent');
   const bottomSensors = [
     rangeId
       ? {

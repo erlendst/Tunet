@@ -19,7 +19,7 @@ const ScenesCard = memo(function ScenesCard({
   t,
 }) {
   const name = customName || settings?.name || 'Overskrift';
-  const sceneIds = Array.isArray(settings?.scenes) ? settings.scenes : [];
+  const sceneIds = (Array.isArray(settings?.scenes) ? settings.scenes : []).filter((id) => entities?.[id]);
   const [recentlyActivated, setRecentlyActivated] = useState(null);
 
   const activateScene = useCallback(
@@ -56,7 +56,7 @@ const ScenesCard = memo(function ScenesCard({
               key={sceneId}
               type="button"
               onClick={() => activateScene(sceneId)}
-              className={`card-btn text-md px-6 py-4 font-medium transition-all duration-300 ${
+              className={`card-btn text-sm px-6 py-4 font-medium transition-all duration-300 ${
                 isActive
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
                   : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'

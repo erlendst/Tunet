@@ -2771,7 +2771,7 @@ export default function EditCardModal({
 
           {isEditRoomLights && editSettingsKey && (() => {
             const lightOptions = sortByName(byDomain('light'));
-            const sceneOptions = sortByName(byDomain('scene'));
+            const scriptOptions = sortByName(byDomain('script'));
             const rooms = Array.isArray(editSettings.rooms) ? editSettings.rooms : [];
             const updateRoom = (index, field, value) => {
               const next = [...rooms];
@@ -2827,11 +2827,11 @@ export default function EditCardModal({
                         t={t}
                       />
                       <SearchableSelect
-                        label="Scene (aktiveres ved klikk)"
-                        value={room.sceneId || null}
-                        options={sceneOptions}
-                        onChange={(id) => updateRoom(idx, 'sceneId', id)}
-                        placeholder="Velg scene"
+                        label="Script (aktiveres ved klikk)"
+                        value={room.scriptId || null}
+                        options={scriptOptions}
+                        onChange={(id) => updateRoom(idx, 'scriptId', id)}
+                        placeholder="Velg script"
                         entities={entities}
                         t={t}
                       />

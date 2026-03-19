@@ -29,9 +29,11 @@ const RoomLightsCard = memo(function RoomLightsCard({
   }, []);
 
   const activateRoom = useCallback(
-    (sceneId) => {
-      if (editMode || !sceneId) return;
-      callService?.('scene', 'turn_on', { entity_id: sceneId });
+    (room) => {
+      if (editMode) return;
+      if (room.scriptId) {
+        callService?.('script', 'turn_on', { entity_id: room.scriptId });
+      }
     },
     [editMode, callService]
   );
@@ -65,19 +67,14 @@ const RoomLightsCard = memo(function RoomLightsCard({
             <button
               key={idx}
               type="button"
-              onClick={() => activateRoom(room.sceneId)}
-              className={`card-btn aspect-[1.28/1] flex flex-col items-center justify-center gap-1.5 p-3 transition-all duration-200 ${
+              onClick={() => activateRoom(room)}
+              className={`card-btn aspect-[1.28/1] flex flex-col items-center justify-center gap-1.5 p-3 outline-none transition-all duration-200 ${
                 isOn
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
                   : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'
               }`}
             >
-              {Icon && (
-                <Icon
-                  className="h-5 w-5"
-                  strokeWidth={1.5}
-                />
-              )}
+              {Icon && <Icon className="h-5 w-5" />}
               <span className="text-center text-xs font-medium leading-tight">
                 {room.name || '–'}
               </span>
