@@ -15,6 +15,9 @@ const db = new Database(dbPath);
 // Enable WAL mode for better concurrent read performance
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
+db.pragma('synchronous = NORMAL');
+db.pragma('cache_size = -8000');
+db.pragma('temp_store = MEMORY');
 
 // Create tables
 db.exec(`
