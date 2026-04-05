@@ -354,6 +354,34 @@ export function CarMappingsSection({
                     />
                   </div>
                 )}
+                {st.key === 'lockId' && (
+                  <div className="mt-3 space-y-2">
+                    <div>
+                      <div className="mb-1 ml-1 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                        {t('car.lockIconLocked') || 'Locked icon'}
+                      </div>
+                      <IconPicker
+                        value={editSettings['lockIcon'] || null}
+                        onSelect={(iconName) => saveCardSetting(editSettingsKey, 'lockIcon', iconName)}
+                        onClear={() => saveCardSetting(editSettingsKey, 'lockIcon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
+                      />
+                    </div>
+                    <div>
+                      <div className="mb-1 ml-1 text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                        {t('car.lockIconUnlocked') || 'Unlocked icon'}
+                      </div>
+                      <IconPicker
+                        value={editSettings['unlockIcon'] || null}
+                        onSelect={(iconName) => saveCardSetting(editSettingsKey, 'unlockIcon', iconName)}
+                        onClear={() => saveCardSetting(editSettingsKey, 'unlockIcon', null)}
+                        t={t}
+                        maxHeightClass="max-h-56"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

@@ -114,6 +114,8 @@ const CarCard = ({
     tempId,
     vehicleImageUrl,
     lockId,
+    lockIcon,
+    unlockIcon,
     timeToFullId,
   } = settings;
   const effectiveChargingId = chargingStateId || chargingId;
@@ -211,6 +213,15 @@ const CarCard = ({
           toneClass: 'car-card__metric-value',
         }
       : null,
+    lockId
+      ? {
+          key: 'lock',
+          iconName: (isLocked ? lockIcon : unlockIcon) || null,
+          fallbackIcon: isLocked ? Lock : Unlock,
+          value: lockLabel,
+          toneClass: 'car-card__metric-value',
+        }
+      : null,
   ].filter(Boolean);
 
   const resolvedImageUrl =
@@ -282,9 +293,6 @@ const CarCard = ({
           >
             {batteryValue !== null ? `${formatValue(batteryValue)}%` : '--'}
           </span>
-          {lockId && (
-            <span className="car-card__metric-value">{lockLabel}</span>
-          )}
         </div>
 
         {resolvedImageUrl && (
