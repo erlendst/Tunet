@@ -21,6 +21,7 @@ const CARD_SPAN_RULES = [
   { prefix: 'travel_card_',   category: 'dualSize' },
   { prefix: 'camera_card_',   category: 'dualSize' },
   { prefix: 'spacer_card_',   category: 'dualSize' },
+  { prefix: 'scooter_card_', category: 'dualSize' },
 ];
 
 const getLegacyRowSpan = (cardId, getCardSettingsKey, cardSettings, activePage) => {

@@ -12,6 +12,7 @@ import {
   Home,
   Lightbulb,
   ListChecks,
+  MapPin,
   Minus,
   Music,
   Speaker,
@@ -1111,6 +1112,13 @@ function AddCardContent({
                   isActive={addCardType === 'spacer'}
                   onSelect={setAddCardType}
                 />
+                <TypeButton
+                  type="scooter"
+                  icon={MapPin}
+                  label={getLabel('addCard.type.scooter', 'Scootere')}
+                  isActive={addCardType === 'scooter'}
+                  onSelect={setAddCardType}
+                />
               </div>
               {addCardType === 'sensor' && (
                 <p className="mt-2 ml-4 text-[11px] text-[var(--text-secondary)] opacity-75">
@@ -1160,6 +1168,8 @@ function AddCardContent({
               renderSimpleAddSection(Sparkles, t('addCard.scenesDescription') || 'Legg til et stemningskort med knapper for å aktivere scener.', t('addCard.add') || 'Legg til')
             ) : addCardType === 'room_lights' ? (
               renderSimpleAddSection(Lightbulb, t('addCard.roomLightsDescription') || 'Legg til et lyskort med romknapper som viser av/på-status.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'scooter' ? (
+              renderSimpleAddSection(MapPin, 'Legg til et kart som viser tilgjengelige el-sparkesykler i nærheten.', t('addCard.add') || 'Legg til')
             ) : (
               renderGenericEntityList()
             )}

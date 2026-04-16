@@ -104,6 +104,12 @@ export const handleAddSelected = (ctx) => {
   // -- Card-type handlers ----------------------------------------------------
 
   switch (addCardType) {
+    case 'scooter': {
+      const cardId = `scooter_card_${Date.now()}`;
+      commitSingleCard(cardId, { range: 500 }, { openEdit: true });
+      return;
+    }
+
     case 'weather': {
       if (!selectedWeatherId) return;
       const cardId = `weather_temp_${Date.now()}`;

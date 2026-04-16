@@ -3,6 +3,7 @@ import { X, Check, Plus, ChevronDown, ChevronUp, RefreshCw, Upload, Trash2 } fro
 import IconPicker from '../components/ui/IconPicker';
 import ConditionBuilder from '../components/ui/ConditionBuilder';
 import AccessibleModalShell from '../components/ui/AccessibleModalShell';
+import M3Slider from '../components/ui/M3Slider';
 import { getRelatedEntityIds } from '../services/haClient';
 import { CarMappingsSection, SearchableSelect } from './editCard/CarMappingsSection';
 import { buildCarAnchorOptions } from './editCard/carAnchorOptions';
@@ -745,6 +746,7 @@ export default function EditCardModal({
   isEditClimateOverview,
   isEditScenes,
   isEditRoomLights,
+  isEditScooter,
   gridColumns,
   conn,
   pagesConfig,
@@ -1147,7 +1149,7 @@ export default function EditCardModal({
                   <input
                     type="range"
                     min={1}
-                    max={8}
+                    max={12}
                     step={1}
                     value={editSettings.gridRows || 1}
                     onChange={(e) => saveCardSetting(editSettingsKey, 'gridRows', parseInt(e.target.value, 10))}
@@ -2848,6 +2850,136 @@ export default function EditCardModal({
               </div>
             );
           })()}
+
+          {isEditScooter && editSettingsKey && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="ml-1 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                  Breddegrad (lat)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    step="0.000001"
+                    className="popup-surface flex-1 rounded-2xl px-4 py-3 text-[var(--text-primary)] outline-none focus:border-[var(--glass-border)] transition-colors"
+                    defaultValue={editSettings.lat ?? ''}
+                    onBlur={(e) => {
+                      const v = parseFloat(e.target.value);
+                      saveCardSetting(editSettingsKey, 'lat', Number.isFinite(v) ? v : null);
+                    }}
+                    placeholder="59.9139"
+                  />
+                  {entities?.['zone.home']?.attributes?.latitude != null && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        saveCardSetting(editSettingsKey, 'lat', entities['zone.home'].attributes.latitude);
+                        saveCardSetting(editSettingsKey, 'lon', entities['zone.home'].attributes.longitude);
+                      }}
+                      className="rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-xs font-bold tracking-widest text-[var(--text-secondary)] uppercase hover:bg-[var(--glass-bg-hover)]"
+                    >
+                      Bruk hjem
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="ml-1 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                  Lengdegrad (lon)
+                </label>
+                <input
+                  type="number"
+                  step="0.000001"
+                  className="popup-surface w-full rounded-2xl px-4 py-3 text-[var(--text-primary)] outline-none focus:border-[var(--glass-border)] transition-colors"
+                  defaultValue={editSettings.lon ?? ''}
+                  onBlur={(e) => {
+                    const v = parseFloat(e.target.value);
+                    saveCardSetting(editSettingsKey, 'lon', Number.isFinite(v) ? v : null);
+                  }}
+                  placeholder="10.7522"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { key: 'offsetX', label: 'Offset venstre/høyre', hint: '← negativ · positiv →' },
+                  { key: 'offsetY', label: 'Offset opp/ned', hint: '↑ negativ · positiv ↓' },
+                ].map(({ key, label, hint }) => {
+                  const raw = parseInt(editSettings[key], 10);
+                  const val = Number.isFinite(raw) ? raw : 0;
+                  return (
+                    <div key={key} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                          {label}
+                        </label>
+                        <span className="text-xs font-bold text-[var(--text-primary)]">{val}px</span>
+                      </div>
+                      <M3Slider
+                        min={-300}
+                        max={300}
+                        step={10}
+                        value={val}
+                        onChange={(e) => saveCardSetting(editSettingsKey, key, parseInt(e.target.value, 10))}
+                        ariaLabel={label}
+                      />
+                      <p className="text-center text-[9px] text-[var(--text-muted)]">{hint}</p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="space-y-2">
+                <label className="ml-1 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                  Kartstil
+                </label>
+                <div className="popup-surface flex flex-wrap items-center gap-2 rounded-2xl p-3">
+                  {[
+                    { value: 'auto', label: 'Auto (tema)' },
+                    { value: 'voyager', label: 'Voyager' },
+                    { value: 'positron', label: 'Lys' },
+                    { value: 'dark', label: 'Mørk' },
+                    { value: 'osm', label: 'OpenStreetMap' },
+                  ].map(({ value, label }) => {
+                    const active = (editSettings.mapStyle || 'auto') === value;
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => saveCardSetting(editSettingsKey, 'mapStyle', value)}
+                        className={`rounded-full border px-3 py-2 text-[10px] font-bold tracking-widest uppercase transition-all ${active ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]' : 'border-transparent bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)] hover:text-[var(--text-primary)]'}`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {(() => {
+                  const rangeVal = parseInt(editSettings.range, 10);
+                  const safeRange = Number.isFinite(rangeVal) ? rangeVal : 500;
+                  return (
+                    <>
+                      <label className="ml-1 text-xs font-bold tracking-widest text-[var(--text-muted)] uppercase">
+                        Søkeradius: {safeRange} m
+                      </label>
+                      <M3Slider
+                        min={100}
+                        max={2000}
+                        step={50}
+                        value={safeRange}
+                        onChange={(e) => saveCardSetting(editSettingsKey, 'range', parseInt(e.target.value, 10))}
+                        ariaLabel="Søkeradius"
+                      />
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
 
           {canEditStatus && !isEditSensor && (
             <div className="popup-surface space-y-4 rounded-2xl p-4">

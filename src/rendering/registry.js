@@ -27,6 +27,7 @@ import {
   renderClimateOverviewCard,
   renderScenesCard,
   renderRoomLightsCard,
+  renderScooterCard,
 } from './cards';
 
 /**
@@ -59,6 +60,7 @@ export const CARD_REGISTRY = [
   { prefix: 'climate_overview_card_', renderer: renderClimateOverviewCard },
   { prefix: 'scenes_card_', renderer: renderScenesCard },
   { prefix: 'room_lights_card_', renderer: renderRoomLightsCard },
+  { prefix: 'scooter_card_', renderer: renderScooterCard },
 ];
 
 export function dispatchCardRender(cardId, dragProps, getControls, cardStyle, settingsKey, ctx) {

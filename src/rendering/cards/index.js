@@ -23,3 +23,4 @@ export { renderTodayCard } from './todayRenderer';
 export { renderClimateOverviewCard } from './climateOverviewRenderer';
 export { renderScenesCard } from './scenesRenderer';
 export { renderRoomLightsCard } from './roomLightsRenderer';
+export { renderScooterCard } from './scooterRenderer';

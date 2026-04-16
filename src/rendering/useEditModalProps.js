@@ -62,6 +62,7 @@ export function useEditModalProps({
     const isEditClimateOverview = !!editId && editId.startsWith('climate_overview_card_');
     const isEditScenes = !!editId && editId.startsWith('scenes_card_');
     const isEditRoomLights = !!editId && editId.startsWith('room_lights_card_');
+    const isEditScooter = !!editId && editId.startsWith('scooter_card_');
 
     const canEditName =
       !!editId &&
@@ -121,6 +122,7 @@ export function useEditModalProps({
       isEditClimateOverview,
       isEditScenes,
       isEditRoomLights,
+      isEditScooter,
       editSettingsKey,
       editSettings,
     };
