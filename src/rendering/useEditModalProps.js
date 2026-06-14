@@ -58,7 +58,9 @@ export function useEditModalProps({
       isEditFan;
     const isEditSensor = !!editSettings?.type && editSettings.type === 'sensor';
     const isEditWeatherTemp = !!editId && editId.startsWith('weather_temp_');
-    const isEditToday = !!editId && editId.startsWith('today_card_');
+    const isEditWeatherForecast = !!editId && editId.startsWith('weather_forecast_card_');
+    const isEditWeeklyPlan = !!editId && editId.startsWith('weekly_plan_card_');
+    const isEditDinnerPlan = !!editId && editId.startsWith('dinner_plan_card_');
     const isEditClimateOverview = !!editId && editId.startsWith('climate_overview_card_');
     const isEditScenes = !!editId && editId.startsWith('scenes_card_');
     const isEditRoomLights = !!editId && editId.startsWith('room_lights_card_');
@@ -118,7 +120,9 @@ export function useEditModalProps({
       isEditAlarm,
       isEditTravel,
       isEditClimate,
-      isEditToday,
+      isEditWeatherForecast,
+      isEditWeeklyPlan,
+      isEditDinnerPlan,
       isEditClimateOverview,
       isEditScenes,
       isEditRoomLights,

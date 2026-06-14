@@ -756,7 +756,9 @@ export default function EditCardModal({
   editSettingsKey,
   editSettings,
   isEditWeatherTemp,
-  isEditToday,
+  isEditWeatherForecast,
+  isEditWeeklyPlan,
+  isEditDinnerPlan,
   isEditClimateOverview,
   isEditScenes,
   isEditRoomLights,
@@ -2540,13 +2542,20 @@ export default function EditCardModal({
             );
           })()}
 
-          {isEditToday && editSettingsKey && (() => {
+          {isEditWeatherForecast && editSettingsKey && (() => {
             const weatherOptions = sortByName(byDomain('weather'));
             return (
               <div className="space-y-4">
                 <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
-                  Vær (I dag-kort)
+                  Værvarsel
                 </label>
+                <input
+                  type="text"
+                  className="popup-surface w-full rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                  defaultValue={editSettings.name || ''}
+                  onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Værvarsel')}
+                  placeholder="Tittel (f.eks. Værvarsel)"
+                />
                 <div className="popup-surface space-y-2 rounded-2xl p-4">
                   <span className="text-xs font-bold text-[var(--text-secondary)]">Timevarsel</span>
                   <SearchableSelect
@@ -2559,34 +2568,81 @@ export default function EditCardModal({
                     t={t}
                   />
                 </div>
-                <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
-                  Kalender
-                </label>
-                <div className="popup-surface custom-scrollbar max-h-48 space-y-2 overflow-y-auto rounded-2xl p-4">
-                  {calendarOptions.length === 0 && (
-                    <p className="py-4 text-center text-xs text-[var(--text-muted)]">Ingen kalendere funnet</p>
-                  )}
-                  {calendarOptions.map((id) => {
-                    const sel = Array.isArray(editSettings.calendarIds) && editSettings.calendarIds.includes(id);
-                    return (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => {
-                          const cur = Array.isArray(editSettings.calendarIds) ? editSettings.calendarIds : [];
-                          saveCardSetting(editSettingsKey, 'calendarIds', sel ? cur.filter((x) => x !== id) : [...cur, id]);
-                        }}
-                        className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${sel ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'}`}
-                      >
-                        <div className="truncate text-sm font-bold">{entities[id]?.attributes?.friendly_name || id}</div>
-                        <div className="truncate text-[10px] text-[var(--text-muted)]">{id}</div>
-                      </button>
-                    );
-                  })}
-                </div>
               </div>
             );
           })()}
+
+          {isEditWeeklyPlan && editSettingsKey && (
+            <div className="space-y-4">
+              <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                Ukeplan
+              </label>
+              <input
+                type="text"
+                className="popup-surface w-full rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                defaultValue={editSettings.name || ''}
+                onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Ukeplan')}
+                placeholder="Tittel (f.eks. Ukeplan)"
+              />
+              <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                Kalender
+              </label>
+              <div className="popup-surface custom-scrollbar max-h-48 space-y-2 overflow-y-auto rounded-2xl p-4">
+                {calendarOptions.length === 0 && (
+                  <p className="py-4 text-center text-xs text-[var(--text-muted)]">Ingen kalendere funnet</p>
+                )}
+                {calendarOptions.map((id) => {
+                  const sel = Array.isArray(editSettings.calendarIds) && editSettings.calendarIds.includes(id);
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => {
+                        const cur = Array.isArray(editSettings.calendarIds) ? editSettings.calendarIds : [];
+                        saveCardSetting(editSettingsKey, 'calendarIds', sel ? cur.filter((x) => x !== id) : [...cur, id]);
+                      }}
+                      className={`w-full rounded-xl border px-3 py-2 text-left transition-colors ${sel ? 'border-[var(--glass-border)] bg-[var(--glass-bg-hover)] text-[var(--text-primary)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'}`}
+                    >
+                      <div className="truncate text-sm font-bold">{entities[id]?.attributes?.friendly_name || id}</div>
+                      <div className="truncate text-[10px] text-[var(--text-muted)]">{id}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {isEditDinnerPlan && editSettingsKey && (
+            <div className="space-y-4">
+              <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                Middagsplan
+              </label>
+              <input
+                type="text"
+                className="popup-surface w-full rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] outline-none"
+                defaultValue={editSettings.name || ''}
+                onBlur={(e) => saveCardSetting(editSettingsKey, 'name', e.target.value.trim() || 'Middagsplan')}
+                placeholder="Tittel (f.eks. Middagsplan)"
+              />
+              <label className="ml-1 text-xs font-bold uppercase text-[var(--text-muted)]">
+                Middagskalender
+              </label>
+              <div className="popup-surface space-y-2 rounded-2xl p-4">
+                <span className="text-xs text-[var(--text-secondary)]">
+                  Viser middagsplanen for den kommende uka
+                </span>
+                <SearchableSelect
+                  label="Middagskalender"
+                  value={editSettings.mealCalendarId || null}
+                  options={calendarOptions}
+                  onChange={(id) => saveCardSetting(editSettingsKey, 'mealCalendarId', id)}
+                  placeholder="Velg middagskalender"
+                  entities={entities}
+                  t={t}
+                />
+              </div>
+            </div>
+          )}
 
           {isEditClimate && editSettingsKey && (
             <div className="space-y-3">

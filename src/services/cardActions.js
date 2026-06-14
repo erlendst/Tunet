@@ -273,8 +273,20 @@ export const handleAddSelected = (ctx) => {
       return;
     }
 
-    case 'today': {
-      const cardId = `today_card_${Date.now()}`;
+    case 'weather_forecast': {
+      const cardId = `weather_forecast_card_${Date.now()}`;
+      commitSingleCard(cardId, {}, { openEdit: true });
+      return;
+    }
+
+    case 'weekly_plan': {
+      const cardId = `weekly_plan_card_${Date.now()}`;
+      commitSingleCard(cardId, { calendarIds: [] }, { openEdit: true });
+      return;
+    }
+
+    case 'dinner_plan': {
+      const cardId = `dinner_plan_card_${Date.now()}`;
       commitSingleCard(cardId, {}, { openEdit: true });
       return;
     }

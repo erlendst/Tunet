@@ -33,6 +33,9 @@ const REMOVABLE_PREFIXES = [
   'spacer_card_',
   'fan.',
   'scooter_card_',
+  'weather_forecast_card_',
+  'weekly_plan_card_',
+  'dinner_plan_card_',
 ];
 
 /** Prefixes for "special" composite cards that don't map 1:1 to an entity. */
@@ -53,7 +56,9 @@ const SPECIAL_CARD_PREFIXES = [
   'camera_card_',
   'alarm_card_',
   'spacer_card_',
-  'today_card_',
+  'weather_forecast_card_',
+  'weekly_plan_card_',
+  'dinner_plan_card_',
   'climate_overview_card_',
   'scenes_card_',
   'room_lights_card_',

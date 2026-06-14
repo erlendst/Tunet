@@ -22,6 +22,7 @@ import {
   Sparkles,
   Thermometer,
   Bus,
+  Utensils,
   X,
   Zap,
 } from '../icons';
@@ -1078,10 +1079,24 @@ function AddCardContent({
                   onSelect={setAddCardType}
                 />
                 <TypeButton
-                  type="today"
+                  type="weather_forecast"
+                  icon={CloudSun}
+                  label={t('addCard.type.weatherForecast') || 'Værvarsel'}
+                  isActive={addCardType === 'weather_forecast'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
+                  type="weekly_plan"
                   icon={Calendar}
-                  label={t('addCard.type.today') || 'I dag'}
-                  isActive={addCardType === 'today'}
+                  label={t('addCard.type.weeklyPlan') || 'Ukeplan'}
+                  isActive={addCardType === 'weekly_plan'}
+                  onSelect={setAddCardType}
+                />
+                <TypeButton
+                  type="dinner_plan"
+                  icon={Utensils}
+                  label={t('addCard.type.dinnerPlan') || 'Middagsplan'}
+                  isActive={addCardType === 'dinner_plan'}
                   onSelect={setAddCardType}
                 />
                 <TypeButton
@@ -1160,8 +1175,12 @@ function AddCardContent({
                 selectedAreaEntitiesById={selectedRoomEntitiesById}
                 setSelectedAreaEntitiesById={setSelectedRoomEntitiesById}
               />
-            ) : addCardType === 'today' ? (
-              renderSimpleAddSection(Calendar, t('addCard.todayDescription') || 'Legg til et "I dag"-kort med værsensorer og kalenderoppføringer.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'weather_forecast' ? (
+              renderSimpleAddSection(CloudSun, t('addCard.weatherForecastDescription') || 'Legg til et værvarselkort. Du kan velge værsensor etter at kortet er lagt til.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'weekly_plan' ? (
+              renderSimpleAddSection(Calendar, t('addCard.weeklyPlanDescription') || 'Legg til et ukeplankort. Du kan velge kalendere etter at kortet er lagt til.', t('addCard.add') || 'Legg til')
+            ) : addCardType === 'dinner_plan' ? (
+              renderSimpleAddSection(Utensils, t('addCard.dinnerPlanDescription') || 'Legg til et middagsplankort. Du kan velge middagskalender etter at kortet er lagt til.', t('addCard.add') || 'Legg til')
             ) : addCardType === 'climate_overview' ? (
               renderSimpleAddSection(Thermometer, t('addCard.climateOverviewDescription') || 'Legg til et klimaoversiktskort med temperatur og luftfuktighet per rom.', t('addCard.add') || 'Legg til')
             ) : addCardType === 'scenes' ? (

@@ -147,6 +147,22 @@ function loadPagesConfig() {
     modified = true;
   }
 
+  // Drop cards whose type no longer exists. Orphaned ids still get a computed
+  // grid placement (reserving a cell) while rendering nothing, which blocks that
+  // slot and reshuffles the layout on save. The combined "today" card was split
+  // into separate weather/weekly-plan/dinner-plan cards.
+  const OBSOLETE_CARD_PREFIXES = ['today_card_'];
+  const isObsoleteCard = (id) =>
+    typeof id === 'string' && OBSOLETE_CARD_PREFIXES.some((prefix) => id.startsWith(prefix));
+  ['header', ...parsed.pages].forEach((pageId) => {
+    if (!Array.isArray(parsed[pageId])) return;
+    const filtered = parsed[pageId].filter((id) => !isObsoleteCard(id));
+    if (filtered.length !== parsed[pageId].length) {
+      parsed[pageId] = filtered;
+      modified = true;
+    }
+  });
+
   if (modified) writeJSON('tunet_pages_config', parsed);
   return parsed;
 }
