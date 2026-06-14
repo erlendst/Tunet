@@ -421,7 +421,7 @@
 .today-card__day-tag {
   justify-self: stretch;
   text-align: center;
-  font-size: clamp(0.66rem, 1.4vw, 0.79rem);
+  font-size: clamp(0.58rem, 1.25vw, 0.67rem);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--accent-color);
@@ -436,7 +436,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: clamp(0.8rem, 1.8vw, 0.92rem);
+  font-size: clamp(0.7rem, 1.6vw, 0.8rem);
   line-height: 1.25;
   color: var(--text-primary);
 }
@@ -461,14 +461,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: clamp(0.8rem, 1.8vw, 0.92rem);
+  font-size: clamp(0.7rem, 1.6vw, 0.8rem);
   line-height: 1.25;
   color: var(--text-primary);
 }
 
 .today-card__cal-event-time {
   flex: 0 0 auto;
-  font-size: clamp(0.8rem, 1.8vw, 0.92rem);
+  font-size: clamp(0.7rem, 1.6vw, 0.8rem);
   color: color-mix(in srgb, var(--text-secondary) 88%, var(--text-primary) 12%);
 }
 
@@ -526,7 +526,7 @@
 
   .today-card__cal-event-title,
   .today-card__cal-event-time {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
   }
 
   .today-card__dinner-cols {

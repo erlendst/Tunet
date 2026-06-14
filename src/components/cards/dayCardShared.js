@@ -32,7 +32,7 @@ export function formatDate(locale = 'nb-NO') {
   const weekday = weekdayRaw ? weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1) : '';
   const month = date.toLocaleDateString(locale, { month: 'long' }).toLowerCase();
   const time = date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-  return `${weekday} ${date.getDate()}. ${month} ${date.getFullYear()} kl. ${time}`;
+  return `${weekday} ${date.getDate()}. ${month} kl. ${time}`;
 }
 
 export function formatEventTime(eventStart, eventEnd) {
