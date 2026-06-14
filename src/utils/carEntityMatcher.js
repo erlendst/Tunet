@@ -13,6 +13,7 @@ const FIELD_ORDER = [
   'chargingPowerId',
   'chargeRateId',
   'timeToFullId',
+  'targetSocId',
   'chargeEndTimeId',
   'climateId',
   'lockId',
@@ -122,10 +123,24 @@ export function matchCarEntities(entities = {}) {
     }
 
     if (domain === 'sensor' || domain === 'input_number') {
+      const isTargetSoc = hasAnyToken(text, [
+        'target_state_of_charge',
+        'target state of charge',
+        'target_soc',
+        'target soc',
+        'charge_target',
+        'target_charge',
+      ]);
+
+      if (isTargetSoc) {
+        addCandidate(candidates, 'targetSocId', id, 120);
+      }
+
       if (
-        deviceClass === 'battery' ||
-        hasAnyToken(text, ['battery', 'soc', 'state_of_charge']) ||
-        (unit === '%' && hasAnyToken(text, ['ev', 'car', 'vehicle']))
+        !isTargetSoc &&
+        (deviceClass === 'battery' ||
+          hasAnyToken(text, ['battery', 'soc', 'state_of_charge']) ||
+          (unit === '%' && hasAnyToken(text, ['ev', 'car', 'vehicle'])))
       ) {
         addCandidate(candidates, 'batteryId', id, deviceClass === 'battery' ? 140 : 100);
       }

@@ -231,6 +231,7 @@
   "car.chargingPower": "Ladeeffekt",
   "car.chargeRate": "Laderate",
   "car.timeToFull": "Tid til full",
+  "car.select.targetSoc": "Mål‑ladenivå",
   "car.notCharging": "Ladar ikkje",
   "car.chargeEndTime": "Ladeslutt",
   "car.chargeControl": "Ladekontroll",

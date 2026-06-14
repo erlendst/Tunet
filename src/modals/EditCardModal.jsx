@@ -329,6 +329,7 @@ function useCarAutoMapping({
       const fallbackSuggestions = {
         batteryId: pickFirstRelated((id, entity) => {
           if (!(id.startsWith('sensor.') || id.startsWith('input_number.'))) return false;
+          if (hasKeyword(id, entity, ['target'])) return false;
           const deviceClass = String(entity?.attributes?.device_class || '').toLowerCase();
           const unit = String(entity?.attributes?.unit_of_measurement || '').toLowerCase();
           return (
@@ -396,6 +397,18 @@ function useCarAutoMapping({
             (id.startsWith('sensor.') || id.startsWith('input_number.')) &&
             hasKeyword(id, entity, ['time_to_full', 'time to full', 'remaining_time'])
         ),
+        targetSocId: pickFirstRelated(
+          (id, entity) =>
+            (id.startsWith('sensor.') || id.startsWith('input_number.')) &&
+            hasKeyword(id, entity, [
+              'target_state_of_charge',
+              'target state of charge',
+              'target_soc',
+              'target soc',
+              'charge_target',
+              'target_charge',
+            ])
+        ),
         chargeEndTimeId: pickFirstRelated(
           (id, entity) =>
             (id.startsWith('sensor.') || id.startsWith('input_number.')) &&
@@ -448,6 +461,7 @@ function useCarAutoMapping({
         'chargingPowerId',
         'chargeRateId',
         'timeToFullId',
+        'targetSocId',
         'chargeEndTimeId',
         'climateId',
         'lockId',
@@ -851,6 +865,7 @@ export default function EditCardModal({
   const chargingPowerOptions = carMatch.options?.chargingPowerId || [];
   const chargeRateOptions = carMatch.options?.chargeRateId || [];
   const timeToFullOptions = carMatch.options?.timeToFullId || [];
+  const targetSocOptions = carMatch.options?.targetSocId || [];
   const chargeEndTimeOptions = carMatch.options?.chargeEndTimeId || [];
   const fuelLevelOptions = carMatch.options?.fuelLevelId || [];
 
@@ -900,6 +915,7 @@ export default function EditCardModal({
     ...chargingPowerOptions,
     ...chargeRateOptions,
     ...timeToFullOptions,
+    ...targetSocOptions,
     ...chargeEndTimeOptions,
     ...fuelLevelOptions,
     ...climateOptions,
@@ -2422,6 +2438,7 @@ export default function EditCardModal({
               chargingPowerOptions={chargingPowerOptions}
               chargeRateOptions={chargeRateOptions}
               timeToFullOptions={timeToFullOptions}
+              targetSocOptions={targetSocOptions}
               chargeEndTimeOptions={chargeEndTimeOptions}
               fuelLevelOptions={fuelLevelOptions}
               climateOptions={climateOptions}

@@ -111,6 +111,7 @@ export function CarMappingsSection({
   chargingPowerOptions,
   chargeRateOptions,
   timeToFullOptions,
+  targetSocOptions,
   chargeEndTimeOptions,
   fuelLevelOptions,
   climateOptions,
@@ -130,6 +131,8 @@ export function CarMappingsSection({
     chargingId: 'chargingIcon',
     chargingStateId: 'chargingIcon',
     timeToFullId: 'chargingIcon',
+    pluggedId: 'pluggedIcon',
+    targetSocId: 'targetSocIcon',
   };
   const [showAddSensor, setShowAddSensor] = React.useState(false);
   const [sensorType, setSensorType] = React.useState('');
@@ -151,7 +154,12 @@ export function CarMappingsSection({
     if (key === 'chargingId' || key === 'pluggedId' || key === 'engineStatusId') {
       return domain === 'binary_sensor';
     }
-    if (key === 'chargingPowerId' || key === 'chargeRateId' || key === 'timeToFullId') {
+    if (
+      key === 'chargingPowerId' ||
+      key === 'chargeRateId' ||
+      key === 'timeToFullId' ||
+      key === 'targetSocId'
+    ) {
       return ['sensor', 'input_number'].includes(domain);
     }
     if (key === 'chargeEndTimeId' || key === 'apiStatusId' || key === 'lastUpdatedId') {
@@ -196,6 +204,11 @@ export function CarMappingsSection({
       key: 'timeToFullId',
       label: t('car.timeToFull') || 'Time to full',
       options: timeToFullOptions,
+    },
+    {
+      key: 'targetSocId',
+      label: t('car.select.targetSoc') || 'Target state of charge',
+      options: targetSocOptions,
     },
     {
       key: 'chargeEndTimeId',

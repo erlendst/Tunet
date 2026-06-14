@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, memo } from 'react';
 import { getIconComponent } from '../../icons';
-import { Car, MapPin, Zap, RotateCw, Lock, Unlock } from '../../icons';
+import { Car, MapPin, Zap, RotateCw, Lock, Unlock, Plug, BatteryCharging } from '../../icons';
 import { useConfig, useHomeAssistantMeta } from '../../contexts';
 import {
   convertValueByKind,
@@ -109,6 +109,9 @@ const CarCard = ({
     chargingStateId,
     chargingIcon,
     pluggedId,
+    pluggedIcon,
+    targetSocId,
+    targetSocIcon,
     climateId,
     imageUrl,
     tempId,
@@ -165,17 +168,36 @@ const CarCard = ({
 
   const chargingState = getSafeState(entities, effectiveChargingId);
   const pluggedState = getSafeState(entities, pluggedId);
+  const targetSocValue = getNumberState(entities, targetSocId);
   const climateEntity = climateId ? entities[climateId] : null;
   const lockEntity = lockId ? entities[lockId] : null;
   const lockState = lockId ? getSafeState(entities, lockId) : null;
   const timeToFullState = timeToFullId ? getSafeState(entities, timeToFullId) : null;
 
   const isCharging = chargingState === 'on' || chargingState === 'charging';
+  const isPlugged =
+    pluggedState !== null &&
+    ['on', 'plugged', 'connected', 'true'].includes(String(pluggedState).trim().toLowerCase());
   const isLocked = lockState !== null ? isLockedState(lockEntity) : false;
   const isHtg = climateEntity && !['off', 'unavailable', 'unknown'].includes(climateEntity.state);
   const lockLabel = isLocked ? t('state.locked') || 'Låst' : t('state.unlocked') || 'Ikke låst';
-  const chargingTimeSource = timeToFullState ?? chargingState;
-  const chargingTimeLabel = formatMinutesLabel(chargingTimeSource, t);
+  // When a "time to full" sensor is mapped and reports a numeric value, show minutes.
+  // Otherwise fall back to a plain charging/not-charging label (binary charging sensors
+  // report "on"/"off", which would otherwise render as a literal "off").
+  const timeToFullNumeric =
+    timeToFullState !== null && Number.isFinite(Number(String(timeToFullState).replace(',', '.')));
+  const chargingTimeLabel = timeToFullNumeric
+    ? formatMinutesLabel(timeToFullState, t)
+    : isCharging
+      ? t('car.charging') || 'Lader'
+      : t('car.notCharging') || 'Lader ikke';
+  const pluggedLabel = isPlugged
+    ? t('car.pluggedIn') || 'Plugget i'
+    : t('car.unplugged') || 'Ikke plugget i';
+  const targetSocLabel =
+    targetSocValue !== null
+      ? `${formatValue(targetSocValue)} ${entities[targetSocId]?.attributes?.unit_of_measurement || '%'}`.trim()
+      : '--';
   const rangeLabel =
     displayRangeValue !== null
       ? `${formatUnitValue(displayRangeValue, { fallback: '--' })} ${rangeUnit}`
@@ -202,6 +224,24 @@ const CarCard = ({
           toneClass: isCharging
             ? 'car-card__metric-value car-card__metric-value--charging'
             : 'car-card__metric-value',
+        }
+      : null,
+    pluggedId
+      ? {
+          key: 'plugged',
+          iconName: pluggedIcon || 'plug',
+          fallbackIcon: Plug,
+          value: pluggedLabel,
+          toneClass: 'car-card__metric-value',
+        }
+      : null,
+    targetSocId
+      ? {
+          key: 'targetSoc',
+          iconName: targetSocIcon || 'battery-charging',
+          fallbackIcon: BatteryCharging,
+          value: targetSocLabel,
+          toneClass: 'car-card__metric-value',
         }
       : null,
     locationId
