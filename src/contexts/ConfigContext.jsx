@@ -6,6 +6,13 @@ import { hashPin, verifyPin } from '../utils';
 /** @typedef {import('../types/dashboard').ConfigContextValue} ConfigContextValue */
 /** @typedef {import('../types/dashboard').ConfigProviderProps} ConfigProviderProps */
 
+// Union of every custom property any theme defines. Used to clear stale
+// properties on theme switch so keys absent from the new theme (e.g.
+// --control-bg, or the flat theme's extra tokens) don't leak across themes.
+const ALL_THEME_KEYS = Array.from(
+  new Set(Object.values(themes).flatMap((theme) => Object.keys(theme.colors)))
+);
+
 export const GRADIENT_PRESETS = {
   midnight: { label: 'Midnight', from: '#0f172a', to: '#020617' },
   ocean: { label: 'Ocean', from: '#0c4a6e', to: '#164e63' },
@@ -245,6 +252,11 @@ export const ConfigProvider = ({ children }) => {
   useEffect(() => {
     const themeKey = themes[currentTheme] ? currentTheme : 'dark';
     const theme = themes[themeKey].colors;
+    // Clear properties from the previous theme that this one doesn't define,
+    // so asymmetric tokens (e.g. --control-bg) don't leak across theme switches.
+    for (const key of ALL_THEME_KEYS) {
+      if (!(key in theme)) document.documentElement.style.removeProperty(key);
+    }
     for (const key in theme) {
       document.documentElement.style.setProperty(key, theme[key]);
     }

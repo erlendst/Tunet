@@ -84,7 +84,7 @@ const VacuumCard = ({
   const statusText = getVacuumStateLabel(state, battery, t);
   const secondaryText = battery !== null ? `${battery}%` : statusText;
   const buttonBaseClass =
-    'card-btn flex items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'card-btn control-surface flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   const handlePlayPause = (e) => {
     e.stopPropagation();

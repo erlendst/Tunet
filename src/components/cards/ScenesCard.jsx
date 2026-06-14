@@ -59,7 +59,7 @@ const ScenesCard = memo(function ScenesCard({
               className={`card-btn text-sm px-6 py-4 font-medium transition-all duration-300 ${
                 isActive
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
-                  : 'bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'
+                  : 'control-surface'
               }`}
             >
               {label}

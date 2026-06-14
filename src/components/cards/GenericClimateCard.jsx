@@ -41,7 +41,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
   const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
   const ClimateIcon = (iconName && getIconComponent(iconName)) || Thermometer;
   const buttonBaseClass =
-    'card-btn flex items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'card-btn control-surface flex items-center justify-center transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (isSmall) {
     return (

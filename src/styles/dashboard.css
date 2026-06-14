@@ -416,7 +416,7 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--text-secondary);
-  background: var(--glass-bg);
+  background: var(--control-bg, var(--glass-bg));
   border-radius: 999px;
   padding: 0.22rem 0.7rem;
   white-space: nowrap;
@@ -582,6 +582,16 @@
 }
 .card-btn {
   border-radius: var(--button-border-radius);
+}
+
+/* Inactive control / tag surface. Falls back to --glass-bg; light themes
+   override --control-bg so pills stay visible on white cards. */
+.control-surface {
+  background: var(--control-bg, var(--glass-bg));
+  color: var(--text-secondary);
+}
+.control-surface:hover {
+  background: var(--control-bg-hover, var(--glass-bg-hover));
 }
 
 .dashboard-card-title {

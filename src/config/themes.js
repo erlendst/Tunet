@@ -110,6 +110,8 @@ export const themes = {
       '--glass-bg': '#f1f5f9',
       '--glass-bg-hover': '#e2e8f0',
       '--glass-border': '#cbd5e1',
+      '--control-bg': '#eef2f7', // Inactive control/tag surface (visible on white cards)
+      '--control-bg-hover': '#e2e8f0',
       '--modal-bg': '#ffffff',
       '--modal-backdrop': 'rgba(0,0,0,0.2)',
       '--accent-color': '#4a6b8c', // Dampened blue
@@ -200,6 +202,8 @@ export const themes = {
       '--glass-bg': 'rgba(90, 105, 220, 0.07)',
       '--glass-bg-hover': 'rgba(90, 105, 220, 0.13)',
       '--glass-border': 'rgba(90, 105, 220, 0.18)',
+      '--control-bg': '#e7ebf8', // Inactive control/tag surface (visible on white cards)
+      '--control-bg-hover': '#dde3f4',
       '--modal-bg': '#ffffff',
       '--modal-backdrop': 'rgba(15, 21, 53, 0.25)',
       '--accent-color': '#5565e8',
@@ -297,6 +301,8 @@ export const themes = {
       '--glass-bg': 'rgba(255,255,255,0.6)',
       '--glass-bg-hover': 'rgba(255,255,255,0.9)',
       '--glass-border': 'rgba(0,0,0,0.08)',
+      '--control-bg': '#e8ece6', // Inactive control/tag surface (visible on white cards)
+      '--control-bg-hover': '#dfe6de',
       '--modal-bg': '#ffffff',
       '--modal-backdrop': 'rgba(0,0,0,0.3)',
       '--accent-color': '#2A5A3B',
