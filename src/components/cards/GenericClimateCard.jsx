@@ -41,7 +41,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
   const stepTemp = (delta) => onSetTemperature?.(resolvedTargetTemp + delta);
   const ClimateIcon = (iconName && getIconComponent(iconName)) || Thermometer;
   const buttonBaseClass =
-    'card-btn flex items-center justify-center bg-[#e8ece6] text-[#2A5A3B] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'card-btn flex items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (isSmall) {
     return (
@@ -59,7 +59,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
           <div className="flex flex-col">
             <span className="truncate text-xs font-medium text-[var(--text-primary)]">{name}</span>
             <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-primary)]">
-              <ClimateIcon className="h-3.5 w-3.5 text-[#2A5A3B]" />
+              <ClimateIcon className="h-3.5 w-3.5 text-[var(--accent-color)]" />
               {displayPrimaryTemp.text}
             </span>
           </div>
@@ -98,7 +98,7 @@ const GenericClimateCard = memo(function GenericClimateCard({
         <div className="flex flex-col">
           <span className="dashboard-card-title dashboard-card-title--truncate">{name}</span>
           <span className="mt-2 inline-flex items-center gap-2 text-2xl font-light leading-tight text-[var(--text-primary)]">
-            <ClimateIcon className="h-5 w-5 text-[#2A5A3B]" />
+            <ClimateIcon className="h-5 w-5 text-[var(--accent-color)]" />
             {displayPrimaryTemp.text}
           </span>
         </div>

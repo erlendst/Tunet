@@ -310,7 +310,7 @@ export const createDragAndDropHandlers = ({
     const isTouchTarget = !!touchTargetId && touchTargetId === cardId;
 
     const style = {
-      backgroundColor: isDragging ? 'rgba(30, 58, 138, 0.6)' : '#ffffff',
+      backgroundColor: isDragging ? 'rgba(30, 58, 138, 0.6)' : 'var(--card-bg)',
       borderColor: isDragging
         ? 'rgba(96, 165, 250, 1)'
         : editMode
@@ -336,7 +336,7 @@ export const createDragAndDropHandlers = ({
           ? '0 0 0 2px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.35)'
           : editMode
             ? '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-            : '0 2px 8px rgba(0, 0, 0, 0.07)',
+            : 'var(--card-shadow, 0 2px 8px rgba(0, 0, 0, 0.07))',
       zIndex: isDragging ? 50 : 1,
       pointerEvents: isDragging ? 'none' : 'auto',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',

@@ -310,6 +310,37 @@ export const themes = {
       '--modal-surface-shadow-hover': '0 4px 12px rgba(0,0,0,0.1)',
     },
   },
+  naturalDark: {
+    label: 'Natur Mørk',
+    icon: Leaf,
+    colors: {
+      '--bg-primary': '#01130B', // Deep forest page background
+      '--bg-secondary': '#032615',
+      '--bg-gradient-from': '#032715', // Subtle depth toward page bg
+      '--bg-gradient-to': '#01130B',
+      '--text-primary': '#e8efe2', // Pale parchment-green
+      '--text-secondary': '#a3b899', // Sage
+      '--text-muted': 'rgba(163, 184, 153, 0.6)',
+      ...STATUS_TOKENS_DARK,
+      '--card-bg': '#021D10', // Container / card surface
+      '--card-border': 'rgba(168, 200, 150, 0.1)',
+      '--card-shadow': 'none', // Flat containers, no drop shadow
+      '--glass-bg': '#032715', // Inactive button / tile surface
+      '--glass-bg-hover': '#054a2a', // Hover: between inactive and active
+      '--glass-border': 'rgba(168, 200, 150, 0.12)',
+      '--modal-bg': '#032615',
+      '--modal-backdrop': 'rgba(0,0,0,0.7)',
+      '--accent-color': '#065630', // Active state (deep green)
+      '--accent-foreground': '#e8efe2', // Light text/icons on the deep-green active fill
+      '--accent-bg': 'rgba(6, 86, 48, 0.22)',
+      '--modal-border': 'rgba(168, 200, 150, 0.1)',
+      '--modal-shadow': '0 20px 40px rgba(0, 0, 0, 0.5)',
+      '--modal-surface': '#032715',
+      '--modal-surface-hover': '#054a2a',
+      '--modal-surface-shadow': '0 10px 24px rgba(0, 0, 0, 0.3)',
+      '--modal-surface-shadow-hover': '0 14px 28px rgba(0, 0, 0, 0.35)',
+    },
+  },
   oled: {
     label: 'OLED',
     icon: Moon,

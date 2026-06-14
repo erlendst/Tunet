@@ -84,7 +84,7 @@ const VacuumCard = ({
   const statusText = getVacuumStateLabel(state, battery, t);
   const secondaryText = battery !== null ? `${battery}%` : statusText;
   const buttonBaseClass =
-    'card-btn flex items-center justify-center bg-[#e8ece6] text-[#2A5A3B] transition-all hover:bg-[#dfe6de] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
+    'card-btn flex items-center justify-center bg-[var(--glass-bg)] text-[var(--text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50';
 
   const handlePlayPause = (e) => {
     e.stopPropagation();
@@ -105,7 +105,7 @@ const VacuumCard = ({
         className={`dashboard-action-card relative flex h-full items-center justify-between gap-3 overflow-hidden px-4 py-3 ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
         style={{
           ...cardStyle,
-          backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
+          backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || 'var(--card-bg)',
           borderColor: isErrorState ? 'var(--status-error-border)' : cardStyle?.borderColor,
         }}
       >
@@ -143,7 +143,7 @@ const VacuumCard = ({
       className={`dashboard-action-card dashboard-card-padding relative flex h-full items-center justify-between overflow-hidden ${!editMode ? 'cursor-pointer active:scale-[0.98]' : 'cursor-move'} ${isUnavailable ? 'opacity-70' : ''}`}
       style={{
         ...cardStyle,
-        backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || '#ffffff',
+        backgroundColor: isErrorState ? 'var(--status-error-bg)' : cardStyle?.backgroundColor || 'var(--card-bg)',
         borderColor: isErrorState ? 'var(--status-error-border)' : cardStyle?.borderColor,
       }}
     >

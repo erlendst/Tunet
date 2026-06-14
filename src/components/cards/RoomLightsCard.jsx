@@ -71,7 +71,7 @@ const RoomLightsCard = memo(function RoomLightsCard({
               className={`card-btn aspect-[1.28/1] flex flex-col items-center justify-center gap-1.5 p-3 outline-none transition-all duration-200 ${
                 isOn
                   ? 'bg-[var(--accent-color)] text-[var(--accent-foreground)]'
-                  : 'bg-[#e8ece6] text-[#2A5A3B] hover:bg-[#dfe6de]'
+                  : 'bg-[var(--glass-bg)] text-[var(--text-secondary)] hover:bg-[var(--glass-bg-hover)]'
               }`}
             >
               {Icon && <Icon className="h-5 w-5" />}

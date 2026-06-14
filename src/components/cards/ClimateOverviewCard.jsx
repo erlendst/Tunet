@@ -82,8 +82,8 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
                 </div>
                 <div className="flex items-center gap-5">
                   {tempValue != null && (
-                    <div className="flex items-center gap-1.5 text-base text-[var(--text-secondary)]">
-                      <TempIcon className="h-5 w-5" />
+                    <div className="flex items-center gap-1.5 text-base text-[var(--text-primary)]">
+                      <TempIcon className="h-5 w-5 text-[var(--accent-color)]" />
                       <span>
                         {Number.isFinite(Number(tempValue))
                           ? Number(tempValue).toFixed(1).replace(/\.0$/, '')
@@ -93,8 +93,8 @@ const ClimateOverviewCard = memo(function ClimateOverviewCard({
                     </div>
                   )}
                   {humidityValue != null && (
-                    <div className="flex items-center gap-1.5 text-base text-[var(--text-secondary)]">
-                      <HumidityIcon className="h-5 w-5" />
+                    <div className="flex items-center gap-1.5 text-base text-[var(--text-primary)]">
+                      <HumidityIcon className="h-5 w-5 text-[var(--accent-color)]" />
                       <span>
                         {Number.isFinite(Number(humidityValue))
                           ? Math.round(Number(humidityValue))

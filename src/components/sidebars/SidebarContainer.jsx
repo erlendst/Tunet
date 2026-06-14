@@ -78,13 +78,15 @@ export default function SidebarContainer({ open, onClose, title, children, icon:
       <div
         ref={panelRef}
         data-testid={testId}
-        className={`popup-anim cubic-bezier(0.34, 1.56, 0.64, 1) fixed inset-y-0 right-0 z-[101] w-full max-w-[360px] transform border-l shadow-2xl backdrop-blur-xl transition-transform duration-500 ${
-          open ? 'translate-x-0' : 'translate-x-full'
+        className={`popup-anim cubic-bezier(0.34, 1.56, 0.64, 1) fixed inset-y-0 right-0 z-[101] w-full max-w-[360px] transform border-l transition-transform duration-500 ${
+          open ? 'translate-x-0 backdrop-blur-xl' : 'translate-x-full'
         }`}
         style={{
           backgroundColor: 'var(--modal-surface, var(--glass-bg))',
           borderColor: 'var(--modal-border, var(--glass-border))',
           borderLeftWidth: 'var(--modal-border-width, 1px)',
+          // Closed sidebars sit off-screen; their .popup-anim shadow would bleed onto the right edge.
+          boxShadow: open ? 'var(--modal-shadow, 0 20px 40px rgba(0, 0, 0, 0.35))' : 'none',
         }}
       >
         <div className="flex h-full flex-col">
