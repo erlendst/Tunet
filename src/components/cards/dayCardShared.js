@@ -156,6 +156,31 @@ export function getHourlyForecastItems(weatherEntity, forecast = []) {
     }));
 }
 
+/* ─── Wake / reconnect helpers ─── */
+
+/**
+ * Re-runs `fetchFn` whenever the page returns to the foreground, the network
+ * comes back, or the HA websocket reconnects. One-shot service calls (forecast,
+ * calendar events) are not resubscribed on reconnect and their polling timers
+ * are frozen while the tab/display sleeps, so without this the data stays stale
+ * (e.g. weather collapses to a single hour, calendar goes empty) until a manual
+ * page refresh. Returns a cleanup function that removes the listeners.
+ */
+export function addWakeListeners(fetchFn, conn) {
+  if (typeof document === 'undefined') return () => {};
+  const onVisible = () => {
+    if (document.visibilityState === 'visible') fetchFn();
+  };
+  document.addEventListener('visibilitychange', onVisible);
+  window.addEventListener('online', fetchFn);
+  conn?.addEventListener?.('ready', fetchFn);
+  return () => {
+    document.removeEventListener('visibilitychange', onVisible);
+    window.removeEventListener('online', fetchFn);
+    conn?.removeEventListener?.('ready', fetchFn);
+  };
+}
+
 /* ─── Shared hooks ─── */
 
 /** Lazily flips to true once the referenced element scrolls near the viewport. */
@@ -224,7 +249,11 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
 
     fetchEvents();
     const interval = setInterval(fetchEvents, 15 * 60 * 1000);
-    return () => clearInterval(interval);
+    const removeWake = addWakeListeners(fetchEvents, conn);
+    return () => {
+      clearInterval(interval);
+      removeWake();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conn, idsKey, isVisible, daysAhead]);
 

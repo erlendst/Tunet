@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ModernDropdown from '../ui/ModernDropdown';
 import M3Slider from '../ui/M3Slider';
 import { GRADIENT_PRESETS } from '../../contexts/ConfigContext';
-import { useConfig } from '../../contexts';
+import { useConfig, useHomeAssistant } from '../../contexts';
 import { isValidPin } from '../../utils';
 import {
   Sparkles,
@@ -71,7 +71,32 @@ export default function ThemeSidebar({
     disableSettingsLock,
     unlockSettingsLock,
     lockSettingsSession,
+    themeAutoEnabled,
+    setThemeAutoEnabled,
+    themeAutoSensor,
+    setThemeAutoSensor,
+    themeAutoOriginalTheme,
+    setThemeAutoOriginalTheme,
+    themeAutoSecondTheme,
+    setThemeAutoSecondTheme,
   } = useConfig();
+  const { entities } = useHomeAssistant();
+
+  // Entities usable as an on/off trigger for auto theme switching.
+  const themeLabelMap = {
+    dark: t('theme.dark'),
+    light: t('theme.light'),
+    contextual: 'Smart (Auto)',
+    oled: t('theme.oled'),
+  };
+  const themeSensorOptions = Object.keys(entities || {})
+    .filter((id) => /^(binary_sensor|input_boolean|switch)\./.test(id))
+    .sort();
+  const themeSensorLabelMap = themeSensorOptions.reduce((acc, id) => {
+    acc[id] = entities?.[id]?.attributes?.friendly_name || id;
+    return acc;
+  }, {});
+
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [unlockPin, setUnlockPin] = useState('');
@@ -192,6 +217,63 @@ export default function ThemeSidebar({
               map={{ dark: t('theme.dark'), light: t('theme.light'), contextual: 'Smart (Auto)', oled: t('theme.oled') }}
               placeholder={t('dropdown.noneSelected')}
             />
+            {/* Auto theme — switch between two themes based on a HA sensor */}
+            <div className="popup-surface space-y-4 rounded-2xl px-5 py-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col">
+                  <span
+                    className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <RefreshCw className="h-4 w-4" style={{ color: 'var(--text-secondary)' }} />
+                    {t('settings.autoTheme')}
+                  </span>
+                  <span className="mt-1 text-[11px]" style={{ color: 'var(--text-muted)' }}>
+                    {t('settings.autoThemeDesc')}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setThemeAutoEnabled(!themeAutoEnabled)}
+                  className={`relative h-6 w-10 shrink-0 rounded-full p-1 transition-colors ${themeAutoEnabled ? 'bg-[var(--glass-bg-hover)]' : 'bg-gray-500/30'}`}
+                  aria-pressed={themeAutoEnabled}
+                >
+                  <div
+                    className={`h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${themeAutoEnabled ? 'translate-x-4' : 'translate-x-0'}`}
+                  />
+                </button>
+              </div>
+              {themeAutoEnabled && (
+                <div className="space-y-4">
+                  <ModernDropdown
+                    label={t('settings.autoThemeSensor')}
+                    icon={Sparkles}
+                    options={themeSensorOptions}
+                    current={themeAutoSensor}
+                    onChange={setThemeAutoSensor}
+                    map={themeSensorLabelMap}
+                    placeholder={t('dropdown.noneSelected')}
+                  />
+                  <ModernDropdown
+                    label={t('settings.autoThemeOriginal')}
+                    icon={Sun}
+                    options={Object.keys(themes)}
+                    current={themeAutoOriginalTheme}
+                    onChange={setThemeAutoOriginalTheme}
+                    map={themeLabelMap}
+                    placeholder={t('dropdown.noneSelected')}
+                  />
+                  <ModernDropdown
+                    label={t('settings.autoThemeSecond')}
+                    icon={Moon}
+                    options={Object.keys(themes)}
+                    current={themeAutoSecondTheme}
+                    onChange={setThemeAutoSecondTheme}
+                    map={themeLabelMap}
+                    placeholder={t('dropdown.noneSelected')}
+                  />
+                </div>
+              )}
+            </div>
             <ModernDropdown
               label={t('settings.language')}
               icon={Globe}

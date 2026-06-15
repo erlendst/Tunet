@@ -20,6 +20,7 @@ import {
 
 import {
   useSmartTheme,
+  useAutoTheme,
   useTempHistory,
   useWeatherForecast,
   useAddCard,
@@ -51,6 +52,10 @@ export function AppContent({ showOnboarding, setShowOnboarding }) {
   const {
     currentTheme,
     setCurrentTheme,
+    themeAutoEnabled,
+    themeAutoSensor,
+    themeAutoOriginalTheme,
+    themeAutoSecondTheme,
     language,
     setLanguage,
     inactivityTimeout,
@@ -351,6 +356,17 @@ export function AppContent({ showOnboarding, setShowOnboarding }) {
 
   // Smart Theme Logic — only active when bgMode is 'theme'
   useSmartTheme({ currentTheme, bgMode, entities, now });
+
+  // Auto theme — switch themes based on a HA binary sensor
+  useAutoTheme({
+    enabled: themeAutoEnabled,
+    sensorId: themeAutoSensor,
+    originalTheme: themeAutoOriginalTheme,
+    secondTheme: themeAutoSecondTheme,
+    entities,
+    currentTheme,
+    setCurrentTheme,
+  });
 
   // ── Entity accessor helpers ────────────────────────────────────────────
   const {

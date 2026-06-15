@@ -57,6 +57,41 @@ export const ConfigProvider = ({ children }) => {
     return 'dark';
   });
 
+  // Auto theme: switch between two themes based on a HA binary sensor.
+  const [themeAutoEnabled, setThemeAutoEnabled] = useState(() => {
+    try {
+      return localStorage.getItem('tunet_theme_auto_enabled') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const [themeAutoSensor, setThemeAutoSensor] = useState(() => {
+    try {
+      return localStorage.getItem('tunet_theme_auto_sensor') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const [themeAutoOriginalTheme, setThemeAutoOriginalTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tunet_theme_auto_original');
+      return saved && themes[saved] ? saved : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  const [themeAutoSecondTheme, setThemeAutoSecondTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tunet_theme_auto_second');
+      return saved && themes[saved] ? saved : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
   const [language, setLanguage] = useState(() => {
     try {
       const rawLanguage = localStorage.getItem('tunet_language') || DEFAULT_LANGUAGE;
@@ -278,6 +313,31 @@ export const ConfigProvider = ({ children }) => {
       console.error('Failed to save theme to localStorage:', error);
     }
   }, [currentTheme]);
+
+  // Persist auto-theme settings
+  useEffect(() => {
+    try {
+      localStorage.setItem('tunet_theme_auto_enabled', themeAutoEnabled ? '1' : '0');
+    } catch {}
+  }, [themeAutoEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tunet_theme_auto_sensor', themeAutoSensor);
+    } catch {}
+  }, [themeAutoSensor]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tunet_theme_auto_original', themeAutoOriginalTheme);
+    } catch {}
+  }, [themeAutoOriginalTheme]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tunet_theme_auto_second', themeAutoSecondTheme);
+    } catch {}
+  }, [themeAutoSecondTheme]);
 
   // Apply background based on bgMode
   useEffect(() => {
@@ -543,6 +603,14 @@ export const ConfigProvider = ({ children }) => {
     currentTheme,
     setCurrentTheme,
     toggleTheme,
+    themeAutoEnabled,
+    setThemeAutoEnabled,
+    themeAutoSensor,
+    setThemeAutoSensor,
+    themeAutoOriginalTheme,
+    setThemeAutoOriginalTheme,
+    themeAutoSecondTheme,
+    setThemeAutoSecondTheme,
     language,
     setLanguage,
     unitsMode,

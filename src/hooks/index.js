@@ -1,5 +1,6 @@
 export { useModals } from './useModals';
 export { useSmartTheme } from './useSmartTheme';
+export { useAutoTheme } from './useAutoTheme';
 export { default as useTempHistory } from './useTempHistory';
 export { default as useWeatherForecast } from './useWeatherForecast';
 export { useAddCard } from './useAddCard';

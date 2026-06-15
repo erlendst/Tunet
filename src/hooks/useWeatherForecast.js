@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getForecast } from '../services';
+import { addWakeListeners } from '../components/cards/dayCardShared';
 
 /**
  * Hook to map multiple weather entities to forecast data
@@ -66,10 +67,12 @@ export default function useWeatherForecast(conn, cardSettings) {
 
     fetchForecasts();
     const interval = setInterval(fetchForecasts, 30 * 60 * 1000);
+    const removeWake = addWakeListeners(fetchForecasts, conn);
 
     return () => {
       cancelled = true;
       clearInterval(interval);
+      removeWake();
     };
   }, [conn, weatherIds]);
 

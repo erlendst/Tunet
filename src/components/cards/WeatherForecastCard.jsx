@@ -4,6 +4,7 @@ import { getForecast } from '../../services/haClient';
 import {
   HOUR_FORECAST_LIMIT,
   WEATHER_CONDITION_ICONS,
+  addWakeListeners,
   formatWeatherValue,
   getCurrentHourItem,
   getHourlyForecastItems,
@@ -60,9 +61,11 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
 
     void fetchForecast();
     const interval = setInterval(fetchForecast, 30 * 60 * 1000);
+    const removeWake = addWakeListeners(() => void fetchForecast(), conn);
     return () => {
       cancelled = true;
       clearInterval(interval);
+      removeWake();
     };
   }, [conn, isVisible, isWeatherDomain, weatherEntity?.entity_id]);
 
