@@ -16,6 +16,7 @@ import {
 import { saveTokens, loadTokens, clearOAuthTokens, hasOAuthTokens } from '../services/oauthStorage';
 import { HOME_ASSISTANT_API_UNAUTHORIZED_EVENT, setOAuthAuthProvider } from '../services/apiAuth';
 import { isEntityDataStale } from '../utils';
+import { recordConnEvent } from '../utils/connectionDiagnostics';
 
 /** @typedef {import('../types/dashboard').EntityMap} EntityMap */
 /** @typedef {import('../types/dashboard').HomeAssistantContextValue} HomeAssistantContextValue */
@@ -410,6 +411,7 @@ export const HomeAssistantProvider = ({ children, config }) => {
 
     const handleReady = () => {
       if (!cancelled) {
+        recordConnEvent('ready');
         setConnected(true);
         setHaUnavailable(false);
         setDisconnectedSince(null);
@@ -417,6 +419,7 @@ export const HomeAssistantProvider = ({ children, config }) => {
     };
     const handleDisconnected = () => {
       if (!cancelled) {
+        recordConnEvent('disconnected');
         setConnected(false);
         setHaUnavailable(true);
         setDisconnectedSince(Date.now());
@@ -430,6 +433,65 @@ export const HomeAssistantProvider = ({ children, config }) => {
       cancelled = true;
       conn.removeEventListener?.('ready', handleReady);
       conn.removeEventListener?.('disconnected', handleDisconnected);
+    };
+  }, [conn]);
+
+  // ── Detect half-open sockets and force a reconnect ─────────────────────
+  // home-assistant-js-websocket only auto-reconnects when the socket fires a
+  // `close` event. A half-open socket — dead after the device sleeps or the
+  // wifi drops, but with no FIN — never fires `close`, so the library keeps
+  // delivering cached entity states (lights/sensors still look fine) while
+  // request/response calls (weather.get_forecasts, calendar.get_events,
+  // history) hang forever. Switching pages remounts those cards, they re-issue
+  // the hung calls, and they render empty. We actively ping; if no pong comes
+  // back we discard the socket and rebuild it. The resulting `ready` event
+  // re-runs the card fetches wired up via addWakeListeners.
+  useEffect(() => {
+    if (!conn || typeof document === 'undefined') return undefined;
+
+    const PING_TIMEOUT_MS = 5000;
+    const HEARTBEAT_MS = 15000;
+    let checking = false;
+
+    const verifyConnection = async () => {
+      if (checking || !conn.connected) return;
+      checking = true;
+      let timer;
+      try {
+        await Promise.race([
+          conn.ping(),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error('ping timeout')), PING_TIMEOUT_MS);
+          }),
+        ]);
+      } catch {
+        console.warn('[HA] websocket unresponsive — forcing reconnect');
+        recordConnEvent('dead-socket-reconnect', { trigger: 'ping-timeout' });
+        try {
+          conn.reconnect(true);
+        } catch {}
+      } finally {
+        clearTimeout(timer);
+        checking = false;
+      }
+    };
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') verifyConnection();
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('online', verifyConnection);
+    window.addEventListener('focus', verifyConnection);
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') verifyConnection();
+    }, HEARTBEAT_MS);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('online', verifyConnection);
+      window.removeEventListener('focus', verifyConnection);
+      clearInterval(interval);
     };
   }, [conn]);
 
