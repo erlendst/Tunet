@@ -218,7 +218,7 @@ export default function ThemeSidebar({
               placeholder={t('dropdown.noneSelected')}
             />
             {/* Auto theme — switch between two themes based on a HA sensor */}
-            <div className="popup-surface space-y-4 rounded-2xl px-5 py-4">
+            <div className="popup-surface relative space-y-4 rounded-2xl px-5 py-4 has-[[data-open]]:z-50">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-col">
                   <span

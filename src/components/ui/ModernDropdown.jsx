@@ -23,7 +23,11 @@ export default function ModernDropdown({
   const getLabel = (val) => (map && map[val] ? map[val] : val);
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div
+      className={`relative w-full ${isOpen ? 'z-50' : ''}`}
+      ref={dropdownRef}
+      data-open={isOpen ? '' : undefined}
+    >
       <p
         className="mb-3 ml-1 text-xs font-bold uppercase"
         style={{ color: 'var(--text-muted)', letterSpacing: '0.2em' }}
