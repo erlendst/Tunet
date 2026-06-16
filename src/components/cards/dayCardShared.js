@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Cloud, CloudRain, CloudSun, Moon, Snowflake, Sun, Wind } from '../../icons';
 import { getCalendarEvents } from '../../services/haClient';
+import { recordConnEvent } from '../../utils/connectionDiagnostics';
 
 /* ─── Shared constants ─── */
 
@@ -211,16 +212,55 @@ export function useLazyVisible() {
  */
 export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, label = 'calendar') {
   const [events, setEvents] = useState([]);
+  // Mirror of the latest events so the fetch logic can tell a transient empty
+  // response apart from a genuinely empty calendar without re-subscribing.
+  const eventsRef = useRef([]);
+  useEffect(() => {
+    eventsRef.current = events;
+  }, [events]);
+
   const ids = Array.isArray(entityIds) ? entityIds.filter(Boolean) : [];
   const idsKey = ids.join('|');
 
   useEffect(() => {
     if (!conn || ids.length === 0 || !isVisible) {
-      if (ids.length === 0) setEvents([]);
+      if (ids.length === 0) {
+        // Distinguish "no calendar configured" from a calendar id list that
+        // briefly emptied during a settings re-sync (which would blank a card
+        // that was showing events a moment ago).
+        if (eventsRef.current.length > 0) {
+          recordConnEvent('calendar-ids-empty', { label });
+        }
+        setEvents([]);
+      }
       return;
     }
 
-    const fetchEvents = async () => {
+    // HA's calendar.get_events occasionally resolves *successfully but empty*
+    // during a calendar-integration token refresh / transient hiccup. The old
+    // code wrote that empty straight into state, blanking a populated card until
+    // the next 15-minute poll. Rules now:
+    //   • a non-empty result always wins;
+    //   • an empty result NEVER overwrites a populated card (we keep what we have
+    //     and retry soon);
+    //   • only a fresh card with no prior events accepts empty, and only after a
+    //     few quick retries (so a genuinely empty week still renders empty).
+    let cancelled = false;
+    let retryTimer;
+    const MAX_RETRIES = 4;
+    const RETRY_DELAY_MS = 8000;
+
+    const apply = (all) => {
+      if (cancelled) return;
+      eventsRef.current = all;
+      setEvents(all);
+    };
+
+    const fetchEvents = async (attempt = 0) => {
+      if (cancelled) return;
+      clearTimeout(retryTimer);
+
+      let all;
       try {
         const start = new Date();
         start.setHours(0, 0, 0, 0);
@@ -229,28 +269,65 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         end.setHours(23, 59, 59, 999);
 
         const result = await getCalendarEvents(conn, { start, end, entityIds: ids });
-        if (!result) { setEvents([]); return; }
+        if (cancelled) return;
 
-        let all = [];
-        Object.values(result).forEach((cal) => {
-          if (cal && Array.isArray(cal.events)) all = [...all, ...cal.events];
-        });
+        all = [];
+        if (result) {
+          Object.values(result).forEach((cal) => {
+            if (cal && Array.isArray(cal.events)) all = [...all, ...cal.events];
+          });
+        }
         all = all.filter((e) => e && e.start);
         all.sort((a, b) => {
           const ta = new Date(a.start?.dateTime || a.start?.date || a.start).getTime();
           const tb = new Date(b.start?.dateTime || b.start?.date || b.start).getTime();
           return ta - tb;
         });
-        setEvents(all);
       } catch (err) {
+        if (cancelled) return;
         console.error(`${label}: failed to fetch calendar events`, err);
+        recordConnEvent('calendar-fetch-error', {
+          label,
+          attempt,
+          message: String(err?.message || err),
+        });
+        if (attempt < MAX_RETRIES) {
+          retryTimer = setTimeout(() => fetchEvents(attempt + 1), RETRY_DELAY_MS);
+        }
+        return; // keep whatever we already show
       }
+
+      if (all.length > 0) {
+        apply(all);
+        return;
+      }
+
+      // Empty result.
+      const hadEvents = eventsRef.current.length > 0;
+      if (hadEvents) {
+        // Never blank a populated calendar on a transient empty. Keep showing
+        // the last good events and retry; the next non-empty result replaces them.
+        recordConnEvent('calendar-empty-kept-previous', { label, attempt });
+        if (attempt < MAX_RETRIES) {
+          retryTimer = setTimeout(() => fetchEvents(attempt + 1), RETRY_DELAY_MS);
+        }
+        return;
+      }
+      if (attempt < MAX_RETRIES) {
+        recordConnEvent('calendar-empty-retry', { label, attempt });
+        retryTimer = setTimeout(() => fetchEvents(attempt + 1), RETRY_DELAY_MS);
+        return;
+      }
+      // Fresh card, retries exhausted, still nothing: accept a genuinely empty range.
+      apply([]);
     };
 
     fetchEvents();
-    const interval = setInterval(fetchEvents, 15 * 60 * 1000);
-    const removeWake = addWakeListeners(fetchEvents, conn);
+    const interval = setInterval(() => fetchEvents(), 15 * 60 * 1000);
+    const removeWake = addWakeListeners(() => fetchEvents(), conn);
     return () => {
+      cancelled = true;
+      clearTimeout(retryTimer);
       clearInterval(interval);
       removeWake();
     };

@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { Cloud } from '../../icons';
 import { getForecast } from '../../services/haClient';
+import { recordConnEvent } from '../../utils/connectionDiagnostics';
 import {
   HOUR_FORECAST_LIMIT,
   WEATHER_CONDITION_ICONS,
@@ -43,27 +44,43 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
     }
 
     let cancelled = false;
+    let retryTimer;
     const entityId = weatherEntity.entity_id;
+    const MAX_RETRIES = 4;
+    const RETRY_DELAY_MS = 8000;
 
-    const fetchForecast = async () => {
+    // A non-empty result always wins; an empty/failed fetch never clobbers a
+    // populated forecast and is retried quickly instead of waiting 30 minutes.
+    const fetchForecast = async (attempt = 0) => {
+      if (cancelled) return;
+      clearTimeout(retryTimer);
       try {
         let data = await getForecast(conn, { entityId, type: 'hourly' });
         if (!Array.isArray(data) || data.length === 0) {
           data = await getForecast(conn, { entityId, type: 'daily' });
         }
-        if (!cancelled && Array.isArray(data) && data.length > 0) {
+        if (cancelled) return;
+        if (Array.isArray(data) && data.length > 0) {
           setForecast(data);
+        } else if (attempt < MAX_RETRIES) {
+          recordConnEvent('weather-empty-retry', { entityId, attempt });
+          retryTimer = setTimeout(() => fetchForecast(attempt + 1), RETRY_DELAY_MS);
         }
-      } catch {
-        // Ignore forecast fetch failures and rely on entity attributes as fallback.
+      } catch (err) {
+        if (cancelled) return;
+        recordConnEvent('weather-fetch-error', { entityId, attempt, message: String(err?.message || err) });
+        if (attempt < MAX_RETRIES) {
+          retryTimer = setTimeout(() => fetchForecast(attempt + 1), RETRY_DELAY_MS);
+        }
       }
     };
 
     void fetchForecast();
-    const interval = setInterval(fetchForecast, 30 * 60 * 1000);
-    const removeWake = addWakeListeners(() => void fetchForecast(), conn);
+    const interval = setInterval(() => fetchForecast(), 30 * 60 * 1000);
+    const removeWake = addWakeListeners(() => fetchForecast(), conn);
     return () => {
       cancelled = true;
+      clearTimeout(retryTimer);
       clearInterval(interval);
       removeWake();
     };
