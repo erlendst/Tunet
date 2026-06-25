@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Cloud, CloudRain, CloudSun, Moon, Snowflake, Sun, Wind } from '../../icons';
 import { getCalendarEvents } from '../../services/haClient';
-import { recordConnEvent } from '../../utils/connectionDiagnostics';
+import { recordConnEvent, cardDebug } from '../../utils/connectionDiagnostics';
 
 /* ─── Shared constants ─── */
 
@@ -201,39 +201,52 @@ export function addWakeListeners(fetchFn, conn) {
  * view. We also fail OPEN — if we can't measure, we show rather than risk a
  * permanently blank card.
  */
-export function useLazyVisible() {
+export function useLazyVisible(label = 'card') {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (isVisible) return undefined;
+    if (isVisible) {
+      cardDebug(label, 'lazy: already visible, skipping');
+      return undefined;
+    }
 
     const el = ref.current;
     if (!el || typeof el.getBoundingClientRect !== 'function') {
+      cardDebug(label, 'lazy: no measurable element -> fail open (visible)');
       setIsVisible(true);
       return undefined;
     }
 
     const MARGIN = 200;
-    const isNearViewport = () => {
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight || 0;
-      const vw = window.innerWidth || document.documentElement.clientWidth || 0;
-      return (
-        rect.bottom >= -MARGIN &&
-        rect.right >= -MARGIN &&
-        rect.top <= vh + MARGIN &&
-        rect.left <= vw + MARGIN
-      );
-    };
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    const near =
+      rect.bottom >= -MARGIN &&
+      rect.right >= -MARGIN &&
+      rect.top <= vh + MARGIN &&
+      rect.left <= vw + MARGIN;
 
-    if (isNearViewport()) {
+    cardDebug(label, 'lazy: mount check', {
+      top: Math.round(rect.top),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height),
+      vh,
+      near,
+    });
+
+    if (near) {
+      cardDebug(label, 'lazy: -> visible (synchronous)');
       setIsVisible(true);
       return undefined;
     }
 
+    cardDebug(label, 'lazy: off-screen, attaching observer');
     const observer = new IntersectionObserver(
       ([entry]) => {
+        cardDebug(label, 'lazy: observer fired', { isIntersecting: entry.isIntersecting });
         if (entry.isIntersecting) {
           setIsVisible(true);
           observer.disconnect();
@@ -243,7 +256,7 @@ export function useLazyVisible() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, [isVisible, label]);
 
   return [ref, isVisible];
 }
@@ -265,7 +278,13 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
   const idsKey = ids.join('|');
 
   useEffect(() => {
+    cardDebug(label, 'cal effect run', { hasConn: !!conn, ids: ids.length, idsKey, isVisible });
     if (!conn || ids.length === 0 || !isVisible) {
+      cardDebug(label, 'cal effect BAILED (no fetch)', {
+        hasConn: !!conn,
+        ids: ids.length,
+        isVisible,
+      });
       if (ids.length === 0) {
         // Distinguish "no calendar configured" from a calendar id list that
         // briefly emptied during a settings re-sync (which would blank a card
@@ -310,8 +329,18 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         end.setDate(end.getDate() + daysAhead);
         end.setHours(23, 59, 59, 999);
 
+        cardDebug(label, 'cal fetching', { attempt, ids, daysAhead });
         const result = await getCalendarEvents(conn, { start, end, entityIds: ids });
         if (cancelled) return;
+        cardDebug(label, 'cal raw result', {
+          isObject: !!result && typeof result === 'object',
+          keys: result ? Object.keys(result) : null,
+          perKeyCounts: result
+            ? Object.fromEntries(
+                Object.entries(result).map(([k, v]) => [k, Array.isArray(v?.events) ? v.events.length : 'no-events-array'])
+              )
+            : null,
+        });
 
         all = [];
         if (result) {
@@ -339,13 +368,17 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         return; // keep whatever we already show
       }
 
+      cardDebug(label, 'cal parsed events', { count: all.length, attempt });
+
       if (all.length > 0) {
         apply(all);
+        cardDebug(label, 'cal APPLIED events', all.length);
         return;
       }
 
       // Empty result.
       const hadEvents = eventsRef.current.length > 0;
+      cardDebug(label, 'cal empty result', { hadEvents, attempt });
       if (hadEvents) {
         // Never blank a populated calendar on a transient empty. Keep showing
         // the last good events and retry; the next non-empty result replaces them.

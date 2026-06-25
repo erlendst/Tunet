@@ -16,7 +16,7 @@ const DinnerPlanCard = memo(function DinnerPlanCard({
   conn,
   editMode,
 }) {
-  const [cardRef, isVisible] = useLazyVisible();
+  const [cardRef, isVisible] = useLazyVisible('dinner');
 
   const mealCalendarId = settings?.mealCalendarId || null;
   const title = customName || settings?.name || 'Middagsplan';

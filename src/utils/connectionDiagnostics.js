@@ -50,6 +50,34 @@ export function clearConnLog() {
   } catch {}
 }
 
+// ── Verbose per-card debug logging ──────────────────────────────────────────
+// Off by default. Turn on from the browser console with:
+//     localStorage.tunet_card_debug = '1'   (then reload)
+// or by adding ?carddebug to the URL. Logs the full lifecycle of the
+// visibility gate and data fetch for the weather/calendar/todo/sensor cards so
+// an intermittent "blank card" can be traced to an exact step.
+let _cardDebug;
+function cardDebugEnabled() {
+  if (_cardDebug === undefined) {
+    try {
+      _cardDebug =
+        localStorage.getItem('tunet_card_debug') === '1' ||
+        (typeof window !== 'undefined' &&
+          new URLSearchParams(window.location.search).has('carddebug'));
+    } catch {
+      _cardDebug = false;
+    }
+  }
+  return _cardDebug;
+}
+
+export function cardDebug(label, ...args) {
+  if (!cardDebugEnabled()) return;
+  const ts = new Date().toISOString().slice(11, 23);
+  // eslint-disable-next-line no-console
+  console.log(`%c[cards ${ts}] ${label}`, 'color:#0a84ff;font-weight:bold', ...args);
+}
+
 // Console helper: `tunetConnLog()` prints the timeline and returns the raw array.
 if (typeof window !== 'undefined') {
   window.tunetConnLog = () => {

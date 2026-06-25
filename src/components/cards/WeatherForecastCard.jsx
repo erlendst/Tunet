@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { Cloud } from '../../icons';
 import { getForecast } from '../../services/haClient';
-import { recordConnEvent } from '../../utils/connectionDiagnostics';
+import { recordConnEvent, cardDebug } from '../../utils/connectionDiagnostics';
 import {
   HOUR_FORECAST_LIMIT,
   WEATHER_CONDITION_ICONS,
@@ -23,7 +23,7 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
   editMode,
 }) {
   const [forecast, setForecast] = useState([]);
-  const [cardRef, isVisible] = useLazyVisible();
+  const [cardRef, isVisible] = useLazyVisible('weather');
 
   const weatherEntityId = settings?.weatherEntityId || null;
   const title = customName || settings?.name || 'Værvarsel';
@@ -37,8 +37,24 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
         .slice(0, HOUR_FORECAST_LIMIT)
     : [];
 
+  cardDebug('weather', 'render', {
+    weatherEntityId,
+    hasEntity: !!weatherEntity,
+    isWeatherDomain,
+    isVisible,
+    forecastLen: forecast.length,
+    hourlyShown: hourlyWeather.length,
+  });
+
   useEffect(() => {
+    cardDebug('weather', 'fetch effect run', {
+      hasConn: !!conn,
+      isVisible,
+      isWeatherDomain,
+      entityId: weatherEntity?.entity_id,
+    });
     if (!conn || !isVisible || !isWeatherDomain) {
+      cardDebug('weather', 'fetch effect BAILED', { hasConn: !!conn, isVisible, isWeatherDomain });
       if (!isWeatherDomain) setForecast([]);
       return;
     }
@@ -55,13 +71,22 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
       if (cancelled) return;
       clearTimeout(retryTimer);
       try {
+        cardDebug('weather', 'fetching forecast', { entityId, attempt });
         let data = await getForecast(conn, { entityId, type: 'hourly' });
+        let usedType = 'hourly';
         if (!Array.isArray(data) || data.length === 0) {
           data = await getForecast(conn, { entityId, type: 'daily' });
+          usedType = 'daily';
         }
         if (cancelled) return;
+        cardDebug('weather', 'forecast result', {
+          usedType,
+          isArray: Array.isArray(data),
+          count: Array.isArray(data) ? data.length : null,
+        });
         if (Array.isArray(data) && data.length > 0) {
           setForecast(data);
+          cardDebug('weather', 'forecast APPLIED', data.length);
         } else if (attempt < MAX_RETRIES) {
           recordConnEvent('weather-empty-retry', { entityId, attempt });
           retryTimer = setTimeout(() => fetchForecast(attempt + 1), RETRY_DELAY_MS);

@@ -18,7 +18,7 @@ const WeeklyPlanCard = memo(function WeeklyPlanCard({
   conn,
   editMode,
 }) {
-  const [cardRef, isVisible] = useLazyVisible();
+  const [cardRef, isVisible] = useLazyVisible('weekly');
 
   // Re-render every minute so the clock in the date header stays current.
   const [, setTick] = useState(0);
