@@ -278,7 +278,13 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
   const idsKey = ids.join('|');
 
   useEffect(() => {
-    cardDebug(label, 'cal effect run', { hasConn: !!conn, ids: ids.length, idsKey, isVisible });
+    cardDebug(label, 'cal effect run', {
+      hasConn: !!conn,
+      connConnected: conn?.connected,
+      ids: ids.length,
+      idsKey,
+      isVisible,
+    });
     if (!conn || ids.length === 0 || !isVisible) {
       cardDebug(label, 'cal effect BAILED (no fetch)', {
         hasConn: !!conn,
@@ -329,7 +335,7 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         end.setDate(end.getDate() + daysAhead);
         end.setHours(23, 59, 59, 999);
 
-        cardDebug(label, 'cal fetching', { attempt, ids, daysAhead });
+        cardDebug(label, 'cal fetching', { attempt, ids, daysAhead, connConnected: conn?.connected });
         const result = await getCalendarEvents(conn, { start, end, entityIds: ids });
         if (cancelled) return;
         cardDebug(label, 'cal raw result', {

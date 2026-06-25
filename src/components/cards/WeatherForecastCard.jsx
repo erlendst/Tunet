@@ -49,6 +49,7 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
   useEffect(() => {
     cardDebug('weather', 'fetch effect run', {
       hasConn: !!conn,
+      connConnected: conn?.connected,
       isVisible,
       isWeatherDomain,
       entityId: weatherEntity?.entity_id,
@@ -71,7 +72,7 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
       if (cancelled) return;
       clearTimeout(retryTimer);
       try {
-        cardDebug('weather', 'fetching forecast', { entityId, attempt });
+        cardDebug('weather', 'fetching forecast', { entityId, attempt, connConnected: conn?.connected });
         let data = await getForecast(conn, { entityId, type: 'hourly' });
         let usedType = 'hourly';
         if (!Array.isArray(data) || data.length === 0) {
