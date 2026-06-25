@@ -201,64 +201,18 @@ export function addWakeListeners(fetchFn, conn) {
  * view. We also fail OPEN — if we can't measure, we show rather than risk a
  * permanently blank card.
  */
-export function useLazyVisible(label = 'card') {
+export function useLazyVisible() {
   const ref = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    if (isVisible) {
-      cardDebug(label, 'lazy: already visible, skipping');
-      return undefined;
-    }
-
-    const el = ref.current;
-    if (!el || typeof el.getBoundingClientRect !== 'function') {
-      cardDebug(label, 'lazy: no measurable element -> fail open (visible)');
-      setIsVisible(true);
-      return undefined;
-    }
-
-    const MARGIN = 200;
-    const rect = el.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
-    const vw = window.innerWidth || document.documentElement.clientWidth || 0;
-    const near =
-      rect.bottom >= -MARGIN &&
-      rect.right >= -MARGIN &&
-      rect.top <= vh + MARGIN &&
-      rect.left <= vw + MARGIN;
-
-    cardDebug(label, 'lazy: mount check', {
-      top: Math.round(rect.top),
-      bottom: Math.round(rect.bottom),
-      width: Math.round(rect.width),
-      height: Math.round(rect.height),
-      vh,
-      near,
-    });
-
-    if (near) {
-      cardDebug(label, 'lazy: -> visible (synchronous)');
-      setIsVisible(true);
-      return undefined;
-    }
-
-    cardDebug(label, 'lazy: off-screen, attaching observer');
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        cardDebug(label, 'lazy: observer fired', { isIntersecting: entry.isIntersecting });
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: `${MARGIN}px` }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isVisible, label]);
-
-  return [ref, isVisible];
+  // Lazy-visibility gating has been removed. It was the root cause of cards
+  // staying blank after an in-app page switch: on remount the IntersectionObserver's
+  // first sample could report "not intersecting" and never fire again, leaving
+  // isVisible stuck false and the data fetch permanently gated off (proven by
+  // logs showing `isVisible:false` on the remounted weather card). These are
+  // always-present dashboard cards and cards on inactive pages are unmounted
+  // anyway, so the optimisation saved little. Treat cards as visible on mount
+  // and fetch immediately; `ref` is still returned for callers that measure the
+  // element (e.g. CalendarCard's width ResizeObserver).
+  return [ref, true];
 }
 
 /**
@@ -338,15 +292,23 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         cardDebug(label, 'cal fetching', { attempt, ids, daysAhead, connConnected: conn?.connected });
         const result = await getCalendarEvents(conn, { start, end, entityIds: ids });
         if (cancelled) return;
-        cardDebug(label, 'cal raw result', {
-          isObject: !!result && typeof result === 'object',
-          keys: result ? Object.keys(result) : null,
-          perKeyCounts: result
-            ? Object.fromEntries(
-                Object.entries(result).map(([k, v]) => [k, Array.isArray(v?.events) ? v.events.length : 'no-events-array'])
-              )
-            : null,
-        });
+        cardDebug(
+          label,
+          'cal raw result',
+          'keys=' + JSON.stringify(result ? Object.keys(result) : null),
+          'perKeyCounts=' +
+            JSON.stringify(
+              result
+                ? Object.fromEntries(
+                    Object.entries(result).map(([k, v]) => [
+                      k,
+                      Array.isArray(v?.events) ? v.events.length : 'NO-events-array',
+                    ])
+                  )
+                : null
+            ),
+          'rawSample=' + JSON.stringify(result).slice(0, 400)
+        );
 
         all = [];
         if (result) {

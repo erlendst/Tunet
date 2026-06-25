@@ -23,7 +23,7 @@ const WeatherForecastCard = memo(function WeatherForecastCard({
   editMode,
 }) {
   const [forecast, setForecast] = useState([]);
-  const [cardRef, isVisible] = useLazyVisible('weather');
+  const [cardRef, isVisible] = useLazyVisible();
 
   const weatherEntityId = settings?.weatherEntityId || null;
   const title = customName || settings?.name || 'Værvarsel';
