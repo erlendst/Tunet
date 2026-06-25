@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Cloud, CloudRain, CloudSun, Moon, Snowflake, Sun, Wind } from '../../icons';
 import { getCalendarEvents } from '../../services/haClient';
-import { recordConnEvent, cardDebug } from '../../utils/connectionDiagnostics';
+import { recordConnEvent } from '../../utils/connectionDiagnostics';
 
 /* ─── Shared constants ─── */
 
@@ -232,19 +232,7 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
   const idsKey = ids.join('|');
 
   useEffect(() => {
-    cardDebug(label, 'cal effect run', {
-      hasConn: !!conn,
-      connConnected: conn?.connected,
-      ids: ids.length,
-      idsKey,
-      isVisible,
-    });
     if (!conn || ids.length === 0 || !isVisible) {
-      cardDebug(label, 'cal effect BAILED (no fetch)', {
-        hasConn: !!conn,
-        ids: ids.length,
-        isVisible,
-      });
       if (ids.length === 0) {
         // Distinguish "no calendar configured" from a calendar id list that
         // briefly emptied during a settings re-sync (which would blank a card
@@ -289,26 +277,8 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         end.setDate(end.getDate() + daysAhead);
         end.setHours(23, 59, 59, 999);
 
-        cardDebug(label, 'cal fetching', { attempt, ids, daysAhead, connConnected: conn?.connected });
         const result = await getCalendarEvents(conn, { start, end, entityIds: ids });
         if (cancelled) return;
-        cardDebug(
-          label,
-          'cal raw result',
-          'keys=' + JSON.stringify(result ? Object.keys(result) : null),
-          'perKeyCounts=' +
-            JSON.stringify(
-              result
-                ? Object.fromEntries(
-                    Object.entries(result).map(([k, v]) => [
-                      k,
-                      Array.isArray(v?.events) ? v.events.length : 'NO-events-array',
-                    ])
-                  )
-                : null
-            ),
-          'rawSample=' + JSON.stringify(result).slice(0, 400)
-        );
 
         all = [];
         if (result) {
@@ -336,17 +306,13 @@ export function useCalendarEvents(conn, entityIds, isVisible, daysAhead = 6, lab
         return; // keep whatever we already show
       }
 
-      cardDebug(label, 'cal parsed events', { count: all.length, attempt });
-
       if (all.length > 0) {
         apply(all);
-        cardDebug(label, 'cal APPLIED events', all.length);
         return;
       }
 
       // Empty result.
       const hadEvents = eventsRef.current.length > 0;
-      cardDebug(label, 'cal empty result', { hadEvents, attempt });
       if (hadEvents) {
         // Never blank a populated calendar on a transient empty. Keep showing
         // the last good events and retry; the next non-empty result replaces them.
