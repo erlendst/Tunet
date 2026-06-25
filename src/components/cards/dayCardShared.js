@@ -184,12 +184,54 @@ export function addWakeListeners(fetchFn, conn) {
 
 /* ─── Shared hooks ─── */
 
-/** Lazily flips to true once the referenced element scrolls near the viewport. */
+/**
+ * Flips to true as soon as the referenced element is on (or near) the screen.
+ *
+ * Cards gate their data fetch behind this. The earlier version relied solely on
+ * an IntersectionObserver's async callback to flip it true — which works on a
+ * full page load but is unreliable on an in-app remount (e.g. switching to
+ * another page and back): the grid is rebuilt via `key={activePage}` behind a
+ * fade transition, and the observer's first sample can land before layout
+ * settles and report "not intersecting", with no follow-up callback ever
+ * arriving. The flag then stays false forever and the fetch never runs, leaving
+ * the calendar blank and the weather stuck on the current hour.
+ *
+ * Fix: measure synchronously on mount and show immediately if the card is on
+ * screen, falling back to the observer only for cards genuinely scrolled out of
+ * view. We also fail OPEN — if we can't measure, we show rather than risk a
+ * permanently blank card.
+ */
 export function useLazyVisible() {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (isVisible) return undefined;
+
+    const el = ref.current;
+    if (!el || typeof el.getBoundingClientRect !== 'function') {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const MARGIN = 200;
+    const isNearViewport = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+      return (
+        rect.bottom >= -MARGIN &&
+        rect.right >= -MARGIN &&
+        rect.top <= vh + MARGIN &&
+        rect.left <= vw + MARGIN
+      );
+    };
+
+    if (isNearViewport()) {
+      setIsVisible(true);
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -197,11 +239,11 @@ export function useLazyVisible() {
           observer.disconnect();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: `${MARGIN}px` }
     );
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [isVisible]);
 
   return [ref, isVisible];
 }
