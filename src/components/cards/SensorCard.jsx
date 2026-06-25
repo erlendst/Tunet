@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { Minus, Plus, Activity, Play } from 'lucide-react';
 import { getHistory, getStatistics } from '../../services/haClient';
+import { useLazyVisible } from './dayCardShared';
 import SparkLine from '../charts/SparkLine';
 import { Gauge, Donut, Bar } from '../charts/SensorGauge';
 import { useConfig, useHomeAssistantMeta } from '../../contexts';
@@ -241,9 +242,8 @@ const SensorCard = memo(function SensorCard({
     normalizedNumericState !== null;
 
   const [history, setHistory] = useState([]);
-  const [isVisible, setIsVisible] = useState(false);
   const [activeUntil, setActiveUntil] = useState(0);
-  const cardRef = useRef(null);
+  const [cardRef, isVisible] = useLazyVisible();
 
   useEffect(() => {
     if (activeUntil > 0) {
@@ -253,24 +253,6 @@ const SensorCard = memo(function SensorCard({
       return () => clearTimeout(timeout);
     }
   }, [activeUntil]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!conn || !entity?.entity_id || !showGraph || !isVisible) {

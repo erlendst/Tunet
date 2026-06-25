@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { Circle, CheckCircle2, Plus, AlertCircle, ListChecks, Trash2 } from 'lucide-react';
 import { getIconComponent } from '../../icons';
 import { getTodoItems, addTodoItem, updateTodoItem, removeTodoItem } from '../../services/haClient';
+import { useLazyVisible } from './dayCardShared';
 
 class TodoErrorBoundary extends React.Component {
   constructor(props) {
@@ -51,28 +52,13 @@ const TodoCard = memo(function TodoCard({
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef(null);
+  const [cardRef, isVisible] = useLazyVisible();
 
   // Large card interactive state
   const [newItemText, setNewItemText] = useState('');
   const [adding, setAdding] = useState(false);
 
   const todoEntityId = settings?.todoEntityId;
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   const fetchItems = useCallback(async () => {
     if (!conn || !todoEntityId) {

@@ -138,14 +138,27 @@ const ScooterCard = memo(function ScooterCard({
     enabled: isVisible && !!lat && !!lon,
   });
 
-  // Only poll when the card is actually in the viewport
+  // Only poll when the card is actually in the viewport. Seed the value with a
+  // synchronous measurement so an in-app remount (page switch) doesn't get stuck
+  // waiting on the observer's first async sample, which may report "not visible"
+  // before layout settles and never fire again. Fail open if we can't measure.
   useEffect(() => {
-    if (!cardRef.current) return;
+    const el = cardRef.current;
+    if (!el || typeof el.getBoundingClientRect !== 'function') {
+      setIsVisible(true);
+      return undefined;
+    }
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    const vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (rect.bottom >= 0 && rect.right >= 0 && rect.top <= vh && rect.left <= vw) {
+      setIsVisible(true);
+    }
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
       { threshold: 0.1 }
     );
-    observer.observe(cardRef.current);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 

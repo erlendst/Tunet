@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, memo } from 'react';
 import { Calendar as CalendarIcon, Clock, MapPin, AlertCircle } from 'lucide-react';
 import { getIconComponent } from '../../icons';
 import { getCalendarEvents } from '../../services/haClient';
+import { useLazyVisible } from './dayCardShared';
 
 class CalendarErrorBoundary extends React.Component {
   constructor(props) {
@@ -52,9 +53,8 @@ const CalendarCard = memo(function CalendarCard({
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [visibleDays, setVisibleDays] = useState(7);
-  const cardRef = useRef(null);
+  const [cardRef, isVisible] = useLazyVisible();
   const gridScrollRef = useRef(null);
 
   // Parse check status ("It should be checked when the card is selected")
@@ -64,24 +64,6 @@ const CalendarCard = memo(function CalendarCard({
     [settings?.calendars]
   );
   const selectedCalendarsKey = useMemo(() => selectedCalendars.join('|'), [selectedCalendars]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   // Adapt visible day count based on card width
   useEffect(() => {
@@ -94,6 +76,7 @@ const CalendarCard = memo(function CalendarCard({
     });
     ro.observe(cardRef.current);
     return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getEventDate = (eventDate) => {
